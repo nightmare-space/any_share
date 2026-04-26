@@ -32,33 +32,14 @@ android {
         multiDexEnabled true
     }
     signingConfigs {
-        // 本地编译注释以下代码
-        // start
-        release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-        }
-    // end
+        sign
     }
-    // 本地编译放开下面代码
-    // buildTypes {
-    //     release {
-    //         signingConfig signingConfigs.debug
-    //     }
-    //     debug {
-    //         signingConfig signingConfigs.debug
-    //     }
-    // }
-    // 本地编译注释下面代码
-    // start
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.sign
         }
         debug {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.sign
         }
     }
     // end
@@ -85,3 +66,5 @@ flutter {
 
 dependencies {
 }
+
+apply from: rootProject.file('signing.gradle')
