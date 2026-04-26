@@ -52,15 +52,15 @@ dependencies:
   responsive_framework: ^1.0.0
   path_provider: ^2.0.10
   device_info_plus: ^10.1.0
+
+  # git dependencies
   # device find
   multicast:
     git: https://github.com/nightmare-space/multicast
   file_manager:
-    git: https://github.com/nightmare-space/file_manager_private.git
-  shelf_static:
-    git:
-      url: https://github.com/nightmare-space/shelf
-      path: pkgs/shelf_static
+    git: https://github.com/nightmare-space/file_manager.git
+  # TODO: upgrade
+  shelf_static: ^1.1.1
   settings:
     git: https://github.com/nightmare-space/settings
   speed_share_extension:
@@ -75,7 +75,7 @@ dependencies:
       url: https://github.com/nightmare-space/empty_package
       path: behavior_api
   android_api_server_client:
-    path: /Users/Laurie/Desktop/nightmare-space/android_api_server_client
+    git: https://github.com/nightmare-space/android_api_server_client
 
 dev_dependencies:
   flutter_test:

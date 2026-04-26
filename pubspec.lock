@@ -20,9 +20,11 @@ packages:
   android_api_server_client:
     dependency: "direct main"
     description:
-      path: "/Users/Laurie/Desktop/nightmare-space/android_api_server_client"
-      relative: false
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: "9bb0ea2261b530825d131346a73bf6f7743c4243"
+      url: "https://github.com/nightmare-space/android_api_server_client"
+    source: git
     version: "0.0.1"
   animations:
     dependency: "direct main"
@@ -268,9 +270,11 @@ packages:
   file_manager:
     dependency: "direct main"
     description:
-      path: "/Users/Laurie/Desktop/nightmare-space/file_manager_private"
-      relative: false
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: ccedd181d0f482ffeca654de1954b5f6fda537fd
+      url: "https://github.com/nightmare-space/file_manager.git"
+    source: git
     version: "1.0.0+1"
   file_selector:
     dependency: "direct main"
@@ -423,9 +427,11 @@ packages:
   global_repository:
     dependency: "direct main"
     description:
-      path: "/Users/Laurie/Desktop/nightmare-space/global_repository"
-      relative: false
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: "252e965fddc5254144efe31a6507da8aea29b14b"
+      url: "https://github.com/nightmare-space/global_repository"
+    source: git
     version: "0.0.1"
   hive:
     dependency: transitive
@@ -1040,12 +1046,11 @@ packages:
   shelf_static:
     dependency: "direct main"
     description:
-      path: "pkgs/shelf_static"
-      ref: HEAD
-      resolved-ref: "9fff4b678217c0cd1311e69f19e0abac05216615"
-      url: "https://github.com/nightmare-space/shelf"
-    source: git
-    version: "1.1.1-dev"
+      name: shelf_static
+      sha256: c87c3875f91262785dade62d135760c2c69cb217ac759485334c5857ad89f6e3
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.3"
   shortid:
     dependency: transitive
     description:
