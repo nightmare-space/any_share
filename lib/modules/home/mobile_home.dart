@@ -31,7 +31,7 @@ class _MobileHomeState extends State<MobileHome> {
                     Container(
                       color: Colors.white,
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w),
+                        padding: EdgeInsets.symmetric(horizontal: $(8)),
                         child: const ShareChatV2(),
                       ),
                     ),

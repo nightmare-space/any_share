@@ -9,7 +9,8 @@ import 'dir_item.dart';
 import 'file_item.dart';
 
 class MessageItemFactory {
-  static Widget? getMessageItem(MessageBaseInfo? info, bool sendByUser) {
+  static Widget? getMessageItem(MessageBaseInfo? info, bool sendByUser, BuildContext context) {
+    final $ = context.$;
     Widget? child;
     if (info is TextMessage) {
       child = TextMessageItem(
@@ -39,8 +40,8 @@ class MessageItemFactory {
       alignment: sendByUser ? Alignment.centerLeft : Alignment.centerLeft,
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: 10.w,
-          vertical: 8.w,
+          horizontal: $(10),
+          vertical: $(8),
         ),
         child: Column(
           crossAxisAlignment: sendByUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
@@ -63,20 +64,20 @@ class MessageItemFactory {
                       child: Text(
                         info.deviceName ?? '',
                         style: TextStyle(
-                          fontSize: 12.w,
+                          fontSize: $(12),
                           color: Device.getColor(info.deviceType),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(width: 4.w),
+                  SizedBox(width: $(4)),
                   if (info is ClipboardMessage)
                     Container(
                       decoration: BoxDecoration(
                         color: Device.getColor(info.deviceType).withOpacity(0.15),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      margin: EdgeInsets.only(left: 4.w),
+                      margin: EdgeInsets.only(left: $(4)),
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,
                         vertical: 4,
@@ -84,14 +85,14 @@ class MessageItemFactory {
                       child: Center(
                         child: Text(
                           S.current.clipboard,
-                          style: TextStyle(fontSize: 12.w, color: Device.getColor(info.deviceType)),
+                          style: TextStyle(fontSize: $(12), color: Device.getColor(info.deviceType)),
                         ),
                       ),
                     ),
                 ],
               ),
             SizedBox(
-              height: 4.w,
+              height: $(4),
             ),
             child,
           ],

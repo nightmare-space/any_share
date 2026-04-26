@@ -25,25 +25,25 @@ class _NavState extends State<Nav> {
       children: [
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14.w),
+            borderRadius: BorderRadius.circular($(14)),
             color: Theme.of(context).primaryColor,
           ),
           transformAlignment: Alignment.center,
           transform: Matrix4.identity()..rotateZ(pi / 4),
-          width: 36.w,
-          height: 36.w,
+          width: $(36),
+          height: $(36),
         ),
         Center(
           child: Icon(
             Icons.add,
             color: Theme.of(context).colorScheme.onPrimary,
-            size: 28.w,
+            size: $(28),
           ),
         ),
       ],
     );
     return SizedBox(
-      height: 56.w,
+      height: $(56),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -61,8 +61,8 @@ class _NavState extends State<Nav> {
                   children: [
                     Image.asset(
                       enable ? 'assets/icon/homev2_sel.png' : 'assets/icon/homev2.png',
-                      width: 24.w,
-                      height: 24.w,
+                      width: $(24),
+                      height: $(24),
                       color: enable ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface,
                       package: Config.package,
                       gaplessPlayback: false,
@@ -78,8 +78,8 @@ class _NavState extends State<Nav> {
                   children: [
                     Image.asset(
                       'assets/icon/remote_file.png',
-                      width: 24.w,
-                      height: 24.w,
+                      width: $(24),
+                      height: $(24),
                       color: enable ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface,
                       gaplessPlayback: false,
                       package: Config.package,
@@ -96,8 +96,8 @@ class _NavState extends State<Nav> {
                     children: [
                       Image.asset(
                         enable ? 'assets/icon/file.png' : 'assets/icon/file.png',
-                        width: 24.w,
-                        height: 24.w,
+                        width: $(24),
+                        height: $(24),
                         gaplessPlayback: false,
                         color: enable ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface,
                         package: Config.package,
@@ -113,8 +113,8 @@ class _NavState extends State<Nav> {
                     children: [
                       Image.asset(
                         enable ? 'assets/icon/person.png' : 'assets/icon/person.png',
-                        width: 24.w,
-                        height: 24.w,
+                        width: $(24),
+                        height: $(24),
                         gaplessPlayback: false,
                         color: enable ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface,
                         package: Config.package,
@@ -158,7 +158,7 @@ class _BottomTabState extends State<BottomTab> {
       elevation: 0,
       color: Theme.of(context).colorScheme.surfaceContainer,
       child: SizedBox(
-        height: 66.w,
+        height: $(66),
         width: MediaQuery.of(context).size.width,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -166,7 +166,7 @@ class _BottomTabState extends State<BottomTab> {
           children: [
             for (int i = 0; i < widget.children!.length; i++)
               IconButton(
-                padding: EdgeInsets.all(4.w),
+                padding: EdgeInsets.all($(4)),
                 onPressed: () {
                   widget.onChange?.call(i);
                 },

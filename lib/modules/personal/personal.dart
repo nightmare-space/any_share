@@ -19,7 +19,7 @@ class _PersonalPageState extends State<PersonalPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12.w),
+      padding: EdgeInsets.symmetric(horizontal: $(12)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -28,10 +28,10 @@ class _PersonalPageState extends State<PersonalPage> {
             Column(
               children: [
                 personHeader!,
-                SizedBox(height: 8.w),
+                SizedBox(height: $(8)),
               ],
             ),
-          SizedBox(height: 12.w),
+          SizedBox(height: $(12)),
           // personalItem(
           //   title: S.of(context).aboutSpeedShare,
           //   onTap: () {
@@ -47,10 +47,10 @@ class _PersonalPageState extends State<PersonalPage> {
           personalItem(
             title: S.current.projectBoard,
             onTap: () {
-              Get.to(ScreenQuery(
+              Get.to(ViewMetric(
                 uiWidth: 600,
                 screenWidth: Get.size.width,
-                child: const ProjBoard(),
+                child: const ProjBoardV2(),
               ));
             },
           ),
@@ -93,10 +93,10 @@ class _PersonalPageState extends State<PersonalPage> {
                 appVersion: Config.versionName,
                 versionCode: Config.versionCode,
                 logo: Padding(
-                  padding: EdgeInsets.only(top: 32.w),
+                  padding: EdgeInsets.only(top: $(32)),
                   child: SizedBox(
-                    width: 100.w,
-                    height: 100.w,
+                    width: $(100),
+                    height: $(100),
                     child: Image.asset('assets/icon/app_icon_1024.png'),
                   ),
                 ),
@@ -117,28 +117,28 @@ class _PersonalPageState extends State<PersonalPage> {
     void Function()? onTap,
   }) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 8.w),
+      padding: EdgeInsets.only(bottom: $(8)),
       child: Material(
-        borderRadius: BorderRadius.circular(12.w),
+        borderRadius: BorderRadius.circular($(12)),
         color: Theme.of(context).colorScheme.surfaceContainer,
         child: InkWell(
-          borderRadius: BorderRadius.circular(10.w),
+          borderRadius: BorderRadius.circular($(10)),
           onTap: () {
             onTap!();
           },
           child: Container(
-            height: 52.w,
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            height: $(52),
+            padding: EdgeInsets.symmetric(horizontal: $(10)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontSize: 16.w),
+                  style: TextStyle(fontSize: $(16)),
                 ),
                 Icon(
                   Icons.arrow_forward_ios,
-                  size: 16.w,
+                  size: $(16),
                 ),
               ],
             ),

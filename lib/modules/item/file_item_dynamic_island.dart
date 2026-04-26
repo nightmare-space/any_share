@@ -83,7 +83,7 @@ class _FileDynamicIslandState extends State<FileDynamicIsland> {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(10.w),
+      borderRadius: BorderRadius.circular($(10)),
       clipBehavior: Clip.antiAlias,
       child: GestureDetector(
         onTapDown: (details) {
@@ -96,9 +96,9 @@ class _FileDynamicIslandState extends State<FileDynamicIsland> {
 
   Padding body(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10.w),
+      padding: EdgeInsets.all($(10)),
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 200.w),
+        constraints: BoxConstraints(maxWidth: $(200)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -110,7 +110,23 @@ class _FileDynamicIslandState extends State<FileDynamicIsland> {
                   //   OpenFile.open(savePath);
                   // }
                 },
-                child: buildPreviewWidget(url),
+                child: InkWell(
+                  child: Row(
+                    children: [
+                      getIconByExt(url, context),
+                      SizedBox(width: $(8)),
+                      Expanded(
+                        child: Text(
+                          widget.info!.fileName!,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: $(12),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               );
             }),
             // 展示下载进度条
@@ -121,7 +137,7 @@ class _FileDynamicIslandState extends State<FileDynamicIsland> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     SizedBox(
-                      height: 8.w,
+                      height: $(8),
                     ),
                     ClipRRect(
                       borderRadius: const BorderRadius.all(
@@ -139,7 +155,7 @@ class _FileDynamicIslandState extends State<FileDynamicIsland> {
                       }),
                     ),
                     SizedBox(
-                      height: 4.w,
+                      height: $(4),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -149,7 +165,7 @@ class _FileDynamicIslandState extends State<FileDynamicIsland> {
                           if (pro == 1.0) {
                             return Icon(
                               Icons.check,
-                              size: 16.w,
+                              size: $(16),
                               color: Colors.green,
                             );
                           }
@@ -157,7 +173,7 @@ class _FileDynamicIslandState extends State<FileDynamicIsland> {
                             '${info.speed}/s',
                             style: TextStyle(
                               color: Colors.white54,
-                              fontSize: 12.w,
+                              fontSize: $(12),
                             ),
                           );
                         }),
@@ -165,10 +181,10 @@ class _FileDynamicIslandState extends State<FileDynamicIsland> {
                           children: [
                             SizedBox(
                               child: Text(
-                                FileUtil.formatBytes(info.count)!,
+                                FileUtil.formatBytes(info.count),
                                 style: TextStyle(
                                   color: Colors.white54,
-                                  fontSize: 12.w,
+                                  fontSize: $(12),
                                 ),
                               ),
                             ),
@@ -176,7 +192,7 @@ class _FileDynamicIslandState extends State<FileDynamicIsland> {
                               '/',
                               style: TextStyle(
                                 color: Colors.white54,
-                                fontSize: 12.w,
+                                fontSize: $(12),
                               ),
                             ),
                             SizedBox(
@@ -184,7 +200,7 @@ class _FileDynamicIslandState extends State<FileDynamicIsland> {
                                 widget.info!.fileSize!,
                                 style: TextStyle(
                                   color: Colors.white54,
-                                  fontSize: 12.w,
+                                  fontSize: $(12),
                                 ),
                               ),
                             ),
@@ -202,23 +218,4 @@ class _FileDynamicIslandState extends State<FileDynamicIsland> {
   }
 
   UniqueKey key = UniqueKey();
-  Widget buildPreviewWidget(String url) {
-    return InkWell(
-      child: Row(
-        children: [
-          getIconByExt(url),
-          SizedBox(width: 8.w),
-          Expanded(
-            child: Text(
-              widget.info!.fileName!,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12.w,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

@@ -25,15 +25,15 @@ class _SelectLangState extends State<SelectLang> {
     return Center(
       child: Material(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(12.w),
+        borderRadius: BorderRadius.circular($(12)),
         child: SizedBox(
-          width: 300.w,
+          width: $(300),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               for (String lang in languageMap.keys.toList())
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.w),
+                  padding: EdgeInsets.symmetric(horizontal: $(12), vertical: $(4)),
                   child: Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

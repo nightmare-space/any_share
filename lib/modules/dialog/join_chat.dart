@@ -29,29 +29,29 @@ class _JoinChatState extends State<JoinChat> {
     return Center(
       child: Material(
         clipBehavior: Clip.antiAlias,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular($(12)),
         child: SizedBox(
-          height: 200.w,
-          width: 300.w,
+          height: $(200),
+          width: $(300),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all($(8)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  height: 4.w,
+                  height: $(4),
                 ),
                 Text(
                   S.current.inputAddressTip,
                   style: TextStyle(
                     color: AppColors.fontColor,
                     fontWeight: FontWeight.bold,
-                    fontSize: 18.w,
+                    fontSize: $(18),
                   ),
                 ),
                 SizedBox(
-                  height: 16.w,
+                  height: $(16),
                 ),
                 TextField(
                   controller: controller,
@@ -62,11 +62,11 @@ class _JoinChatState extends State<JoinChat> {
                     fillColor: const Color(0xfff0f0f0),
                     hintText: 'HTTP://xxx:xxx',
                     hintStyle: TextStyle(
-                      fontSize: 12.w,
+                      fontSize: $(12),
                     ),
                   ),
                 ),
-                SizedBox(height: 8.w),
+                SizedBox(height: $(8)),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(

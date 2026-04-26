@@ -60,7 +60,7 @@ class _BroswerFileItemState extends State<BroswerFileItem> {
       children: [
         Material(
           color: colorScheme.surface,
-          borderRadius: BorderRadius.circular(10.w),
+          borderRadius: BorderRadius.circular($(10)),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onLongPress: () {},
@@ -91,7 +91,7 @@ class _BroswerFileItemState extends State<BroswerFileItem> {
                     padding: const EdgeInsets.all(8),
                     child: Icon(
                       Icons.file_download,
-                      size: 18.w,
+                      size: $(18),
                     ),
                   ),
                 ),
@@ -102,7 +102,7 @@ class _BroswerFileItemState extends State<BroswerFileItem> {
                     padding: const EdgeInsets.all(8),
                     child: Icon(
                       Icons.content_copy,
-                      size: 18.w,
+                      size: $(18),
                     ),
                   ),
                 ),
@@ -115,105 +115,113 @@ class _BroswerFileItemState extends State<BroswerFileItem> {
 
   Padding body(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10.w),
+      padding: EdgeInsets.all($(10)),
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 200.w),
+        constraints: BoxConstraints(maxWidth: $(200)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Builder(builder: (context) {
-              return GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  // if (fileDownratio == 1.0 && !timer.isActive) {
-                  //   OpenFile.open(savePath);
-                  // }
-                },
-                child: buildPreviewWidget(url),
-              );
-            }),
+            Builder(
+              builder: (context) {
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    // if (fileDownratio == 1.0 && !timer.isActive) {
+                    //   OpenFile.open(savePath);
+                    // }
+                  },
+                  child: buildPreviewWidget(url),
+                );
+              },
+            ),
             // 展示下载进度条
             if (!widget.sendByUser! && !GetPlatform.isWeb)
-              GetBuilder<DownloadController>(builder: (context) {
-                DownloadInfo info = downloadController.getInfo(url)!;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    SizedBox(
-                      height: 8.w,
-                    ),
-                    ClipRRect(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(25.0),
+              GetBuilder<DownloadController>(
+                builder: (context) {
+                  DownloadInfo info = downloadController.getInfo(url)!;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        height: $(8),
                       ),
-                      child: Builder(builder: (context) {
-                        double pro = info.progress;
-                        return LinearProgressIndicator(
-                          backgroundColor: Theme.of(context).colorScheme.surface3,
-                          valueColor: AlwaysStoppedAnimation(
-                            pro == 1.0 ? Theme.of(context).primaryColor : Theme.of(context).primaryColor.withOpacity(0.4),
-                          ),
-                          value: pro,
-                        );
-                      }),
-                    ),
-                    SizedBox(
-                      height: 4.w,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Builder(builder: (_) {
-                          double pro = downloadController.getProgress(url);
-                          if (pro == 1.0) {
-                            return Icon(
-                              Icons.check,
-                              size: 16.w,
-                              color: Colors.green,
-                            );
-                          }
-                          return Text(
-                            '${info.speed}/s',
-                            style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: 12.w,
-                            ),
-                          );
-                        }),
-                        Row(
-                          children: [
-                            SizedBox(
-                              child: Text(
-                                gr.FileUtil.formatBytes(info.count),
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 12.w,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              '/',
-                              style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 12.w,
-                              ),
-                            ),
-                            SizedBox(
-                              child: Text(
-                                widget.info!.fileSize!,
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 12.w,
-                                ),
-                              ),
-                            ),
-                          ],
+                      ClipRRect(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(25.0),
                         ),
-                      ],
-                    ),
-                  ],
-                );
-              }),
+                        child: Builder(
+                          builder: (context) {
+                            double pro = info.progress;
+                            return LinearProgressIndicator(
+                              backgroundColor: Theme.of(context).colorScheme.surface3,
+                              valueColor: AlwaysStoppedAnimation(
+                                pro == 1.0 ? Theme.of(context).primaryColor : Theme.of(context).primaryColor.withOpacityExact(0.4),
+                              ),
+                              value: pro,
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: $(4),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Builder(
+                            builder: (_) {
+                              double pro = downloadController.getProgress(url);
+                              if (pro == 1.0) {
+                                return Icon(
+                                  Icons.check,
+                                  size: $(16),
+                                  color: Colors.green,
+                                );
+                              }
+                              return Text(
+                                '${info.speed}/s',
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: $(12),
+                                ),
+                              );
+                            },
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                child: Text(
+                                  gr.FileUtil.formatBytes(info.count),
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: $(12),
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                '/',
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: $(12),
+                                ),
+                              ),
+                              SizedBox(
+                                child: Text(
+                                  widget.info!.fileSize!,
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: $(12),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
+              ),
           ],
         ),
       ),
@@ -234,8 +242,8 @@ class _BroswerFileItemState extends State<BroswerFileItem> {
                   FileUtil.openFile(widget.info!.blob!);
                 },
                 child: Image(
-                  width: 36.w,
-                  height: 36.w,
+                  width: $(36),
+                  height: $(36),
                   fit: BoxFit.cover,
                   image: ResizeImage(
                     NetworkImage(widget.info!.blob!),
@@ -246,14 +254,14 @@ class _BroswerFileItemState extends State<BroswerFileItem> {
             )
           else
             // 传入文件名，已展示对应的图标
-            getIconByExt(widget.info!.fileName!),
-          SizedBox(width: 8.w),
+            getIconByExt(widget.info!.fileName!, context),
+          SizedBox(width: $(8)),
           Expanded(
             child: Text(
               widget.info!.fileName!,
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 12.w,
+                fontSize: $(12),
               ),
             ),
           ),

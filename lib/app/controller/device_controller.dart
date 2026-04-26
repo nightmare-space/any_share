@@ -8,6 +8,7 @@ import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart';
 import 'package:speed_share/app/controller/history.dart';
 import 'package:speed_share/app/controller/utils/join_util.dart';
+import 'package:speed_share/global/network/dio_manager.dart';
 
 class Device {
   Device(this.id);
@@ -207,7 +208,7 @@ class DeviceController extends GetxController {
     for (String url in urls) {
       // Log.i('$url');
       try {
-        await httpInstance!.post(url, data: data);
+        await DioInstance.post(url, data: data);
       } catch (e) {
         // Log.e('send error : ${e}');
       }

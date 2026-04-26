@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:file_manager/file_manager.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:file_manager/file_manager.dart' as file_manager;
 import 'package:flutter/material.dart';
@@ -71,7 +70,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget build(BuildContext context) {
     TextStyle title = TextStyle(
       color: Theme.of(context).primaryColor,
-      fontSize: 16.w,
+      fontSize: $(16),
     );
     final S s = S.of(context);
     AppBar? appBar;
@@ -91,52 +90,54 @@ class _SettingPageState extends State<SettingPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.w),
+                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
                   child: Text(
                     s.common,
                     style: title,
                   ),
                 ),
-                GetBuilder<SettingController>(builder: (_) {
-                  return SettingItem(
-                    onTap: () async {
-                      if (GetPlatform.isDesktop) {
-                        const confirmButtonText = 'Choose';
-                        final path = await getDirectoryPath(
-                          confirmButtonText: confirmButtonText,
-                        );
-                        Log.e('path:$path');
-                        if (path != null) {
-                          controller.switchDownLoadPath(path);
+                GetBuilder<SettingController>(
+                  builder: (_) {
+                    return SettingItem(
+                      onTap: () async {
+                        if (GetPlatform.isDesktop) {
+                          const confirmButtonText = 'Choose';
+                          final path = await getDirectoryPath(
+                            confirmButtonText: confirmButtonText,
+                          );
+                          Log.e('path:$path');
+                          if (path != null) {
+                            controller.switchDownLoadPath(path);
+                          }
+                        } else {
+                          String? path = await file_manager.FileManager.selectDirectory();
+                          if (path != null) {
+                            controller.switchDownLoadPath(path);
+                          }
                         }
-                      } else {
-                        String? path = await file_manager.FileManager.selectDirectory();
-                        if (path != null) {
-                          controller.switchDownLoadPath(path);
-                        }
-                      }
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          s.downlaodPath,
-                          style: TextStyle(
-                            fontSize: 18.w,
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            s.downlaodPath,
+                            style: TextStyle(
+                              fontSize: $(18),
+                            ),
                           ),
-                        ),
-                        Text(
-                          controller.savePath!,
-                          style: TextStyle(
-                            fontSize: 16.w,
-                            color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.6),
+                          Text(
+                            controller.savePath!,
+                            style: TextStyle(
+                              fontSize: $(16),
+                              color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
+                        ],
+                      ),
+                    );
+                  },
+                ),
                 SettingItem(
                   onTap: () {
                     Get.dialog(const SelectLang());
@@ -148,14 +149,14 @@ class _SettingPageState extends State<SettingPage> {
                       Text(
                         s.lang,
                         style: TextStyle(
-                          fontSize: 18.w,
+                          fontSize: $(18),
                         ),
                       ),
                       Text(
                         controller.currentLocale!.toLanguageTag(),
                         style: TextStyle(
-                          fontSize: 16.w,
-                          color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.6),
+                          fontSize: $(16),
+                          color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
                         ),
                       ),
                     ],
@@ -171,7 +172,7 @@ class _SettingPageState extends State<SettingPage> {
                       Text(
                         s.autoDownload,
                         style: TextStyle(
-                          fontSize: 18.w,
+                          fontSize: $(18),
                         ),
                       ),
                       AquaSwitch(
@@ -197,14 +198,14 @@ class _SettingPageState extends State<SettingPage> {
                 //             Text(
                 //               '开启常量岛动画',
                 //               style: TextStyle(
-                //                 fontSize: 18.w,
+                //                 fontSize: $(18),
                 //               ),
                 //             ),
-                //             // SizedBox(height: 2.w),
+                //             // SizedBox(height: $(2)),
                 //             Text(
                 //               '模仿iOS灵动岛的动画，这个开关需要同时打开速享的悬浮窗权限',
                 //               style: TextStyle(
-                //                 fontSize: 14.w,
+                //                 fontSize: $(14),
                 //                 color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.6),
                 //               ),
                 //             ),
@@ -228,7 +229,7 @@ class _SettingPageState extends State<SettingPage> {
                       Text(
                         s.clipboardshare,
                         style: TextStyle(
-                          fontSize: 18.w,
+                          fontSize: $(18),
                         ),
                       ),
                       AquaSwitch(
@@ -248,7 +249,7 @@ class _SettingPageState extends State<SettingPage> {
                       Text(
                         s.messageNote,
                         style: TextStyle(
-                          fontSize: 18.w,
+                          fontSize: $(18),
                         ),
                       ),
                       AquaSwitch(
@@ -260,7 +261,7 @@ class _SettingPageState extends State<SettingPage> {
                 ),
 
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.w),
+                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
                   child: Text(
                     S.current.fileType,
                     style: title,
@@ -281,13 +282,15 @@ class _SettingPageState extends State<SettingPage> {
                           children: [
                             Text(
                               S.current.enableFileClassification,
-                              style: TextStyle(fontSize: 18.w),
+                              style: TextStyle(fontSize: $(18)),
                             ),
+
+                            // SizedBox(height: $(2)),
                             Text(
-                              S.current.classifyTips,
+                              '注意，文件分类开启后会自动整理下载路径的所有文件',
                               style: TextStyle(
-                                fontSize: 14.w,
-                                color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.6),
+                                fontSize: $(14),
+                                color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
                               ),
                             ),
                           ],
@@ -315,15 +318,15 @@ class _SettingPageState extends State<SettingPage> {
                             Text(
                               S.current.enableWebServer,
                               style: TextStyle(
-                                fontSize: 18.w,
+                                fontSize: $(18),
                               ),
                             ),
-                            // SizedBox(height: 2.w),
+                            // SizedBox(height: $(2)),
                             Text(
                               S.current.enableWebServerTips,
                               style: TextStyle(
-                                fontSize: 14.w,
-                                color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.6),
+                                fontSize: $(14),
+                                color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
                               ),
                             ),
                           ],
@@ -344,7 +347,7 @@ class _SettingPageState extends State<SettingPage> {
                         List<Widget> children = [];
                         for (String address in snapshot.data!) {
                           children.add(Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.w),
+                            padding: EdgeInsets.symmetric(horizontal: $(10), vertical: $(2)),
                             child: SelectableText('$address:${chatController.messageBindPort}/sdcard'),
                           ));
                         }
@@ -356,7 +359,7 @@ class _SettingPageState extends State<SettingPage> {
                     },
                   ),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.w),
+                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
                   child: Text(
                     S.current.clearCache,
                     style: title,
@@ -366,7 +369,7 @@ class _SettingPageState extends State<SettingPage> {
                   onTap: () async {
                     await cache!.delete(recursive: true);
                     getp();
-                    showToast(S.current.cacheCleaned);
+                    showToast('缓存清理完成');
                   },
                   child: Row(
                     children: [
@@ -375,16 +378,16 @@ class _SettingPageState extends State<SettingPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${S.current.curCacheSize}:$cacheSize',
+                              '当前缓存大小:$cacheSize',
                               style: TextStyle(
-                                fontSize: 18.w,
+                                fontSize: $(18),
                               ),
                             ),
                             Text(
-                              S.current.androidSAFTips,
+                              '安卓SAF架构会导致从系统文件夹选择文件总是会拷贝一份，如果使用速享自带文件管理器选择，则不会增加缓存大小',
                               style: TextStyle(
-                                fontSize: 14.w,
-                                color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.6),
+                                fontSize: $(14),
+                                color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
                               ),
                             ),
                           ],
@@ -394,7 +397,7 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.w),
+                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
                   child: Text(
                     s.aboutSpeedShare,
                     style: title,
@@ -407,15 +410,15 @@ class _SettingPageState extends State<SettingPage> {
                       Text(
                         s.developer,
                         style: TextStyle(
-                          fontSize: 18.w,
+                          fontSize: $(18),
                         ),
                       ),
                       Text(
                         '梦魇兽',
                         style: TextStyle(
-                          fontSize: 18.w,
+                          fontSize: $(18),
                           fontWeight: FontWeight.normal,
-                          color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.4),
+                          color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.4),
                         ),
                       ),
                     ],
@@ -428,15 +431,15 @@ class _SettingPageState extends State<SettingPage> {
                       Text(
                         s.ui,
                         style: TextStyle(
-                          fontSize: 18.w,
+                          fontSize: $(18),
                         ),
                       ),
                       Text(
                         '柚凛/梦魇兽',
                         style: TextStyle(
-                          fontSize: 18.w,
+                          fontSize: $(18),
                           fontWeight: FontWeight.normal,
-                          color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.4),
+                          color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.4),
                         ),
                       ),
                     ],
@@ -461,15 +464,16 @@ class SettingItem extends StatelessWidget {
   final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
+    final $ = context.$;
     return InkWell(
       onTap: () {
         onTap?.call();
       },
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.w),
+        padding: EdgeInsets.symmetric(horizontal: $(10), vertical: $(10)),
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            minHeight: 40.w,
+            minHeight: $(40),
           ),
           child: SizedBox(
             child: Align(

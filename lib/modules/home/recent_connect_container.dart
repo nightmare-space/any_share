@@ -19,8 +19,8 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
   @override
   Widget build(BuildContext context) {
     return CardWrapper(
-      height: 200.w,
-      padding: EdgeInsets.all(12.w),
+      height: $(200),
+      padding: EdgeInsets.all($(12)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -41,12 +41,12 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
                 },
                 child: Icon(
                   Icons.delete,
-                  size: 20.w,
+                  size: $(20),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 4.w),
+          SizedBox(height: $(4)),
           Expanded(
             child: GetBuilder<DeviceController>(
               builder: (ctl) {
@@ -59,7 +59,7 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
-                            height: 20.w,
+                            height: $(20),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -67,7 +67,7 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
                                   basename(history.deviceName!),
                                   maxLines: 2,
                                   style: TextStyle(
-                                    fontSize: 14.w,
+                                    fontSize: $(14),
                                     color: Theme.of(context).textTheme.bodyMedium!.color,
                                     height: 1,
                                   ),
@@ -85,7 +85,7 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
                                       basename(history.id ?? ''),
                                       maxLines: 1,
                                       style: TextStyle(
-                                        fontSize: 14.w,
+                                        fontSize: $(14),
                                         color: Theme.of(context).textTheme.bodyMedium!.color,
                                       ),
                                     ),
@@ -98,13 +98,13 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(
-                                height: 20.w,
+                                height: $(20),
                                 child: Center(
                                   child: Text(
                                     basename(history.url!),
                                     maxLines: 1,
                                     style: TextStyle(
-                                      fontSize: 14.w,
+                                      fontSize: $(14),
                                       color: Theme.of(context).textTheme.bodyMedium!.color,
                                     ),
                                   ),
@@ -126,17 +126,17 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
                                 return Container(
                                   decoration: BoxDecoration(
                                     color: device.isConnect! ? Theme.of(context).primaryColor.withOpacity(0.08) : Colors.red.withOpacity(0.08),
-                                    borderRadius: BorderRadius.circular(12.w),
+                                    borderRadius: BorderRadius.circular($(12)),
                                   ),
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: 4.w,
-                                    vertical: 2.w,
+                                    horizontal: $(4),
+                                    vertical: $(2),
                                   ),
                                   child: Text(
                                     device.isConnect! ? S.current.connected : S.current.disconnected,
                                     style: TextStyle(
                                       color: device.isConnect! ? Theme.of(context).primaryColor : Colors.red,
-                                      fontSize: 12.w,
+                                      fontSize: $(12),
                                     ),
                                   ),
                                 );
@@ -149,7 +149,7 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
                   );
                   children.add(
                     SizedBox(
-                      width: 4.w,
+                      width: $(4),
                     ),
                   );
                 }
@@ -158,7 +158,7 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
                     child: Text(
                       S.current.empty,
                       style: TextStyle(
-                        fontSize: 16.w,
+                        fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),

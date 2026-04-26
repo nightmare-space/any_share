@@ -89,11 +89,11 @@ class Global with ClipboardListener, WindowListener {
 
   // 初始化全局单例
   Future<void> initGlobal() async {
-    Log.v('initGlobal', tag: 'GlobalInstance');
+    Log.v('initGlobal', 'GlobalInstance');
     uniqueKey = await UniqueUtil.getUniqueKey();
     deviceName = await UniqueUtil.getDevicesId();
-    Log.v('deviceId -> $deviceName', tag: 'GlobalInstance');
-    Log.v('uniqueKey -> $uniqueKey', tag: 'GlobalInstance');
+    Log.v('deviceId -> $deviceName', 'GlobalInstance');
+    Log.v('uniqueKey -> $uniqueKey', 'GlobalInstance');
     if (GetPlatform.isWeb || GetPlatform.isIOS) {
       // web udp 和部署都不支持
       return;

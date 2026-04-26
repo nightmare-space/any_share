@@ -27,25 +27,27 @@ class SpeedPages {
     ),
     GetPage(
       name: Routes.home,
-      page: () => Builder(builder: (context) {
-        return PopScope(
-          canPop: true,
-          onPopInvoked: (value) async {
-            if (time == 0) {
-              time++;
-              showToast(S.current.backAgainTip);
-            } else {
-              Navigator.of(context).pop();
-            }
-            debouncer.call(() {
-              time = 0;
-            });
-          },
-          child: const ThemeWrapper(
-            child: AdaptiveEntryPoint(),
-          ),
-        );
-      }),
+      page: () => Builder(
+        builder: (context) {
+          return PopScope(
+            canPop: true,
+            onPopInvoked: (value) async {
+              if (time == 0) {
+                time++;
+                showToast(S.current.backAgainTip);
+              } else {
+                Navigator.of(context).pop();
+              }
+              debouncer.call(() {
+                time = 0;
+              });
+            },
+            child: const ThemeWrapper(
+              child: AdaptiveEntryPoint(),
+            ),
+          );
+        },
+      ),
       binding: HomeBinding(),
     ),
   ];
@@ -61,7 +63,7 @@ class ThemeWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final ThemeData theme = isDark ? dark() : light();
+    final ThemeData theme = isDark ? dark(context) : light(context);
     return Theme(
       data: theme,
       child: child!,

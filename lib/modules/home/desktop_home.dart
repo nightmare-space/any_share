@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:speed_share/app/controller/controller.dart';
 import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/global/constant.dart';
 import 'package:speed_share/modules/desktop_drawer.dart';
 import 'package:speed_share/modules/file/file_page.dart';
 import 'package:speed_share/modules/home/home_page.dart';
@@ -83,7 +82,7 @@ class _DesktopHomeState extends State<DesktopHome> {
               left: false,
               child: Column(
                 children: [
-                  Container(height: 1.w, color: Theme.of(context).primaryColor),
+                  Container(height: $(1), color: Theme.of(context).primaryColor),
                   Expanded(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,70 +94,70 @@ class _DesktopHomeState extends State<DesktopHome> {
                             setState(() {});
                           },
                         ),
-                        GetBuilder<DeviceController>(builder: (controller) {
-                          if (GetPlatform.isWeb) {
+                        GetBuilder<DeviceController>(
+                          builder: (controller) {
+                            if (GetPlatform.isWeb) {
+                              return Expanded(
+                                child: [
+                                  const SizedBox(),
+                                  Container(
+                                    color: Theme.of(context).colorScheme.surface,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: $(8)),
+                                      child: const ShareChatV2(),
+                                    ),
+                                  ),
+                                  for (int i = 0; i < controller.connectDevice.length; i++)
+                                    Builder(
+                                      builder: (context) {
+                                        Uri uri = Uri.tryParse(
+                                          controller.connectDevice[i].url!,
+                                        )!;
+                                        // TODO: Fix me
+                                        file_manager.FMController fmController = Get.find();
+                                        // TODO: Fix me, need change base dir path(/User or /sdcard) by device type
+                                        return file_manager.FileManagerView(
+                                          controller: fmController,
+                                        );
+                                      },
+                                    ),
+                                  const SizedBox(),
+                                  const SizedBox(),
+                                ][page],
+                              );
+                            }
                             return Expanded(
                               child: [
-                                const SizedBox(),
-                                Container(
-                                  color: Theme.of(context).colorScheme.surface,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8.w),
-                                    child: const ShareChatV2(),
-                                  ),
-                                ),
-                                // TODO
-                                // for (int i = 0; i < controller.connectDevice.length; i++)
-                                //   Builder(
-                                //     builder: (context) {
-                                //       Uri uri = Uri.tryParse(
-                                //         controller.connectDevice[i].url!,
-                                //       )!;
-                                //       String addr = 'http://${uri.host}:${fm.Config.port}';
-                                //       return fm.FileManager(
-                                //         address: addr,
-                                //         usePackage: true,
-                                //         path: controller.connectDevice[i].deviceType == desktop ? '/User' : '/sdcard',
-                                //       );
-                                //     },
-                                //   ),
-                                const SizedBox(),
-                                const SizedBox(),
-                              ][page],
-                            );
-                          }
-                          return Expanded(
-                            child: [
-                              HomePage(
-                                onMessageWindowTap: () {
-                                  page = 1;
-                                  setState(() {});
-                                },
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8.w),
-                                child: const ShareChatV2(),
-                              ),
-                              for (int i = 0; i < controller.connectDevice.length; i++)
-                                Builder(
-                                  builder: (context) {
-                                    Uri uri = Uri.tryParse(
-                                      controller.connectDevice[i].url!,
-                                    )!;
-                                    // String addr = 'http://${uri.host}:${file_manager.Config.port}';
-                                    // TODO
-                                    // return file_manager.FileManager(
-                                    //   address: addr,
-                                    //   usePackage: true,
-                                    // );
-                                    return const SizedBox();
+                                HomePage(
+                                  onMessageWindowTap: () {
+                                    page = 1;
+                                    setState(() {});
                                   },
                                 ),
-                              const FilePage(),
-                              const SettingPage(),
-                            ][page],
-                          );
-                        }),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: $(8)),
+                                  child: const ShareChatV2(),
+                                ),
+                                for (int i = 0; i < controller.connectDevice.length; i++)
+                                  Builder(
+                                    builder: (context) {
+                                      Uri uri = Uri.tryParse(
+                                        controller.connectDevice[i].url!,
+                                      )!;
+                                      // TODO: Fix me
+                                      file_manager.FMController fmController = Get.find();
+                                      // TODO: Fix me, need change base dir path(/User or /sdcard) by device type
+                                      return file_manager.FileManagerView(
+                                        controller: fmController,
+                                      );
+                                    },
+                                  ),
+                                const FilePage(),
+                                const SettingPage(),
+                              ][page],
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -180,7 +179,7 @@ class _DesktopHomeState extends State<DesktopHome> {
                     style: TextStyle(
                       color: AppColors.fontColor,
                       fontWeight: FontWeight.bold,
-                      fontSize: 20.w,
+                      fontSize: $(20),
                     ),
                   ),
                 ),

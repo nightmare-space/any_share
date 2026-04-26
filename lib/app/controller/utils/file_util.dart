@@ -1,6 +1,7 @@
 import 'package:file_manager/file_manager.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:get/get.dart';
+import 'package:file_manager/file_manager.dart' as file_manager;
 
 // 用来选择文件的
 Future<List<XFile>?> getFilesForDesktopAndWeb() async {
@@ -19,7 +20,7 @@ Future<List<XFile>?> getFilesForDesktopAndWeb() async {
 Future<List<String?>> getFilesPathsForAndroid(bool useSystemPicker) async {
   List<String> filePaths = [];
   if (!useSystemPicker) {
-    filePaths = await FileManager.selectFile();
+    filePaths = (await file_manager.FileManager.selectFile());
   } else {
     final List<XFile> files = await openFiles();
     return files.map((e) => e.path).toList();

@@ -26,18 +26,18 @@ class _ShowQRPageState extends State<ShowQRPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(40.w),
+      padding: EdgeInsets.all($(40)),
       child: Center(
         child: Material(
           color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(10.w),
+          borderRadius: BorderRadius.circular($(10)),
           child: Material(
             color: Colors.transparent,
             child: Container(
-              height: 360.w,
-              width: 300.w,
+              height: $(360),
+              width: $(300),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.w),
+                borderRadius: BorderRadius.circular($(10)),
                 color: Theme.of(context).colorScheme.surface,
               ),
               child: Column(
@@ -50,11 +50,11 @@ class _ShowQRPageState extends State<ShowQRPage> {
                         return Column(
                           children: [
                             Container(
-                              padding: EdgeInsets.all(10.w),
+                              padding: EdgeInsets.all($(10)),
                               child: QrImageView(
                                 data: 'http://${address[i]}:${widget.port}',
                                 version: QrVersions.auto,
-                                size: 280.w,
+                                size: $(280),
                                 eyeStyle: const QrEyeStyle(
                                   eyeShape: QrEyeShape.square,
                                   color: Colors.black,
@@ -78,7 +78,7 @@ class _ShowQRPageState extends State<ShowQRPage> {
                     S.of(context).qrTips,
                   ),
                   SizedBox(
-                    height: 10.w,
+                    height: $(10),
                   ),
                 ],
               ),

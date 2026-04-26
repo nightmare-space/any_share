@@ -23,6 +23,7 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final $ = context.$;
     ChatController controller = Get.find();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -30,28 +31,28 @@ class Header extends StatelessWidget {
         Expanded(
           child: Row(
             children: [
-              SizedBox(width: 4.w),
+              SizedBox(width: $(4)),
               if (!GetPlatform.isWeb)
                 ValueListenableBuilder<bool>(
                   valueListenable: controller.connectState,
                   builder: (_, value, __) {
                     return Container(
-                      width: 4.w,
-                      height: 16.w,
+                      width: $(4),
+                      height: $(16),
                       decoration: BoxDecoration(
                         color: value ? Colors.green : Colors.red,
-                        borderRadius: BorderRadius.circular(16.w),
+                        borderRadius: BorderRadius.circular($(16)),
                       ),
                     );
                   },
                 ),
-              SizedBox(width: 4.w),
+              SizedBox(width: $(4)),
               const HeaderSwiper(),
             ],
           ),
         ),
         Transform(
-          transform: Matrix4.identity()..translate(4.w),
+          transform: Matrix4.identity()..translate($(4)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -62,7 +63,7 @@ class Header extends StatelessWidget {
                 child: SvgPicture.asset(
                   GlobalAssets.qrCode,
                   color: Theme.of(context).colorScheme.onSurface,
-                  width: 24.w,
+                  width: $(24),
                 ),
               ),
               NiIconButton(
@@ -73,7 +74,7 @@ class Header extends StatelessWidget {
                 },
                 child: Image.asset(
                   'assets/icon/qr.png',
-                  width: 20.w,
+                  width: $(20),
                   package: Config.package,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
@@ -156,7 +157,7 @@ class _HeaderSwiperState extends State<HeaderSwiper> {
                     TextSpan(
                       text: S.current.headerNotice(deviceController.availableDevice()),
                       style: TextStyle(
-                        fontSize: 16.w,
+                        fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.w500,
                       ),
@@ -175,11 +176,11 @@ class _HeaderSwiperState extends State<HeaderSwiper> {
                     children.add(
                       Material(
                         color: device.deviceColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8.w),
+                        borderRadius: BorderRadius.circular($(8)),
                         child: SizedBox(
-                          height: 32.w,
+                          height: $(32),
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w),
+                            padding: EdgeInsets.symmetric(horizontal: $(8)),
                             child: Center(
                               child: Text(device.deviceName!),
                             ),

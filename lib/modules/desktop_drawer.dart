@@ -41,7 +41,7 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
       child: Row(
         children: [
           Padding(
-            padding: EdgeInsets.all(12.w),
+            padding: EdgeInsets.all($(12)),
             child: Row(
               children: [
                 GetBuilder<DeviceController>(builder: (controller) {
@@ -60,10 +60,10 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
                         Column(
                           children: [
                             SizedBox(
-                              width: 200.w,
+                              width: $(200),
                               child: personHeader,
                             ),
-                            SizedBox(height: 8.w),
+                            SizedBox(height: $(8)),
                           ],
                         ),
                       homeMenu(),
@@ -101,9 +101,9 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
             Image.asset(
               'assets/icon/setting.png',
               color: Theme.of(_).textTheme.bodyMedium!.color,
-              width: 16.w,
+              width: $(16),
             ),
-            SizedBox(width: 4.w),
+            SizedBox(width: $(4)),
             Text(
               S.current.setting,
               style: TextStyle(
@@ -129,10 +129,10 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
           children: [
             Image.asset(
               'assets/icon/file.png',
-              width: 16.w,
+              width: $(16),
               color: Theme.of(_).textTheme.bodyMedium!.color,
             ),
-            SizedBox(width: 4.w),
+            SizedBox(width: $(4)),
             Text(
               S.current.fileManagerLocal,
               style: TextStyle(
@@ -163,10 +163,10 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
                   children: [
                     Image.asset(
                       getIcon(_.connectDevice[i].deviceType),
-                      width: 16.w,
+                      width: $(16),
                       color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
-                    SizedBox(width: 4.w),
+                    SizedBox(width: $(4)),
                     Text(
                       '${S.current.fileManager}(${_.connectDevice[i].deviceName})',
                       style: TextStyle(
@@ -196,10 +196,10 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
           children: [
             Image.asset(
               'assets/icon/all.png',
-              width: 16.w,
+              width: $(16),
               color: Theme.of(_).textTheme.bodyMedium!.color,
             ),
-            SizedBox(width: 4.w),
+            SizedBox(width: $(4)),
             Text(
               S.current.chatWindow,
               style: TextStyle(
@@ -225,10 +225,10 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
           children: [
             Image.asset(
               'assets/icon/homev2.png',
-              width: 16.w,
+              width: $(16),
               color: Theme.of(_).textTheme.bodyMedium!.color,
             ),
-            SizedBox(width: 4.w),
+            SizedBox(width: $(4)),
             Text(
               S.current.home,
               style: TextStyle(
@@ -257,21 +257,23 @@ class DrawerItem extends StatelessWidget {
   bool get enable => groupValue == value;
   @override
   Widget build(BuildContext context) {
+    final $ = context.$;
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     return InkWell(
       onTap: () {
         onChange?.call(value);
       },
-      borderRadius: BorderRadius.circular(8.w),
+      borderRadius: BorderRadius.circular($(8)),
       child: Container(
-        width: 200.w,
+        width: $(200),
         padding: EdgeInsets.symmetric(
-          horizontal: 12.w,
-          vertical: 12.w,
+          horizontal: $(12),
+          vertical: $(12),
         ),
         decoration: BoxDecoration(
-          color: enable ? Theme.of(context).primaryColor.withOpacity(0.11) : null,
-          borderRadius: BorderRadius.circular(8.w),
+          // TODO(lin): Check 0.11 opacity
+          color: enable ? Theme.of(context).primaryColor.withOpacityExact(0.11) : null,
+          borderRadius: BorderRadius.circular($(8)),
         ),
         child: Theme(
           data: Theme.of(context).copyWith(

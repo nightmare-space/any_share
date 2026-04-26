@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:global_repository/global_repository.dart';
 import 'theme.dart';
 
-ThemeData dark() {
+ThemeData dark(BuildContext context) {
+  final $ = context.$;
   final lightThemeData = ThemeData.dark(useMaterial3: true);
   ColorScheme colorScheme = ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.dark);
   return lightThemeData.copyWith(
@@ -18,14 +19,14 @@ ThemeData dark() {
     inputDecorationTheme: InputDecorationTheme(
       fillColor: colorScheme.surfaceContainer,
       isDense: true,
-      contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.w),
+      contentPadding: EdgeInsets.symmetric(horizontal: $(12), vertical: $(12)),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.w),
+        borderRadius: BorderRadius.circular($(8)),
         gapPadding: 0,
         borderSide: const BorderSide(width: 0, color: Colors.transparent),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.w),
+        borderRadius: BorderRadius.circular($(8)),
         gapPadding: 0,
         borderSide: const BorderSide(width: 0, color: Colors.transparent),
       ),
@@ -43,14 +44,14 @@ ThemeData dark() {
       backgroundColor: Colors.transparent,
       elevation: 0,
       actionsIconTheme: lightThemeData.iconTheme.copyWith(color: colorScheme.primary),
-      titleTextStyle: lightThemeData.textTheme.titleLarge!.copyWith(fontSize: 18.w, fontWeight: FontWeight.bold),
+      titleTextStyle: lightThemeData.textTheme.titleLarge!.copyWith(fontSize: $(18), fontWeight: FontWeight.bold),
     ),
     dividerColor: colorScheme.outline,
-    dividerTheme: DividerThemeData(color: colorScheme.outline, space: 1.w),
+    dividerTheme: DividerThemeData(color: colorScheme.outline, space: $(1)),
     popupMenuTheme: PopupMenuThemeData(color: colorScheme.surface),
     textTheme: lightThemeData.textTheme.copyWith(
       bodyMedium: lightThemeData.textTheme.bodyMedium!.copyWith(
-        fontSize: 14.w,
+        fontSize: $(14),
         fontWeight: FontWeight.w500,
         color: colorScheme.onSurface,
         fontFamily: 'MiSans',

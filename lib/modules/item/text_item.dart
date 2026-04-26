@@ -12,6 +12,7 @@ class TextMessageItem extends StatelessWidget {
   const TextMessageItem({Key? key, this.info, this.sendByUser}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final $ = context.$;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: sendByUser! ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -20,16 +21,16 @@ class TextMessageItem extends StatelessWidget {
           crossAxisAlignment: sendByUser! ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             Container(
-              padding: EdgeInsets.all(10.w),
+              padding: EdgeInsets.all($(10)),
               decoration: BoxDecoration(
                 color: context.colorScheme.surface,
-                borderRadius: BorderRadius.circular(10.w),
+                borderRadius: BorderRadius.circular($(10)),
               ),
               child: Stack(
                 alignment: Alignment.bottomRight,
                 children: [
                   ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 260.w),
+                    constraints: BoxConstraints(maxWidth: $(260)),
                     child: Column(
                       children: [
                         Theme(
@@ -42,7 +43,7 @@ class TextMessageItem extends StatelessWidget {
                             info!.content!,
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface,
-                              fontSize: 14.w,
+                              fontSize: $(14),
                               letterSpacing: 1,
                             ),
                           ),
@@ -70,7 +71,7 @@ class TextMessageItem extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: Icon(
                   Icons.content_copy,
-                  size: 18.w,
+                  size: $(18),
                 ),
               ),
             ),

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as io;
+import 'package:speed_share/global/network/dio_manager.dart';
 import 'server_util.dart';
 
 // Router fileRouter = Router();
@@ -45,7 +46,7 @@ Future<String?> getToken(String url) async {
     }
   });
   try {
-    response = await httpInstance!.get(
+    response = await DioInstance.get(
       '$url/check_token',
       cancelToken: cancelToken,
     );

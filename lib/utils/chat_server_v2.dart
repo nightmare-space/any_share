@@ -10,6 +10,7 @@ import 'package:shelf_static/shelf_static.dart';
 import 'package:speed_share/app/controller/controller.dart';
 import 'package:speed_share/config/config.dart';
 import 'package:file_manager/file_manager.dart' as file_manager;
+import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/utils/utils.dart';
 
 var app = Router();
@@ -37,12 +38,15 @@ class Server {
     });
     app.get('/check_token', (Request request) {
       // Log.d('check_token call');
-      return Response.ok('success', headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': '*',
-        'Access-Control-Allow-Methods': '*',
-        'Access-Control-Allow-Credentials': 'true',
-      });
+      return Response.ok(
+        'success',
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*',
+          'Access-Control-Allow-Methods': '*',
+          'Access-Control-Allow-Credentials': 'true',
+        },
+      );
     });
     app.post('/file_upload', (Request request) async {
       // return Response.ok(

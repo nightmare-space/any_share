@@ -7,7 +7,6 @@ import 'package:speed_share/app/controller/chat_controller.dart';
 import 'package:speed_share/app/controller/setting_controller.dart';
 import 'package:speed_share_extension/speed_share_extension.dart';
 import 'package:window_manager/window_manager.dart';
-import 'android_window.dart';
 import 'app/controller/device_controller.dart';
 import 'config/config.dart';
 import 'global/global.dart';
@@ -26,39 +25,6 @@ Future<void> initSetting() async {
     path = RuntimeEnvir.configPath;
   }
   await initSettingStore(path);
-}
-
-@pragma('vm:entry-point')
-Future<void> androidWindow() async {
-  Log.defaultLogger.level = LogLevel.error;
-  Log.d("androidWindow");
-  Log.v("androidWindow");
-  Log.w("androidWindow");
-  Log.e("androidWindow");
-  Log.i("androidWindow");
-  if (!GetPlatform.isWeb && !GetPlatform.isIOS) {
-    WidgetsFlutterBinding.ensureInitialized();
-    // 拿到应用程序路径
-    // get app directory
-    final dir = (await getApplicationSupportDirectory()).path;
-    RuntimeEnvir.initEnvirWithPackageName(
-      Config.packageName,
-      appSupportDirectory: dir,
-    );
-    // 启动文件服务器
-    // start file manager server
-    file_manager.Server.start();
-  }
-  if (!GetPlatform.isWeb) {
-    await initSetting();
-  }
-  Get.put(SettingController());
-  Get.put(DeviceController());
-  Get.put(ChatController());
-
-  pop = true;
-  runApp(const AndroidWindowApp());
-  StatusBarUtil.transparent();
 }
 
 bool pop = false;
@@ -112,7 +78,7 @@ Future<void> main() async {
 
       FlutterError.onError = (FlutterErrorDetails details) {
         FlutterError.presentError(details);
-        Log.e('页面构建异常 : ${details.exception}');
+        Log.e('Page build exception : ${details.exception}');
       };
       if (GetPlatform.isDesktop) {
         if (!GetPlatform.isWeb) {
@@ -122,7 +88,7 @@ Future<void> main() async {
       Global().initGlobal();
     },
     (error, stackTrace) {
-      Log.e('未捕捉到的异常 : $error \n$stackTrace');
+      Log.e('Uncaught exception : $error \n$stackTrace');
     },
   );
 }

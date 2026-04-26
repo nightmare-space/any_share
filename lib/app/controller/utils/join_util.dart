@@ -3,6 +3,7 @@ import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart';
 import 'package:speed_share/app/controller/controller.dart';
 import 'package:speed_share/global/global.dart';
+import 'package:speed_share/global/network/dio_manager.dart';
 import 'package:speed_share/model/model.dart';
 
 class JoinUtil {
@@ -21,7 +22,7 @@ class JoinUtil {
     message.messagePort = chatBindPort;
     // Log.i(message);
     try {
-      Response res = await httpInstance!.post(
+      Response res = await DioInstance.post(
         '$url/',
         data: message.toJson(),
       );

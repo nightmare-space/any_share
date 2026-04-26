@@ -98,7 +98,7 @@ class _FileItemState extends State<FileItem> {
       children: [
         Material(
           color: colorScheme.surface,
-          borderRadius: BorderRadius.circular(10.w),
+          borderRadius: BorderRadius.circular($(10)),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onLongPress: () {
@@ -156,7 +156,7 @@ class _FileItemState extends State<FileItem> {
                     padding: const EdgeInsets.all(8),
                     child: Icon(
                       Icons.file_download,
-                      size: 18.w,
+                      size: $(18),
                     ),
                   ),
                 ),
@@ -170,7 +170,7 @@ class _FileItemState extends State<FileItem> {
                     padding: const EdgeInsets.all(8),
                     child: Icon(
                       Icons.content_copy,
-                      size: 18.w,
+                      size: $(18),
                     ),
                   ),
                 ),
@@ -183,9 +183,9 @@ class _FileItemState extends State<FileItem> {
 
   Padding body(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10.w),
+      padding: EdgeInsets.all($(10)),
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 200.w),
+        constraints: BoxConstraints(maxWidth: $(200)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -208,7 +208,7 @@ class _FileItemState extends State<FileItem> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     SizedBox(
-                      height: 8.w,
+                      height: $(8),
                     ),
                     ClipRRect(
                       borderRadius: const BorderRadius.all(
@@ -226,7 +226,7 @@ class _FileItemState extends State<FileItem> {
                       }),
                     ),
                     SizedBox(
-                      height: 4.w,
+                      height: $(4),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -236,7 +236,7 @@ class _FileItemState extends State<FileItem> {
                           if (pro == 1.0) {
                             return Icon(
                               Icons.check,
-                              size: 16.w,
+                              size: $(16),
                               color: Colors.green,
                             );
                           }
@@ -244,7 +244,7 @@ class _FileItemState extends State<FileItem> {
                             '${info.speed}/s',
                             style: TextStyle(
                               color: Colors.black54,
-                              fontSize: 12.w,
+                              fontSize: $(12),
                             ),
                           );
                         }),
@@ -255,7 +255,7 @@ class _FileItemState extends State<FileItem> {
                                 FileUtil.formatBytes(info.count),
                                 style: TextStyle(
                                   color: Colors.black54,
-                                  fontSize: 12.w,
+                                  fontSize: $(12),
                                 ),
                               ),
                             ),
@@ -263,7 +263,7 @@ class _FileItemState extends State<FileItem> {
                               '/',
                               style: TextStyle(
                                 color: Colors.black54,
-                                fontSize: 12.w,
+                                fontSize: $(12),
                               ),
                             ),
                             SizedBox(
@@ -271,7 +271,7 @@ class _FileItemState extends State<FileItem> {
                                 widget.info!.fileSize!,
                                 style: TextStyle(
                                   color: Colors.black54,
-                                  fontSize: 12.w,
+                                  fontSize: $(12),
                                 ),
                               ),
                             ),
@@ -293,14 +293,14 @@ class _FileItemState extends State<FileItem> {
     return InkWell(
       child: Row(
         children: [
-          getIconByExt(url),
-          SizedBox(width: 8.w),
+          getIconByExt(url, context),
+          SizedBox(width: $(8)),
           Expanded(
             child: Text(
               widget.info!.fileName!,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurface,
-                fontSize: 12.w,
+                fontSize: $(12),
               ),
             ),
           ),
@@ -366,15 +366,15 @@ class _MenuState extends State<Menu> {
       children: [
         Positioned.fill(
           top: widget.offset!.dy,
-          left: min(widget.offset!.dx, MediaQuery.of(context).size.width - 120.w),
+          left: min(widget.offset!.dx, MediaQuery.of(context).size.width - $(120)),
           child: Align(
             alignment: Alignment.topCenter,
             child: Material(
               color: Theme.of(context).colorScheme.surface,
               clipBehavior: Clip.antiAlias,
-              borderRadius: BorderRadius.circular(10.w),
+              borderRadius: BorderRadius.circular($(10)),
               child: SizedBox(
-                width: 120.w,
+                width: $(120),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -387,7 +387,7 @@ class _MenuState extends State<Menu> {
                         ));
                       },
                       child: SizedBox(
-                        height: 40.w,
+                        height: $(40),
                         child: Center(
                           child: Text(S.current.fileQRCode),
                         ),

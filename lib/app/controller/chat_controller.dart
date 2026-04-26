@@ -14,6 +14,7 @@ import 'package:speed_share/app/controller/controller.dart';
 import 'package:speed_share/config/config.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/global/global.dart';
+import 'package:speed_share/global/network/dio_manager.dart';
 import 'package:speed_share/model/model.dart';
 import 'package:speed_share/modules/item/item.dart';
 import 'package:speed_share/utils/utils.dart' hide FileUtil;
@@ -56,6 +57,10 @@ class ChatController extends GetxController with WidgetsBindingObserver {
       return KeyEventResult.ignored;
     };
   }
+  // 用来屏幕适配
+  // for screen adaptation
+  // TODO: 不优雅
+  late BuildContext context;
   // 一个标记位，是否输入多行
   bool inputMultiline = false;
   // 输入框用到的焦点
@@ -140,13 +145,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     }
     Uri uri = Uri.parse(urlPrefix);
     int port = uri.port;
-    deviceController.onDeviceConnect(
-      shortHash(''),
-      S.current.device,
-      phone,
-      'http://${uri.host}',
-      port,
-    );
+    deviceController.onDeviceConnect(shortHash(''), S.current.device, phone, 'http://${uri.host}', port);
     // Log.i('$urlPrefix/${info.messagePort}');
 
     sendJoinEvent('http://${uri.host}:$port');
@@ -170,10 +169,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
 
   Future<void> getSuccessBindPort() async {
     if (!GetPlatform.isWeb) {
-      shelfBindPort ??= await getSafePort(
-        Config.shelfPortRangeStart,
-        Config.shelfPortRangeEnd,
-      );
+      shelfBindPort ??= await getSafePort(Config.shelfPortRangeStart, Config.shelfPortRangeEnd);
       handleTokenCheck(shelfBindPort!);
     }
   }
@@ -181,20 +177,11 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   Future<void> sendDirFromPath(String dirPath) async {
     Directory dir = Directory(dirPath);
     String dirName = p.basename(dirPath);
-    DirMessage dirMessage = DirMessage(
-      dirName: dirName,
-      fullSize: 0,
-      deviceName: Global().deviceName,
-      addrs: addrs,
-      port: shelfBindPort,
-    );
+    DirMessage dirMessage = DirMessage(dirName: dirName, fullSize: 0, deviceName: Global().deviceName, addrs: addrs, port: shelfBindPort);
     // 发送消息
     sendMessage(dirMessage);
     // 将消息添加到本地列表
-    children.add(MessageItemFactory.getMessageItem(
-      dirMessage,
-      true,
-    ));
+    children.add(MessageItemFactory.getMessageItem(dirMessage, true, context));
     scrollController.scrollToEnd();
     update();
     // TODO 这个功能难用
@@ -209,11 +196,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
         size = await entity.length();
         ServerUtil.serveFile(entity.path, shelfBindPort!);
       }
-      DirPartMessage dirPartMessage = DirPartMessage(
-        path: event.path + suffix,
-        size: size,
-        partOf: dirName,
-      );
+      DirPartMessage dirPartMessage = DirPartMessage(path: event.path + suffix, size: size, partOf: dirName);
       sendMessage(dirPartMessage);
       // Log.i(dirPartMessage);
     });
@@ -238,11 +221,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   // 通知web浏览器开始上传文件
   Future<void> notifyBroswerUploadFile(String? hash) async {
     List<String> addresses = await PlatformUtil.localAddress();
-    final NotifyMessage notifyMessage = NotifyMessage(
-      hash: hash,
-      addrs: addresses,
-      port: messageBindPort,
-    );
+    final NotifyMessage notifyMessage = NotifyMessage(hash: hash, addrs: addresses, port: messageBindPort);
     messageWebCache.add(notifyMessage.toJson());
   }
 
@@ -270,10 +249,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
         // socket.send(sendFileInfo.toString());
         sendMessage(sendFileInfo);
         // 将消息添加到本地列表
-        children.add(MessageItemFactory.getMessageItem(
-          sendFileInfo,
-          true,
-        ));
+        children.add(MessageItemFactory.getMessageItem(sendFileInfo, true, context));
         scrollController.scrollToEnd();
         update();
       }
@@ -309,14 +285,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
         onSendProgress: (count, total) {
           Log.v('count:$count total:$total pro:${count / total}');
         },
-        options: Options(
-          headers: {
-            Headers.contentLengthHeader: await xFile.length(),
-            HttpHeaders.contentTypeHeader: ContentType.binary.toString(),
-            'filename': base64Name,
-            'blob': xFile.path,
-          },
-        ),
+        options: Options(headers: {Headers.contentLengthHeader: await xFile.length(), HttpHeaders.contentTypeHeader: ContentType.binary.toString(), 'filename': base64Name, 'blob': xFile.path}),
       );
       Log.w(response2);
     } catch (e) {
@@ -325,10 +294,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   }
 
   /// useSystemPicker: 是否使用系统文件选择器
-  Future<void> sendFileForAndroid({
-    bool useSystemPicker = false,
-    BuildContext? context,
-  }) async {
+  Future<void> sendFileForAndroid({bool useSystemPicker = false, BuildContext? context}) async {
     // 选择文件路径
     List<String?> filePaths = await getFilesPathsForAndroid(useSystemPicker);
     Log.i('filePaths -> $filePaths');
@@ -355,15 +321,15 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     int size = await File(filePath).length();
     // 替换windows盘符
     filePath = filePath.replaceAll(RegExp('^[A-Z]:'), '');
-    p.Context context;
+    p.Context pathContext;
     if (GetPlatform.isWindows) {
-      context = p.windows;
+      pathContext = p.windows;
     } else {
-      context = p.posix;
+      pathContext = p.posix;
     }
     final FileMessage sendFileInfo = FileMessage(
       filePath: filePath,
-      fileName: context.basename(filePath),
+      fileName: pathContext.basename(filePath),
       fileSize: FileUtil.formatBytes(size),
       addrs: addrs,
       port: shelfBindPort,
@@ -372,10 +338,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     // 发送消息
     sendMessage(sendFileInfo);
     // 将消息添加到本地列表
-    children.add(MessageItemFactory.getMessageItem(
-      sendFileInfo,
-      true,
-    ));
+    children.add(MessageItemFactory.getMessageItem(sendFileInfo, true, context));
     scrollController.scrollToEnd();
     update();
   }
@@ -417,10 +380,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
           Log.i('JoinMessage -> $joinMessage');
           Log.i('Global().uniqueKey -> ${Global().uniqueKey}');
           // 这个不带端口，主要是为了筛选IP
-          String? urlPrefix = await getCorrectUrlWithAddressAndPort(
-            joinMessage.addrs!,
-            joinMessage.filePort,
-          );
+          String? urlPrefix = await getCorrectUrlWithAddressAndPort(joinMessage.addrs!, joinMessage.filePort);
           Log.i('计算结果:$urlPrefix');
           if (urlPrefix == null) {
             return;
@@ -433,22 +393,13 @@ class ChatController extends GetxController with WidgetsBindingObserver {
             deviceController.connectDevice.firstWhere((element) => element.id == info.deviceId);
           } catch (e) {
             // catch住说明没有找到
-            deviceController.onDeviceConnect(
-              info.deviceId,
-              info.deviceName,
-              info.deviceType,
-              urlPrefix,
-              joinMessage.messagePort,
-            );
+            deviceController.onDeviceConnect(info.deviceId, info.deviceName, info.deviceType, urlPrefix, joinMessage.messagePort);
             Log.i('$urlPrefix/${joinMessage.messagePort}');
             // 同步之前发送过的消息
             for (Map<String, dynamic> data in messageCache) {
               try {
                 // ignore: unused_local_variable
-                Response res = await httpInstance.post(
-                  '$urlPrefix:${joinMessage.messagePort}',
-                  data: data,
-                );
+                Response res = await DioInstance.post('$urlPrefix:${joinMessage.messagePort}', data: data);
               } catch (e) {
                 Log.e('cache send error : $e');
               }
@@ -460,18 +411,15 @@ class ChatController extends GetxController with WidgetsBindingObserver {
       case FileMessage:
         FileMessage fileMessage = info as FileMessage;
         // 文件消息，需要先计算出正确的下载地址
-        String? url = await getCorrectUrlWithAddressAndPort(
-          fileMessage.addrs!,
-          fileMessage.port,
-        );
+        String? url = await getCorrectUrlWithAddressAndPort(fileMessage.addrs!, fileMessage.port);
         fileMessage.url = '$url:${fileMessage.port}';
         // 这里有种情况，A,B,C三台机器，A创建房间，B加入发送一个文件后退出了速享
         // C加入A的房间，自然是不能再拿到这个文件的信息了
         fileMessage.url ??= '';
-        onNewFileReceive?.call(FileDynamicIsland(
-          info: info,
-          sendByUser: false,
-        ));
+        // TODO: 低优先级，先下掉灵动岛提示，后续单独适配android和ios
+        onNewFileReceive?.call(
+          FileDynamicIsland(info: info, sendByUser: false),
+        );
         if (settingController.enbaleConstIsland) {
           // ConstIsland.onFileReceive(fileMessage.toJson());
         }
@@ -490,19 +438,13 @@ class ChatController extends GetxController with WidgetsBindingObserver {
         if (dirPartMessage.stat == 'complete') {
           Log.i('完成发送');
           dirMsgMap[dirPartMessage.partOf]!.canDownload = true;
-          children[dirItemMap[dirPartMessage.partOf]!] = MessageItemFactory.getMessageItem(
-            dirMsgMap[dirPartMessage.partOf],
-            false,
-          );
+          children[dirItemMap[dirPartMessage.partOf]!] = MessageItemFactory.getMessageItem(dirMsgMap[dirPartMessage.partOf], false, context);
           update();
         } else {
           // 下面这行是不断重置文件夹的大小
           dirMsgMap[dirPartMessage.partOf]!.fullSize = dirMsgMap[dirPartMessage.partOf]!.fullSize! + (dirPartMessage.size ?? 0);
           dirMsgMap[dirPartMessage.partOf]!.paths!.add(dirPartMessage.path);
-          children[dirItemMap[dirPartMessage.partOf]!] = MessageItemFactory.getMessageItem(
-            dirMsgMap[dirPartMessage.partOf],
-            false,
-          );
+          children[dirItemMap[dirPartMessage.partOf]!] = MessageItemFactory.getMessageItem(dirMsgMap[dirPartMessage.partOf], false, context);
           update();
         }
         return;
@@ -511,10 +453,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
         if (GetPlatform.isWeb) {
           if (webFileSendCache.containsKey(notifyMessage.hash)) {
             Log.e(info);
-            String? url = await getCorrectUrlWithAddressAndPort(
-              notifyMessage.addrs!,
-              notifyMessage.port,
-            );
+            String? url = await getCorrectUrlWithAddressAndPort(notifyMessage.addrs!, notifyMessage.port);
             Log.d('uploadFileForWeb url -> $url:${notifyMessage.port}');
             if (url != null) {
               uploadFileForWeb(webFileSendCache[notifyMessage.hash]!, '$url:${notifyMessage.port}');
@@ -527,10 +466,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
       default:
     }
     // 往聊天列表中添加一条消息
-    Widget? item = MessageItemFactory.getMessageItem(
-      info,
-      false,
-    );
+    Widget? item = MessageItemFactory.getMessageItem(info, false, context);
     Log.w(info);
     if (item != null) {
       children.add(item);
@@ -558,15 +494,9 @@ class ChatController extends GetxController with WidgetsBindingObserver {
 
   /// 发送文本消息
   void sendTextMsg() {
-    TextMessage info = TextMessage(
-      content: controller.text,
-      sendFrom: Global().deviceName,
-    );
+    TextMessage info = TextMessage(content: controller.text, sendFrom: Global().deviceName);
     sendMessage(info);
-    children.add(MessageItemFactory.getMessageItem(
-      info,
-      true,
-    ));
+    children.add(MessageItemFactory.getMessageItem(info, true, context));
     update();
     controller.clear();
     scrollController.scrollToEnd();

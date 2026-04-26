@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as path;
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:speed_share/app/controller/file_controller.dart';
@@ -12,6 +13,7 @@ import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/themes/theme.dart';
 import '../widget/header.dart';
 import '../widget/icon.dart';
+import 'package:android_api_server_client/android_api_server_client.dart';
 
 class NiIconButton extends StatelessWidget {
   const NiIconButton({Key? key, this.child, this.onTap}) : super(key: key);
@@ -19,14 +21,15 @@ class NiIconButton extends StatelessWidget {
   final GestureTapCallback? onTap;
   @override
   Widget build(BuildContext context) {
+    final $ = context.$;
     return SizedBox(
-      width: 48.w,
-      height: 48.w,
+      width: $(48),
+      height: $(48),
       child: InkWell(
-        borderRadius: BorderRadius.circular(24.w),
+        borderRadius: BorderRadius.circular($(24)),
         onTap: onTap,
         child: Padding(
-          padding: EdgeInsets.all(12.w),
+          padding: EdgeInsets.all($(12)),
           child: child,
         ),
       ),
@@ -47,7 +50,7 @@ class _FilePageState extends State<FilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10.w),
+        padding: EdgeInsets.symmetric(horizontal: $(10)),
         child: Column(
           children: [
             Stack(
@@ -57,7 +60,7 @@ class _FilePageState extends State<FilePage> {
                   showAddress: false,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 140.w),
+                  padding: EdgeInsets.only(right: $(140)),
                   child: NiIconButton(
                     onTap: () {
                       pageIndex == 0 ? pageIndex = 1 : pageIndex = 0;
@@ -68,7 +71,7 @@ class _FilePageState extends State<FilePage> {
                 ),
               ],
             ),
-            SizedBox(height: 0.w),
+            SizedBox(height: $(0)),
             Expanded(
               child: PageTransitionSwitcher(
                 transitionBuilder: (
@@ -93,12 +96,12 @@ class _FilePageState extends State<FilePage> {
                   );
                 },
                 child: [
-                  // TODO
-                  // file_manager.FileManagFileer(
+                  // TODO(lin):
+                  // fm.FileManager(
                   //   drawer: false,
                   //   path: '/sdcard/SpeedShare',
                   //   address: 'http://127.0.0.1:${fm.Config.port}',
-                  //   padding: EdgeInsets.only(bottom: 8.w),
+                  //   padding: EdgeInsets.only(bottom: $(8)),
                   //   usePackage: true,
                   // ),
                   fileList(context),
@@ -112,7 +115,7 @@ class _FilePageState extends State<FilePage> {
   }
 
   double getWidth(double max) {
-    return (max - 36.w) / 4;
+    return (max - $(36)) / 4;
   }
 
   Material fileList(BuildContext context) {
@@ -121,50 +124,52 @@ class _FilePageState extends State<FilePage> {
         color: Theme.of(context).colorScheme.surface,
         child: Column(
           children: [
-            LayoutBuilder(builder: (context, con) {
-              double width = getWidth(con.maxWidth);
-              return Wrap(
-                runSpacing: 12.w,
-                spacing: 12.w,
-                alignment: WrapAlignment.start,
-                runAlignment: WrapAlignment.start,
-                crossAxisAlignment: WrapCrossAlignment.start,
-                children: [
-                  SizedBox(
-                    width: width,
-                    child: dir(context),
-                  ),
-                  SizedBox(
-                    width: width,
-                    child: onknownFile(context),
-                  ),
-                  SizedBox(
-                    width: width,
-                    child: zipFile(context),
-                  ),
-                  SizedBox(
-                    width: width,
-                    child: docFile(context),
-                  ),
-                  SizedBox(
-                    width: width,
-                    child: audio(context),
-                  ),
-                  SizedBox(
-                    width: width,
-                    child: video(context),
-                  ),
-                  SizedBox(
-                    width: width,
-                    child: imgFile(context),
-                  ),
-                  SizedBox(
-                    width: width,
-                    child: apkFile(context),
-                  ),
-                ],
-              );
-            }),
+            LayoutBuilder(
+              builder: (context, con) {
+                double width = getWidth(con.maxWidth);
+                return Wrap(
+                  runSpacing: $(12),
+                  spacing: $(12),
+                  alignment: WrapAlignment.start,
+                  runAlignment: WrapAlignment.start,
+                  crossAxisAlignment: WrapCrossAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: width,
+                      child: dir(context),
+                    ),
+                    SizedBox(
+                      width: width,
+                      child: onknownFile(context),
+                    ),
+                    SizedBox(
+                      width: width,
+                      child: zipFile(context),
+                    ),
+                    SizedBox(
+                      width: width,
+                      child: docFile(context),
+                    ),
+                    SizedBox(
+                      width: width,
+                      child: audio(context),
+                    ),
+                    SizedBox(
+                      width: width,
+                      child: video(context),
+                    ),
+                    SizedBox(
+                      width: width,
+                      child: imgFile(context),
+                    ),
+                    SizedBox(
+                      width: width,
+                      child: apkFile(context),
+                    ),
+                  ],
+                );
+              },
+            ),
           ],
         ),
       );
@@ -176,31 +181,31 @@ class _FilePageState extends State<FilePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 12.w),
+            SizedBox(height: $(12)),
             dir(context),
-            SizedBox(height: 12.w),
+            SizedBox(height: $(12)),
             onknownFile(context),
-            SizedBox(height: 12.w),
+            SizedBox(height: $(12)),
             Row(
               children: [
                 Expanded(child: zipFile(context)),
-                SizedBox(width: 12.w),
+                SizedBox(width: $(12)),
                 Expanded(child: docFile(context)),
               ],
             ),
-            SizedBox(height: 10.w),
+            SizedBox(height: $(10)),
             Row(
               children: [
                 Expanded(child: audio(context)),
-                SizedBox(width: 10.w),
+                SizedBox(width: $(10)),
                 Expanded(child: video(context)),
               ],
             ),
-            SizedBox(height: 10.w),
+            SizedBox(height: $(10)),
             Row(
               children: [
                 Expanded(child: imgFile(context)),
-                SizedBox(width: 10.w),
+                SizedBox(width: $(10)),
                 Expanded(child: apkFile(context)),
               ],
             ),
@@ -217,14 +222,15 @@ class _FilePageState extends State<FilePage> {
         children: [
           title(S.of(context).video),
           SizedBox(
-            height: 4.w,
+            height: $(4),
           ),
           Container(
-            color: const Color(0xffE0C4C4).withOpacity(0.2),
+            // TODO(Lin): Do not use hard code color
+            color: const Color(0xffE0C4C4).withOpacityExact(0.2),
             height: 1,
           ),
           SizedBox(
-            height: 4.w,
+            height: $(4),
           ),
           Expanded(
             child: GetBuilder<FileController>(
@@ -233,19 +239,19 @@ class _FilePageState extends State<FilePage> {
                 for (FileSystemEntity name in ctl.videoFiles) {
                   children.add(
                     SizedBox(
-                      width: 60.w,
+                      width: $(60),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          getIconByExt(name.path),
-                          SizedBox(height: 8.w),
+                          getIconByExt(name.path, context),
+                          SizedBox(height: $(8)),
                           SizedBox(
-                            height: 20.w,
+                            height: $(20),
                             child: Text(
                               path.basename(name.path),
                               maxLines: 2,
                               style: TextStyle(
-                                fontSize: 8.w,
+                                fontSize: $(8),
                                 height: 1.0,
                               ),
                             ),
@@ -256,7 +262,7 @@ class _FilePageState extends State<FilePage> {
                   );
                   children.add(
                     SizedBox(
-                      width: 8.w,
+                      width: $(8),
                     ),
                   );
                 }
@@ -265,7 +271,7 @@ class _FilePageState extends State<FilePage> {
                     child: Text(
                       S.current.empty,
                       style: TextStyle(
-                        fontSize: 16.w,
+                        fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
@@ -292,12 +298,12 @@ class _FilePageState extends State<FilePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           title(S.of(context).music),
-          SizedBox(height: 4.w),
+          SizedBox(height: $(4)),
           Container(
-            color: const Color(0xffE0C4C4).withOpacity(0.2),
+            color: const Color(0xffE0C4C4).withOpacityExact(0.2),
             height: 1,
           ),
-          SizedBox(height: 10.w),
+          SizedBox(height: $(10)),
           GetBuilder<FileController>(
             builder: (ctl) {
               List<Widget> children = [];
@@ -305,14 +311,14 @@ class _FilePageState extends State<FilePage> {
                 children.add(
                   Column(
                     children: [
-                      getIconByExt(file.path),
+                      getIconByExt(file.path, context),
                       SizedBox(
-                        height: 4.w,
+                        height: $(4),
                       ),
                       Text(
                         path.basename(file.path),
                         style: TextStyle(
-                          fontSize: 10.w,
+                          fontSize: $(10),
                         ),
                       ),
                     ],
@@ -320,7 +326,7 @@ class _FilePageState extends State<FilePage> {
                 );
                 children.add(
                   SizedBox(
-                    width: 20.w,
+                    width: $(20),
                   ),
                 );
               }
@@ -329,7 +335,7 @@ class _FilePageState extends State<FilePage> {
                   child: Text(
                     S.current.empty,
                     style: TextStyle(
-                      fontSize: 16.w,
+                      fontSize: $(16),
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
@@ -355,14 +361,15 @@ class _FilePageState extends State<FilePage> {
         children: [
           title(S.of(context).directory),
           SizedBox(
-            height: 4.w,
+            height: $(4),
           ),
           Container(
-            color: const Color(0xffE0C4C4).withOpacity(0.2),
+            // TODO: Do not use hard code color
+            color: const Color(0xffE0C4C4).withOpacityExact(0.2),
             height: 1,
           ),
           SizedBox(
-            height: 10.w,
+            height: $(10),
           ),
           Expanded(
             child: GetBuilder<FileController>(
@@ -371,25 +378,25 @@ class _FilePageState extends State<FilePage> {
                 for (FileSystemEntity name in ctl.dirFiles) {
                   children.add(
                     SizedBox(
-                      width: 60.w,
+                      width: $(60),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SvgPicture.asset(
                             '${file_manager.Config.packagePrefix}assets/icon/dir.svg',
-                            width: 32.w,
-                            height: 32.w,
+                            width: $(32),
+                            height: $(32),
                             color: Theme.of(context).primaryColor,
                           ),
                           SizedBox(
-                            height: 8.w,
+                            height: $(8),
                           ),
                           SizedBox(
-                            height: 20.w,
+                            height: $(20),
                             child: Text(
                               path.basename(name.path),
                               style: TextStyle(
-                                fontSize: 8.w,
+                                fontSize: $(8),
                               ),
                             ),
                           ),
@@ -399,7 +406,7 @@ class _FilePageState extends State<FilePage> {
                   );
                   children.add(
                     SizedBox(
-                      width: 4.w,
+                      width: $(4),
                     ),
                   );
                 }
@@ -408,7 +415,7 @@ class _FilePageState extends State<FilePage> {
                     child: Text(
                       S.current.empty,
                       style: TextStyle(
-                        fontSize: 16.w,
+                        fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
@@ -436,12 +443,12 @@ class _FilePageState extends State<FilePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           title(S.of(context).image),
-          SizedBox(height: 4.w),
+          SizedBox(height: $(4)),
           Container(
-            color: const Color(0xffE0C4C4).withOpacity(0.2),
+            color: const Color(0xffE0C4C4).withOpacityExact(0.2),
             height: 1,
           ),
-          SizedBox(height: 4.w),
+          SizedBox(height: $(4)),
           Expanded(
             child: GetBuilder<FileController>(
               builder: (ctl) {
@@ -449,19 +456,19 @@ class _FilePageState extends State<FilePage> {
                 for (FileSystemEntity name in ctl.imgFiles) {
                   children.add(
                     SizedBox(
-                      width: 60.w,
+                      width: $(60),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          getIconByExt(name.path),
-                          SizedBox(height: 8.w),
+                          getIconByExt(name.path, context),
+                          SizedBox(height: $(8)),
                           SizedBox(
-                            height: 20.w,
+                            height: $(20),
                             child: Text(
                               path.basename(name.path),
                               maxLines: 2,
                               style: TextStyle(
-                                fontSize: 8.w,
+                                fontSize: $(8),
                                 height: 1.0,
                               ),
                             ),
@@ -472,7 +479,7 @@ class _FilePageState extends State<FilePage> {
                   );
                   children.add(
                     SizedBox(
-                      width: 20.w,
+                      width: $(20),
                     ),
                   );
                 }
@@ -481,7 +488,7 @@ class _FilePageState extends State<FilePage> {
                     child: Text(
                       S.current.empty,
                       style: TextStyle(
-                        fontSize: 16.w,
+                        fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
@@ -508,14 +515,14 @@ class _FilePageState extends State<FilePage> {
         children: [
           title(S.of(context).apk),
           SizedBox(
-            height: 4.w,
+            height: $(4),
           ),
           Container(
-            color: const Color(0xffE0C4C4).withOpacity(0.2),
+            color: const Color(0xffE0C4C4).withOpacityExact(0.2),
             height: 1,
           ),
           SizedBox(
-            height: 4.w,
+            height: $(4),
           ),
           Expanded(
             child: GetBuilder<FileController>(
@@ -527,34 +534,35 @@ class _FilePageState extends State<FilePage> {
                 for (FileSystemEntity name in ctl.apkFiles) {
                   children.add(
                     SizedBox(
-                      width: 40.w,
+                      width: $(40),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // TODO
-                          // GestureDetector(
-                          //   onTap: () {
-                          //     OpenFile.open(name.path);
-                          //   },
-                          //   child: Image.network(
-                          //     'http://127.0.0.1:${(Global().appChannel as RemoteAppChannel).getPort()}/icon?path=${name.path}',
-                          //     gaplessPlayback: true,
-                          //     width: 40.w,
-                          //     height: 40.w,
-                          //     fit: BoxFit.cover,
-                          //     errorBuilder: (_, __, ___) {
-                          //       return const SizedBox();
-                          //     },
-                          //   ),
-                          // ),
-                          SizedBox(height: 8.w),
+                          GestureDetector(
+                            onTap: () {
+                              OpenFile.open(name.path);
+                            },
+                            child: Image.network(
+                              DefaultAas.apkIconUrl(path: name.path),
+                              gaplessPlayback: true,
+                              width: $(40),
+                              height: $(40),
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) {
+                                return const SizedBox();
+                              },
+                            ),
+                          ),
                           SizedBox(
-                            height: 20.w,
+                            height: $(8),
+                          ),
+                          SizedBox(
+                            height: $(20),
                             child: Text(
                               path.basename(name.path),
                               maxLines: 2,
                               style: TextStyle(
-                                fontSize: 8.w,
+                                fontSize: $(8),
                                 height: 1.0,
                               ),
                             ),
@@ -565,7 +573,7 @@ class _FilePageState extends State<FilePage> {
                   );
                   children.add(
                     SizedBox(
-                      width: 20.w,
+                      width: $(20),
                     ),
                   );
                 }
@@ -574,7 +582,7 @@ class _FilePageState extends State<FilePage> {
                     child: Text(
                       S.current.empty,
                       style: TextStyle(
-                        fontSize: 16.w,
+                        fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
@@ -601,12 +609,12 @@ class _FilePageState extends State<FilePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           title(S.of(context).doc),
-          SizedBox(height: 4.w),
+          SizedBox(height: $(4)),
           Container(
-            color: const Color(0xffE0C4C4).withOpacity(0.2),
+            color: const Color(0xffE0C4C4).withOpacityExact(0.2),
             height: 1,
           ),
-          SizedBox(height: 4.w),
+          SizedBox(height: $(4)),
           Expanded(
             child: GetBuilder<FileController>(
               builder: (ctl) {
@@ -615,19 +623,19 @@ class _FilePageState extends State<FilePage> {
                   children.add(
                     SizedBox(
                       // color: Colors.red,
-                      width: 64.w,
+                      width: $(64),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          getIconByExt(file.path),
-                          SizedBox(height: 8.w),
+                          getIconByExt(file.path, context),
+                          SizedBox(height: $(8)),
                           SizedBox(
-                            height: 20.w,
+                            height: $(20),
                             child: Text(
                               path.basename(file.path),
                               maxLines: 2,
                               style: TextStyle(
-                                fontSize: 8.w,
+                                fontSize: $(8),
                                 height: 1.0,
                                 textBaseline: TextBaseline.ideographic,
                               ),
@@ -639,7 +647,7 @@ class _FilePageState extends State<FilePage> {
                   );
                   children.add(
                     SizedBox(
-                      width: 4.w,
+                      width: $(4),
                     ),
                   );
                 }
@@ -648,7 +656,7 @@ class _FilePageState extends State<FilePage> {
                     child: Text(
                       S.current.empty,
                       style: TextStyle(
-                        fontSize: 16.w,
+                        fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
@@ -675,12 +683,12 @@ class _FilePageState extends State<FilePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           title(S.of(context).zip),
-          SizedBox(height: 4.w),
+          SizedBox(height: $(4)),
           Container(
-            color: const Color(0xffE0C4C4).withOpacity(0.2),
+            color: const Color(0xffE0C4C4).withOpacityExact(0.2),
             height: 1,
           ),
-          SizedBox(height: 4.w),
+          SizedBox(height: $(4)),
           Expanded(
             child: GetBuilder<FileController>(
               builder: (ctl) {
@@ -689,20 +697,20 @@ class _FilePageState extends State<FilePage> {
                   children.add(
                     SizedBox(
                       // color: Colors.red,
-                      width: 64.w,
+                      width: $(64),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          getIconByExt(file.path),
-                          SizedBox(height: 8.w),
+                          getIconByExt(file.path, context),
+                          SizedBox(height: $(8)),
                           SizedBox(
-                            height: 20.w,
+                            height: $(20),
                             child: Text(
                               path.basename(file.path),
                               maxLines: 2,
                               style: TextStyle(
-                                fontSize: 8.w,
+                                fontSize: $(8),
                                 height: 1.0,
                               ),
                             ),
@@ -713,7 +721,7 @@ class _FilePageState extends State<FilePage> {
                   );
                   children.add(
                     SizedBox(
-                      width: 4.w,
+                      width: $(4),
                     ),
                   );
                 }
@@ -722,7 +730,7 @@ class _FilePageState extends State<FilePage> {
                     child: Text(
                       S.current.empty,
                       style: TextStyle(
-                        fontSize: 16.w,
+                        fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
@@ -750,7 +758,7 @@ class _FilePageState extends State<FilePage> {
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: Theme.of(context).colorScheme.onSurface,
-          fontSize: 16.w,
+          fontSize: $(16),
         ),
       ),
     );
@@ -762,12 +770,12 @@ class _FilePageState extends State<FilePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           title(S.of(context).unknownFile),
-          SizedBox(height: 4.w),
+          SizedBox(height: $(4)),
           Container(
-            color: const Color(0xffE0C4C4).withOpacity(0.2),
+            color: const Color(0xffE0C4C4).withOpacityExact(0.2),
             height: 1,
           ),
-          SizedBox(height: 4.w),
+          SizedBox(height: $(4)),
           Expanded(
             child: GetBuilder<FileController>(
               builder: (ctl) {
@@ -775,19 +783,19 @@ class _FilePageState extends State<FilePage> {
                 for (FileSystemEntity file in ctl.onknown) {
                   children.add(
                     SizedBox(
-                      width: 64.w,
+                      width: $(64),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          getIconByExt(file.path),
-                          SizedBox(height: 8.w),
+                          getIconByExt(file.path, context),
+                          SizedBox(height: $(8)),
                           SizedBox(
-                            height: 20.w,
+                            height: $(20),
                             child: Text(
                               path.basename(file.path),
                               maxLines: 2,
                               style: TextStyle(
-                                fontSize: 8.w,
+                                fontSize: $(8),
                                 height: 1,
                               ),
                             ),
@@ -798,7 +806,7 @@ class _FilePageState extends State<FilePage> {
                   );
                   children.add(
                     SizedBox(
-                      width: 4.w,
+                      width: $(4),
                     ),
                   );
                 }
@@ -807,7 +815,7 @@ class _FilePageState extends State<FilePage> {
                     child: Text(
                       S.current.empty,
                       style: TextStyle(
-                        fontSize: 16.w,
+                        fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
@@ -842,16 +850,17 @@ class CardWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final $ = context.$;
     return Container(
       decoration: BoxDecoration(
         color: context.colorScheme.surfaceContainer,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular($(12)),
       ),
-      height: height ?? 120.w,
+      height: height ?? $(120),
       padding: padding ??
           EdgeInsets.symmetric(
-            vertical: 4.w,
-            horizontal: 12.w,
+            vertical: $(4),
+            horizontal: $(12),
           ),
       child: child,
     );

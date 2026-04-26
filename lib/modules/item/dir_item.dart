@@ -122,7 +122,7 @@ class _DirMessageItemState extends State<DirMessageItem> {
             borderRadius: BorderRadius.circular(10),
           ),
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 200.w),
+            constraints: BoxConstraints(maxWidth: $(200)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -143,7 +143,7 @@ class _DirMessageItemState extends State<DirMessageItem> {
                         style: TextStyle(
                           color: Colors.black,
                           // fontWeight: FontWeight.bold,
-                          fontSize: 16.w,
+                          fontSize: $(16),
                         ),
                       ),
                     ),
@@ -154,7 +154,7 @@ class _DirMessageItemState extends State<DirMessageItem> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       SizedBox(
-                        height: 8.w,
+                        height: $(8),
                       ),
                       ClipRRect(
                         borderRadius: const BorderRadius.all(Radius.circular(25.0)),
@@ -167,7 +167,7 @@ class _DirMessageItemState extends State<DirMessageItem> {
                         ),
                       ),
                       SizedBox(
-                        height: 4.w,
+                        height: $(4),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -176,7 +176,7 @@ class _DirMessageItemState extends State<DirMessageItem> {
                             if (fileDownratio == 1.0) {
                               return Icon(
                                 Icons.check,
-                                size: 16.w,
+                                size: $(16),
                                 color: Colors.green,
                               );
                             }
@@ -184,7 +184,7 @@ class _DirMessageItemState extends State<DirMessageItem> {
                               '$speed/s',
                               style: TextStyle(
                                 color: Colors.black54,
-                                fontSize: 12.w,
+                                fontSize: $(12),
                               ),
                             );
                           }),
@@ -195,7 +195,7 @@ class _DirMessageItemState extends State<DirMessageItem> {
                                   FileUtil.formatBytes(count),
                                   style: TextStyle(
                                     color: Colors.black54,
-                                    fontSize: 12.w,
+                                    fontSize: $(12),
                                   ),
                                 ),
                               ),
@@ -203,7 +203,7 @@ class _DirMessageItemState extends State<DirMessageItem> {
                                 '/',
                                 style: TextStyle(
                                   color: Colors.black54,
-                                  fontSize: 12.w,
+                                  fontSize: $(12),
                                 ),
                               ),
                               Builder(builder: (context) {
@@ -211,7 +211,7 @@ class _DirMessageItemState extends State<DirMessageItem> {
                                   FileUtil.formatBytes(widget.info!.fullSize!),
                                   style: TextStyle(
                                     color: Colors.black54,
-                                    fontSize: 12.w,
+                                    fontSize: $(12),
                                   ),
                                 );
                               }),
@@ -261,7 +261,7 @@ class _DirMessageItemState extends State<DirMessageItem> {
                     padding: const EdgeInsets.all(8),
                     child: Icon(
                       Icons.file_download,
-                      size: 18.w,
+                      size: $(18),
                     ),
                   ),
                 ),
@@ -272,7 +272,7 @@ class _DirMessageItemState extends State<DirMessageItem> {
                     padding: const EdgeInsets.all(8),
                     child: Icon(
                       Icons.content_copy,
-                      size: 18.w,
+                      size: $(18),
                     ),
                   ),
                 ),

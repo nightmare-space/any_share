@@ -121,19 +121,19 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10.w),
+        padding: EdgeInsets.symmetric(horizontal: $(10)),
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
               const Header(),
-              SizedBox(height: 16.w),
+              SizedBox(height: $(16)),
               chatRoom(context),
-              SizedBox(height: 10.w),
+              SizedBox(height: $(10)),
               recentFile(context),
-              SizedBox(height: 10.w),
+              SizedBox(height: $(10)),
               const RecentConnectContainer(),
-              SizedBox(height: 10.w),
+              SizedBox(height: $(10)),
             ],
           ),
         ),
@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
 
   CardWrapper recentFile(BuildContext context) {
     return CardWrapper(
-      padding: EdgeInsets.all(12.w),
+      padding: EdgeInsets.all($(12)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -154,7 +154,7 @@ class _HomePageState extends State<HomePage> {
               color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
-          SizedBox(height: 4.w),
+          SizedBox(height: $(4)),
           Expanded(
             child: GetBuilder<FileController>(
               builder: (ctl) {
@@ -162,19 +162,19 @@ class _HomePageState extends State<HomePage> {
                 for (FileSystemEntity file in ctl.getRecent()) {
                   children.add(
                     SizedBox(
-                      width: 60.w,
+                      width: $(60),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          getIconByExt(file.path),
-                          SizedBox(height: 8.w),
+                          getIconByExt(file.path, context),
+                          SizedBox(height: $(8)),
                           SizedBox(
-                            height: 20.w,
+                            height: $(20),
                             child: Text(
                               basename(file.path),
                               maxLines: 2,
                               style: TextStyle(
-                                fontSize: 8.w,
+                                fontSize: $(8),
                                 height: 1,
                               ),
                             ),
@@ -184,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
                   children.add(
-                    SizedBox(width: 4.w),
+                    SizedBox(width: $(4)),
                   );
                 }
                 if (children.isEmpty) {
@@ -192,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                     child: Text(
                       S.current.empty,
                       style: TextStyle(
-                        fontSize: 16.w,
+                        fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
@@ -228,7 +228,7 @@ class _HomePageState extends State<HomePage> {
           color: Theme.of(context).colorScheme.surfaceContainer,
           borderRadius: BorderRadius.circular(12),
         ),
-        padding: EdgeInsets.all(12.w),
+        padding: EdgeInsets.all($(12)),
         child: GetBuilder<ChatController>(
           builder: (_) {
             return Column(
@@ -241,14 +241,14 @@ class _HomePageState extends State<HomePage> {
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
-                SizedBox(height: 4.w),
+                SizedBox(height: $(4)),
                 Builder(builder: (context) {
                   return Container(
                     decoration: BoxDecoration(
                       color: colorScheme.surfaceContainer,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    height: 240.w,
+                    height: $(240),
                     width: double.infinity,
                     child: Builder(builder: (context) {
                       if (chatController.children.isEmpty) {

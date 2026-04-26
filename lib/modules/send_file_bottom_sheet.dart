@@ -50,19 +50,19 @@ class _SendFilePageState extends State<SendFilePage> with SingleTickerProviderSt
       children: [
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14.w),
+            borderRadius: BorderRadius.circular($(14)),
             color: color.value,
           ),
           transformAlignment: Alignment.center,
           transform: Matrix4.identity()..rotateZ(pi / 4),
-          width: 36.w,
-          height: 36.w,
+          width: $(36),
+          height: $(36),
         ),
         Center(
           child: Icon(
             Icons.add,
             color: Colors.white,
-            size: 28.w,
+            size: $(28),
           ),
         ),
       ],
@@ -82,8 +82,8 @@ class _SendFilePageState extends State<SendFilePage> with SingleTickerProviderSt
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(16.w),
-                    topRight: Radius.circular(16.w),
+                    topLeft: Radius.circular($(16)),
+                    topRight: Radius.circular($(16)),
                   ),
                 ),
                 child: Column(
@@ -101,18 +101,18 @@ class _SendFilePageState extends State<SendFilePage> with SingleTickerProviderSt
                           child: Column(
                             children: [
                               SizedBox(
-                                height: 24.w,
+                                height: $(24),
                               ),
                               Image.asset(
                                 'assets/icon/gallery.png',
-                                width: 32.w,
-                                height: 32.w,
+                                width: $(32),
+                                height: $(32),
                                 package: Config.package,
                                 color: Theme.of(context).primaryColor,
                               ),
                               Text(
                                 S.current.sendFile,
-                                style: TextStyle(fontSize: 14.w, color: Colors.black),
+                                style: TextStyle(fontSize: $(14), color: Colors.black),
                               ),
                             ],
                           ),
@@ -131,18 +131,18 @@ class _SendFilePageState extends State<SendFilePage> with SingleTickerProviderSt
                           child: Column(
                             children: [
                               SizedBox(
-                                height: 8.w,
+                                height: $(8),
                               ),
                               Image.asset(
                                 'assets/icon/camera.png',
-                                width: 32.w,
-                                height: 32.w,
+                                width: $(32),
+                                height: $(32),
                                 package: Config.package,
                                 color: Theme.of(context).primaryColor,
                               ),
                               Text(
                                 S.current.camera,
-                                style: TextStyle(fontSize: 14.w, color: Colors.black),
+                                style: TextStyle(fontSize: $(14), color: Colors.black),
                               ),
                             ],
                           ),
@@ -157,28 +157,28 @@ class _SendFilePageState extends State<SendFilePage> with SingleTickerProviderSt
                           child: Column(
                             children: [
                               SizedBox(
-                                height: 24.w,
+                                height: $(24),
                               ),
                               Image.asset(
                                 'assets/icon/upload.png',
-                                width: 32.w,
-                                height: 32.w,
+                                width: $(32),
+                                height: $(32),
                                 package: Config.package,
                                 color: Theme.of(context).primaryColor,
                               ),
                               Text(
                                 S.current.uploadFile,
-                                style: TextStyle(fontSize: 14.w, color: Colors.black),
+                                style: TextStyle(fontSize: $(14), color: Colors.black),
                               ),
                             ],
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 24.w),
+                    SizedBox(height: $(24)),
                     Container(
                       color: Colors.white,
-                      height: 54.w,
+                      height: $(54),
                       child: GestureWithScale(
                         onTap: () async {
                           await controller.reverse();

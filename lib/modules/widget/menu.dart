@@ -31,21 +31,21 @@ class _HeaderMenuState extends State<HeaderMenu> {
         Positioned.fill(
           top: min(
             widget.offset.dy,
-            MediaQuery.of(context).size.height - 260.w,
+            MediaQuery.of(context).size.height - $(260),
           ),
           left: min(
             widget.offset.dx,
-            MediaQuery.of(context).size.width - 190.w,
+            MediaQuery.of(context).size.width - $(190),
           ),
           child: Align(
             alignment: Alignment.topLeft,
             child: SizedBox(
-              width: 180.w,
+              width: $(180),
               child: Material(
                 color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(12.w),
+                borderRadius: BorderRadius.circular($(12)),
                 child: Material(
-                  borderRadius: BorderRadius.circular(12.w),
+                  borderRadius: BorderRadius.circular($(12)),
                   clipBehavior: Clip.antiAlias,
                   color: colorScheme.surface,
                   elevation: 2,
@@ -58,19 +58,19 @@ class _HeaderMenuState extends State<HeaderMenu> {
                           Get.dialog(const JoinChat());
                         },
                         child: SizedBox(
-                          height: 48.w,
+                          height: $(48),
                           child: Align(
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16.w),
+                              padding: EdgeInsets.symmetric(horizontal: $(16)),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Icon(
                                     Icons.add,
                                     color: Theme.of(context).colorScheme.onSurface,
-                                    size: 24.w,
+                                    size: $(24),
                                   ),
-                                  SizedBox(width: 12.w),
+                                  SizedBox(width: $(12)),
                                   Text(
                                     S.of(context).inputConnect,
                                     style: const TextStyle(
@@ -97,19 +97,19 @@ class _HeaderMenuState extends State<HeaderMenu> {
                           );
                         },
                         child: SizedBox(
-                          height: 48.w,
+                          height: $(48),
                           child: Align(
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16.w),
+                              padding: EdgeInsets.symmetric(horizontal: $(16)),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Icon(
                                     Icons.info,
                                     color: Theme.of(context).colorScheme.onSurface,
-                                    size: 24.w,
+                                    size: $(24),
                                   ),
-                                  SizedBox(width: 12.w),
+                                  SizedBox(width: $(12)),
                                   Text(
                                     S.of(context).log,
                                     style: const TextStyle(
@@ -141,19 +141,19 @@ class _HeaderMenuState extends State<HeaderMenu> {
                           showToast('${S.current.export} ->  ${dir}_$fileName');
                         },
                         child: SizedBox(
-                          height: 48.w,
+                          height: $(48),
                           child: Align(
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16.w),
+                              padding: EdgeInsets.symmetric(horizontal: $(16)),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Icon(
                                     Icons.download,
                                     color: Theme.of(context).colorScheme.onSurface,
-                                    size: 24.w,
+                                    size: $(24),
                                   ),
-                                  SizedBox(width: 12.w),
+                                  SizedBox(width: $(12)),
                                   Text(
                                     '${S.current.export}${S.of(context).log}',
                                     style: const TextStyle(
