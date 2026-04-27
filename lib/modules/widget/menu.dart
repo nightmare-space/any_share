@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:file_manager/controller/file_manager_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
@@ -72,7 +71,7 @@ class _HeaderMenuState extends State<HeaderMenu> {
                                   ),
                                   SizedBox(width: $(12)),
                                   Text(
-                                    S.of(context).inputConnect,
+                                    l10n.inputConnect,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -111,7 +110,7 @@ class _HeaderMenuState extends State<HeaderMenu> {
                                   ),
                                   SizedBox(width: $(12)),
                                   Text(
-                                    S.of(context).log,
+                                    l10n.log,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -138,7 +137,7 @@ class _HeaderMenuState extends State<HeaderMenu> {
                             sb.writeln('${log.time.to()} ${log.data.replaceAll(RegExp('\x1b\\[38;5;244m|\x1b\\[0m|\x1b\\[1;3[0-9]m|\x1b\\[1;0m'), '')}');
                           }
                           newFile.writeAsString(sb.toString());
-                          showToast('${S.current.export} ->  ${dir}_$fileName');
+                          showToast('${l10n.export} ->  ${dir}_$fileName');
                         },
                         child: SizedBox(
                           height: $(48),
@@ -155,7 +154,7 @@ class _HeaderMenuState extends State<HeaderMenu> {
                                   ),
                                   SizedBox(width: $(12)),
                                   Text(
-                                    '${S.current.export}${S.of(context).log}',
+                                    '${l10n.export} ->  ${l10n.log}',
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                     ),

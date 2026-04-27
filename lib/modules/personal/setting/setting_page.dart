@@ -72,12 +72,11 @@ class _SettingPageState extends State<SettingPage> {
       color: Theme.of(context).primaryColor,
       fontSize: $(16),
     );
-    final S s = S.of(context);
     AppBar? appBar;
     if (ResponsiveBreakpoints.of(context).isMobile) {
       appBar = AppBar(
         systemOverlayStyle: OverlayStyle.dark,
-        title: Text(S.current.setting),
+        title: Text(l10n.setting),
       );
     }
     return Scaffold(
@@ -92,7 +91,7 @@ class _SettingPageState extends State<SettingPage> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
                   child: Text(
-                    s.common,
+                    l10n.common,
                     style: title,
                   ),
                 ),
@@ -121,7 +120,7 @@ class _SettingPageState extends State<SettingPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            s.downlaodPath,
+                            l10n.downlaodPath,
                             style: TextStyle(
                               fontSize: $(18),
                             ),
@@ -147,7 +146,7 @@ class _SettingPageState extends State<SettingPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        s.lang,
+                        l10n.lang,
                         style: TextStyle(
                           fontSize: $(18),
                         ),
@@ -170,7 +169,7 @@ class _SettingPageState extends State<SettingPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        s.autoDownload,
+                        l10n.autoDownload,
                         style: TextStyle(
                           fontSize: $(18),
                         ),
@@ -227,7 +226,7 @@ class _SettingPageState extends State<SettingPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        s.clipboardshare,
+                        l10n.clipboardshare,
                         style: TextStyle(
                           fontSize: $(18),
                         ),
@@ -247,7 +246,7 @@ class _SettingPageState extends State<SettingPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        s.messageNote,
+                        l10n.messageNote,
                         style: TextStyle(
                           fontSize: $(18),
                         ),
@@ -263,7 +262,7 @@ class _SettingPageState extends State<SettingPage> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
                   child: Text(
-                    S.current.fileType,
+                    l10n.fileType,
                     style: title,
                   ),
                 ),
@@ -281,7 +280,7 @@ class _SettingPageState extends State<SettingPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              S.current.enableFileClassification,
+                              l10n.enableFileClassification,
                               style: TextStyle(fontSize: $(18)),
                             ),
 
@@ -316,14 +315,14 @@ class _SettingPageState extends State<SettingPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              S.current.enableWebServer,
+                              l10n.enableWebServer,
                               style: TextStyle(
                                 fontSize: $(18),
                               ),
                             ),
                             // SizedBox(height: $(2)),
                             Text(
-                              S.current.enableWebServerTips,
+                              l10n.enableWebServerTips,
                               style: TextStyle(
                                 fontSize: $(14),
                                 color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
@@ -361,7 +360,7 @@ class _SettingPageState extends State<SettingPage> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
                   child: Text(
-                    S.current.clearCache,
+                    l10n.clearCache,
                     style: title,
                   ),
                 ),
@@ -399,7 +398,7 @@ class _SettingPageState extends State<SettingPage> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
                   child: Text(
-                    s.aboutSpeedShare,
+                    l10n.aboutSpeedShare,
                     style: title,
                   ),
                 ),
@@ -408,7 +407,7 @@ class _SettingPageState extends State<SettingPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        s.developer,
+                        l10n.developer,
                         style: TextStyle(
                           fontSize: $(18),
                         ),
@@ -429,7 +428,7 @@ class _SettingPageState extends State<SettingPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        s.ui,
+                        l10n.ui,
                         style: TextStyle(
                           fontSize: $(18),
                         ),

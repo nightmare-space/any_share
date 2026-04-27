@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
         }
         if (call.method == 'send_file') {
           if (call.arguments == null) {
-            showToast(S.current.shareFileFailed);
+            showToast(l10n.shareFileFailed);
             return;
           }
           // File file = File.fromUri(Uri.parse(call.arguments));
@@ -130,85 +130,12 @@ class _HomePageState extends State<HomePage> {
               SizedBox(height: $(16)),
               chatRoom(context),
               SizedBox(height: $(10)),
-              recentFile(context),
               SizedBox(height: $(10)),
               const RecentConnectContainer(),
               SizedBox(height: $(10)),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  CardWrapper recentFile(BuildContext context) {
-    return CardWrapper(
-      padding: EdgeInsets.all($(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            S.of(context).recentFile,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-          SizedBox(height: $(4)),
-          Expanded(
-            child: GetBuilder<FileController>(
-              builder: (ctl) {
-                List<Widget> children = [];
-                for (FileSystemEntity file in ctl.getRecent()) {
-                  children.add(
-                    SizedBox(
-                      width: $(60),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          getIconByExt(file.path, context),
-                          SizedBox(height: $(8)),
-                          SizedBox(
-                            height: $(20),
-                            child: Text(
-                              basename(file.path),
-                              maxLines: 2,
-                              style: TextStyle(
-                                fontSize: $(8),
-                                height: 1,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                  children.add(
-                    SizedBox(width: $(4)),
-                  );
-                }
-                if (children.isEmpty) {
-                  return Center(
-                    child: Text(
-                      S.current.empty,
-                      style: TextStyle(
-                        fontSize: $(16),
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
-                  );
-                }
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: children,
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -235,7 +162,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  S.of(context).chatWindow,
+                  l10n.chatWindow,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.onSurface,
@@ -254,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                       if (chatController.children.isEmpty) {
                         return Center(
                           child: Text(
-                            S.current.chatWindow,
+                            l10n.chatWindow,
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface,
                             ),

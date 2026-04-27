@@ -111,7 +111,7 @@ class _SendFilePageState extends State<SendFilePage> with SingleTickerProviderSt
                                 color: Theme.of(context).primaryColor,
                               ),
                               Text(
-                                S.current.sendFile,
+                                l10n.sendFile,
                                 style: TextStyle(fontSize: $(14), color: Colors.black),
                               ),
                             ],
@@ -141,7 +141,7 @@ class _SendFilePageState extends State<SendFilePage> with SingleTickerProviderSt
                                 color: Theme.of(context).primaryColor,
                               ),
                               Text(
-                                S.current.camera,
+                                l10n.camera,
                                 style: TextStyle(fontSize: $(14), color: Colors.black),
                               ),
                             ],
@@ -167,7 +167,7 @@ class _SendFilePageState extends State<SendFilePage> with SingleTickerProviderSt
                                 color: Theme.of(context).primaryColor,
                               ),
                               Text(
-                                S.current.uploadFile,
+                                l10n.uploadFile,
                                 style: TextStyle(fontSize: $(14), color: Colors.black),
                               ),
                             ],

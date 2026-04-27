@@ -148,7 +148,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
             if (ResponsiveBreakpoints.of(context).isMobile) const PopButton(),
             SizedBox(width: $(12)),
             Text(
-              S.current.allDevices,
+              l10n.allDevices,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     fontWeight: bold,
                     fontSize: $(16),
@@ -203,7 +203,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                   });
                 },
                 child: Tooltip(
-                  message: S.current.systemManagerTips,
+                  message: l10n.systemManagerTips,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -214,7 +214,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                       ),
                       SizedBox(height: $(4)),
                       Text(
-                        S.current.systemManager,
+                        l10n.systemManager,
                         style: TextStyle(
                           color: AppColors.fontColor,
                           fontWeight: bold,
@@ -245,7 +245,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                           });
                         },
                         child: Tooltip(
-                          message: S.current.inlineManagerTips,
+                          message: l10n.inlineManagerTips,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -256,7 +256,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                               ),
                               SizedBox(height: $(4)),
                               Text(
-                                S.current.inlineManager,
+                                l10n.inlineManager,
                                 style: TextStyle(
                                   color: AppColors.fontColor,
                                   fontWeight: bold,
@@ -284,19 +284,20 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                     });
                   },
                   child: Tooltip(
-                    message: S.current.inlineManagerTips,
+                    message: l10n.inlineManagerTips,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SvgPicture.asset(
-                          '${file_manager.Config.packagePrefix}assets/icon/dir.svg',
+                          'assets/icon/dir.svg',
+                          package: file_manager.Config.package,
                           width: $(36),
                           height: $(36),
                           color: Theme.of(context).primaryColor,
                         ),
                         SizedBox(height: $(4)),
                         Text(
-                          S.current.directory,
+                          l10n.directory,
                           style: TextStyle(
                             color: AppColors.fontColor,
                             fontWeight: bold,

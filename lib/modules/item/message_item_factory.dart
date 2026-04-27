@@ -84,7 +84,7 @@ class MessageItemFactory {
                       ),
                       child: Center(
                         child: Text(
-                          S.current.clipboard,
+                          l10n.clipboard,
                           style: TextStyle(fontSize: $(12), color: Device.getColor(info.deviceType)),
                         ),
                       ),

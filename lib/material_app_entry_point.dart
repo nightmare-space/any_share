@@ -1,18 +1,16 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-
 import 'app/controller/controller.dart';
 import 'app/routes/app_pages.dart';
-import 'generated/l10n.dart';
+import 'generated/app_localizations.dart';
 import 'themes/theme.dart';
 
-class SpeedShare extends StatelessWidget {
-  const SpeedShare({Key? key}) : super(key: key);
+class RootView extends StatelessWidget {
+  const RootView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +26,8 @@ class SpeedShare extends StatelessWidget {
           defaultTransition: GetPlatform.isAndroid ? Transition.fadeIn : null,
           debugShowCheckedModeBanner: false,
           themeMode: ThemeMode.dark,
-          localizationsDelegates: const [
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: S.delegate.supportedLocales,
+          localizationsDelegates: L10n.localizationsDelegates,
+          supportedLocales: L10n.supportedLocales,
           builder: (context, child) {
             return ResponsiveBreakpoints.builder(
               child: Builder(
@@ -56,19 +49,9 @@ class SpeedShare extends StatelessWidget {
                       final ThemeData theme = isDark ? dark(context) : light(context);
                       return GetBuilder<SettingController>(
                         builder: (context) {
-                          return Localizations(
-                            locale: context.currentLocale!,
-                            // TODO: duplicate code
-                            delegates: const [
-                              S.delegate,
-                              GlobalMaterialLocalizations.delegate,
-                              GlobalWidgetsLocalizations.delegate,
-                              GlobalCupertinoLocalizations.delegate,
-                            ],
-                            child: Theme(
-                              data: theme,
-                              child: child!,
-                            ),
+                          return Theme(
+                            data: theme,
+                            child: child!,
                           );
                         },
                       );

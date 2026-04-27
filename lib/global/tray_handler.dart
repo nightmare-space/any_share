@@ -22,12 +22,12 @@ class TrayHandler with TrayListener {
       items: [
         MenuItem(
           key: 'show_window',
-          label: S.current.open,
+          label: l10n.open,
         ),
         MenuItem.separator(),
         MenuItem(
           key: 'exit_app',
-          label: S.current.close,
+          label: l10n.close,
         ),
       ],
     );

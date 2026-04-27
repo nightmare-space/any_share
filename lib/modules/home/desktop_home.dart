@@ -175,7 +175,7 @@ class _DesktopHomeState extends State<DesktopHome> {
                 color: Colors.transparent,
                 child: Center(
                   child: Text(
-                    S.current.dropFileTip,
+                    l10n.dropFileTip,
                     style: TextStyle(
                       color: AppColors.fontColor,
                       fontWeight: FontWeight.bold,

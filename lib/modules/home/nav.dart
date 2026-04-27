@@ -4,7 +4,6 @@ import 'package:get/utils.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:speed_share/config/config.dart';
 import 'package:speed_share/app/routes/page_route_builder.dart';
-import 'package:speed_share/themes/app_colors.dart';
 
 import '../send_file_bottom_sheet.dart';
 

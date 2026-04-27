@@ -162,7 +162,7 @@ class _FileItemState extends State<FileItem> {
                 ),
                 InkWell(
                   onTap: () async {
-                    showToast(S.current.copyed);
+                    showToast(l10n.copyed);
                     await Clipboard.setData(ClipboardData(text: url));
                   },
                   borderRadius: BorderRadius.circular(12),
@@ -389,7 +389,7 @@ class _MenuState extends State<Menu> {
                       child: SizedBox(
                         height: $(40),
                         child: Center(
-                          child: Text(S.current.fileQRCode),
+                          child: Text(l10n.fileQRCode),
                         ),
                       ),
                     ),

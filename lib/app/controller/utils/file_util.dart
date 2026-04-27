@@ -1,4 +1,3 @@
-import 'package:file_manager/file_manager.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:get/get.dart';
 import 'package:file_manager/file_manager.dart' as file_manager;

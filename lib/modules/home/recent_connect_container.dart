@@ -27,7 +27,7 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
           Row(
             children: [
               Text(
-                S.current.recentConnect,
+                l10n.recentConnect,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.onSurface,
@@ -37,7 +37,7 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
                 onTap: () {
                   DeviceController deviceController = Get.find();
                   deviceController.clearHistory();
-                  showToast(S.current.clearSuccess);
+                  showToast(l10n.clearSuccess);
                 },
                 child: Icon(
                   Icons.delete,
@@ -133,7 +133,7 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
                                     vertical: $(2),
                                   ),
                                   child: Text(
-                                    device.isConnect! ? S.current.connected : S.current.disconnected,
+                                    device.isConnect! ? l10n.connected : l10n.disconnected,
                                     style: TextStyle(
                                       color: device.isConnect! ? Theme.of(context).primaryColor : Colors.red,
                                       fontSize: $(12),
@@ -156,7 +156,7 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
                 if (children.isEmpty) {
                   return Center(
                     child: Text(
-                      S.current.empty,
+                      l10n.empty,
                       style: TextStyle(
                         fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,

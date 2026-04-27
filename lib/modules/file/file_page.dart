@@ -97,13 +97,9 @@ class _FilePageState extends State<FilePage> {
                 },
                 child: [
                   // TODO(lin):
-                  // fm.FileManager(
-                  //   drawer: false,
-                  //   path: '/sdcard/SpeedShare',
-                  //   address: 'http://127.0.0.1:${fm.Config.port}',
-                  //   padding: EdgeInsets.only(bottom: $(8)),
-                  //   usePackage: true,
-                  // ),
+                  file_manager.FileManagerView(
+                      // controller: file_manager.FMController()...enterHomeDir(),
+                      ),
                   fileList(context),
                 ][pageIndex],
               ),
@@ -220,7 +216,7 @@ class _FilePageState extends State<FilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          title(S.of(context).video),
+          title(l10n.video),
           SizedBox(
             height: $(4),
           ),
@@ -269,7 +265,7 @@ class _FilePageState extends State<FilePage> {
                 if (children.isEmpty) {
                   return Center(
                     child: Text(
-                      S.current.empty,
+                      l10n.empty,
                       style: TextStyle(
                         fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,
@@ -297,7 +293,7 @@ class _FilePageState extends State<FilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          title(S.of(context).music),
+          title(l10n.music),
           SizedBox(height: $(4)),
           Container(
             color: const Color(0xffE0C4C4).withOpacityExact(0.2),
@@ -333,7 +329,7 @@ class _FilePageState extends State<FilePage> {
               if (children.isEmpty) {
                 return Center(
                   child: Text(
-                    S.current.empty,
+                    l10n.empty,
                     style: TextStyle(
                       fontSize: $(16),
                       color: Theme.of(context).colorScheme.onSurface,
@@ -359,7 +355,7 @@ class _FilePageState extends State<FilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          title(S.of(context).directory),
+          title(l10n.directory),
           SizedBox(
             height: $(4),
           ),
@@ -383,7 +379,8 @@ class _FilePageState extends State<FilePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SvgPicture.asset(
-                            '${file_manager.Config.packagePrefix}assets/icon/dir.svg',
+                            'assets/icon/dir.svg',
+                            package: file_manager.Config.package,
                             width: $(32),
                             height: $(32),
                             color: Theme.of(context).primaryColor,
@@ -405,15 +402,13 @@ class _FilePageState extends State<FilePage> {
                     ),
                   );
                   children.add(
-                    SizedBox(
-                      width: $(4),
-                    ),
+                    SizedBox(width: $(4)),
                   );
                 }
                 if (children.isEmpty) {
                   return Center(
                     child: Text(
-                      S.current.empty,
+                      l10n.empty,
                       style: TextStyle(
                         fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,
@@ -442,7 +437,7 @@ class _FilePageState extends State<FilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          title(S.of(context).image),
+          title(l10n.image),
           SizedBox(height: $(4)),
           Container(
             color: const Color(0xffE0C4C4).withOpacityExact(0.2),
@@ -486,7 +481,7 @@ class _FilePageState extends State<FilePage> {
                 if (children.isEmpty) {
                   return Center(
                     child: Text(
-                      S.current.empty,
+                      l10n.empty,
                       style: TextStyle(
                         fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,
@@ -513,7 +508,7 @@ class _FilePageState extends State<FilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          title(S.of(context).apk),
+          title(l10n.apk),
           SizedBox(
             height: $(4),
           ),
@@ -580,7 +575,7 @@ class _FilePageState extends State<FilePage> {
                 if (children.isEmpty) {
                   return Center(
                     child: Text(
-                      S.current.empty,
+                      l10n.empty,
                       style: TextStyle(
                         fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,
@@ -608,7 +603,7 @@ class _FilePageState extends State<FilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          title(S.of(context).doc),
+          title(l10n.doc),
           SizedBox(height: $(4)),
           Container(
             color: const Color(0xffE0C4C4).withOpacityExact(0.2),
@@ -654,7 +649,7 @@ class _FilePageState extends State<FilePage> {
                 if (children.isEmpty) {
                   return Center(
                     child: Text(
-                      S.current.empty,
+                      l10n.empty,
                       style: TextStyle(
                         fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,
@@ -682,7 +677,7 @@ class _FilePageState extends State<FilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          title(S.of(context).zip),
+          title(l10n.zip),
           SizedBox(height: $(4)),
           Container(
             color: const Color(0xffE0C4C4).withOpacityExact(0.2),
@@ -728,7 +723,7 @@ class _FilePageState extends State<FilePage> {
                 if (children.isEmpty) {
                   return Center(
                     child: Text(
-                      S.current.empty,
+                      l10n.empty,
                       style: TextStyle(
                         fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,
@@ -769,7 +764,7 @@ class _FilePageState extends State<FilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          title(S.of(context).unknownFile),
+          title(l10n.unknownFile),
           SizedBox(height: $(4)),
           Container(
             color: const Color(0xffE0C4C4).withOpacityExact(0.2),
@@ -813,7 +808,7 @@ class _FilePageState extends State<FilePage> {
                 if (children.isEmpty) {
                   return Center(
                     child: Text(
-                      S.current.empty,
+                      l10n.empty,
                       style: TextStyle(
                         fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,

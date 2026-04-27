@@ -91,6 +91,3 @@ flutter:
     - assets/icon/
     - CHANGELOG.md
     - LICENSE
-
-flutter_intl:
-  enabled: true

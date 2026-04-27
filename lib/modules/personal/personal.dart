@@ -45,7 +45,7 @@ class _PersonalPageState extends State<PersonalPage> {
           //   },
           // ),
           personalItem(
-            title: S.current.projectBoard,
+            title: l10n.projectBoard,
             onTap: () {
               Get.to(ViewMetric(
                 uiWidth: 600,
@@ -55,41 +55,41 @@ class _PersonalPageState extends State<PersonalPage> {
             },
           ),
           personalItem(
-            title: S.of(context).privacyAgreement,
+            title: l10n.privacyAgreement,
             onTap: () {
               Get.to(const PrivacyPage());
             },
           ),
           personalItem(
-            title: S.of(context).setting,
+            title: l10n.setting,
             onTap: () {
               Get.to(const SettingPage());
             },
           ),
           personalItem(
-            title: S.current.joinQQGroup,
+            title: l10n.joinQQGroup,
             onTap: () async {
               const String url = 'mqqapi://card/show_pslcard?src_type=internal&version=1&uin=673706601&card_type=group&source=qrcode';
               if (await canLaunchUrlString(url)) {
                 await launchUrlString(url);
               } else {
-                showToast(S.current.openQQFail);
+                showToast(l10n.openQQFail);
                 // throw 'Could not launch $url';
               }
             },
           ),
           personalItem(
-            title: S.current.changeLog,
+            title: l10n.changeLog,
             onTap: () async {
               Get.to(const ChangeLogPage());
             },
           ),
           personalItem(
-            title: S.current.aboutSpeedShare,
+            title: l10n.aboutSpeedShare,
             onTap: () async {
               String license = await rootBundle.loadString('LICENSE');
               Get.to(AboutPage(
-                applicationName: S.current.appName,
+                applicationName: l10n.appName,
                 appVersion: Config.versionName,
                 versionCode: Config.versionCode,
                 logo: Padding(

@@ -36,6 +36,7 @@ class Server {
         headers: corsHeader,
       );
     });
+    // TODO: 换成 ping/pong
     app.get('/check_token', (Request request) {
       // Log.d('check_token call');
       return Response.ok(
@@ -126,7 +127,7 @@ class Server {
       if (r.requestedUri.path.startsWith('/sdcard') || file_manager.Server.routes.contains(r.requestedUri.path)) {
         if (!settingController.enableWebServer) {
           return Response.ok(
-            S.current.needWSTip,
+            l10n.needWSTip,
             headers: {
               ...corsHeader,
               HttpHeaders.contentTypeHeader: 'text/plain',

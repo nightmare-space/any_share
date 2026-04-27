@@ -57,11 +57,11 @@ class DownloadController extends GetxController {
   void onClose() {}
   Future<void> downloadFile(String url, String? dir) async {
     if (progress.containsKey(url) && progress[url]!.progress != 0.0) {
-      showToast(S.current.fileIsDownloading);
+      showToast(l10n.fileIsDownloading);
       return;
     }
     if (progress.containsKey(url) && progress[url]!.progress == 1.0) {
-      showToast(S.current.fileDownloadSuccess);
+      showToast(l10n.fileDownloadSuccess);
       return;
     }
     DownloadInfo info = DownloadInfo();

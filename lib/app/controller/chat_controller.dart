@@ -145,7 +145,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     }
     Uri uri = Uri.parse(urlPrefix);
     int port = uri.port;
-    deviceController.onDeviceConnect(shortHash(''), S.current.device, phone, 'http://${uri.host}', port);
+    deviceController.onDeviceConnect(shortHash(''), l10n.device, phone, 'http://${uri.host}', port);
     // Log.i('$urlPrefix/${info.messagePort}');
 
     sendJoinEvent('http://${uri.host}:$port');
@@ -207,7 +207,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   Future<void> sendDir() async {
     String? dirPath;
     if (GetPlatform.isDesktop) {
-      dirPath = await getDirectoryPath(confirmButtonText: S.current.select);
+      dirPath = await getDirectoryPath(confirmButtonText: l10n.select);
     } else {
       dirPath = await file_manager.FileManager.selectDirectory();
     }
@@ -458,7 +458,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
             if (url != null) {
               uploadFileForWeb(webFileSendCache[notifyMessage.hash]!, '$url:${notifyMessage.port}');
             } else {
-              showToast(S.current.noIPFound);
+              showToast(l10n.noIPFound);
             }
           }
         }

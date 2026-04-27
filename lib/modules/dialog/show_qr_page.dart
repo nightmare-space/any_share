@@ -74,12 +74,8 @@ class _ShowQRPageState extends State<ShowQRPage> {
                       },
                     ),
                   ),
-                  Text(
-                    S.of(context).qrTips,
-                  ),
-                  SizedBox(
-                    height: $(10),
-                  ),
+                  Text(l10n.qrTips),
+                  SizedBox(height: $(10)),
                 ],
               ),
             ),

@@ -43,7 +43,7 @@ class _JoinChatState extends State<JoinChat> {
                   height: $(4),
                 ),
                 Text(
-                  S.current.inputAddressTip,
+                  l10n.inputAddressTip,
                   style: TextStyle(
                     color: AppColors.fontColor,
                     fontWeight: FontWeight.bold,
@@ -74,7 +74,7 @@ class _JoinChatState extends State<JoinChat> {
                       joinChat();
                     },
                     child: Text(
-                      S.current.join,
+                      l10n.join,
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),

@@ -59,7 +59,7 @@ class SettingController extends GetxController {
       const Duration(milliseconds: 100),
       () {
         if (!isVIP) {
-          showToast(S.current.vipTips);
+          showToast(l10n.vipTips);
           enableWebServer = !value;
           update();
         } else {
@@ -126,7 +126,7 @@ class SettingController extends GetxController {
       const Duration(milliseconds: 100),
       () {
         if (!isVIP) {
-          showToast(S.current.vipTips);
+          showToast(l10n.vipTips);
           enableAutoDownload = !value;
           update();
         } else {

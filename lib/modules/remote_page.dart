@@ -54,7 +54,6 @@ class _RemotePageState extends State<RemotePage> {
   }
 
   GetBuilder<DeviceController> remoteList(BuildContext context) {
-    S? s = S.of(context);
     return GetBuilder<DeviceController>(
       builder: (controller) {
         return Column(
@@ -77,13 +76,13 @@ class _RemotePageState extends State<RemotePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      s.remoteAccessFile,
+                      l10n.remoteAccessFile,
                       style: TextStyle(
                         fontSize: $(18),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(s.remoteAccessDes),
+                    Text(l10n.remoteAccessDes),
                     SizedBox(
                       height: chatController.addrs.length * $(18),
                       child: ListView.builder(
@@ -146,7 +145,7 @@ class _RemotePageState extends State<RemotePage> {
                                 ),
                                 SizedBox(height: $(10)),
                                 Text(
-                                  S.of(context).tapToViewFile(device.deviceName!),
+                                  l10n.tapToViewFile(device.deviceName!),
                                   style: TextStyle(color: device.deviceColor),
                                 ),
                               ],

@@ -155,7 +155,7 @@ class _HeaderSwiperState extends State<HeaderSwiper> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: S.current.headerNotice(deviceController.availableDevice()),
+                      text: l10n.headerNotice(deviceController.availableDevice()),
                       style: TextStyle(
                         fontSize: $(16),
                         color: Theme.of(context).colorScheme.onSurface,

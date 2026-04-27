@@ -105,7 +105,7 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
             ),
             SizedBox(width: $(4)),
             Text(
-              S.current.setting,
+              l10n.setting,
               style: TextStyle(
                 color: Theme.of(_).textTheme.bodyMedium!.color,
               ),
@@ -134,7 +134,7 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
             ),
             SizedBox(width: $(4)),
             Text(
-              S.current.fileManagerLocal,
+              l10n.fileManagerLocal,
               style: TextStyle(
                 color: Theme.of(_).textTheme.bodyMedium!.color,
               ),
@@ -168,7 +168,7 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
                     ),
                     SizedBox(width: $(4)),
                     Text(
-                      '${S.current.fileManager}(${_.connectDevice[i].deviceName})',
+                      '${l10n.fileManager}(${_.connectDevice[i].deviceName})',
                       style: TextStyle(
                         color: Theme.of(context).textTheme.bodyMedium!.color,
                       ),
@@ -201,7 +201,7 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
             ),
             SizedBox(width: $(4)),
             Text(
-              S.current.chatWindow,
+              l10n.chatWindow,
               style: TextStyle(
                 color: Theme.of(_).textTheme.bodyMedium!.color,
               ),
@@ -230,7 +230,7 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
             ),
             SizedBox(width: $(4)),
             Text(
-              S.current.home,
+              l10n.home,
               style: TextStyle(
                 color: Theme.of(_).textTheme.bodyMedium!.color,
               ),

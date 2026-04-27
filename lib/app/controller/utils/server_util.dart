@@ -26,6 +26,7 @@ class ServerUtil {
   // 用shelf部署一个路径的文件
   static serveFile(String path, int port) async {
     Log.e('部署 path -> $path');
+    // TODO: 下面三行啥意思
     String filePath = path.replaceAll('\\', '/');
     filePath = filePath.replaceAll(RegExp('^[A-Z]:'), '');
     filePath = filePath.replaceAll(RegExp('^/'), '');

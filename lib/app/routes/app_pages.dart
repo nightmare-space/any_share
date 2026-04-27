@@ -31,10 +31,11 @@ class SpeedPages {
         builder: (context) {
           return PopScope(
             canPop: true,
-            onPopInvoked: (value) async {
+            onPopInvokedWithResult: (didPop, result) {
+              // TODO: Reimplement this
               if (time == 0) {
                 time++;
-                showToast(S.current.backAgainTip);
+                showToast(l10n.backAgainTip);
               } else {
                 Navigator.of(context).pop();
               }

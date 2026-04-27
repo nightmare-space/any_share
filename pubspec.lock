@@ -270,11 +270,9 @@ packages:
   file_manager:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: ccedd181d0f482ffeca654de1954b5f6fda537fd
-      url: "https://github.com/nightmare-space/file_manager.git"
-    source: git
+      path: "/Users/Laurie/Desktop/nightmare-space/file_manager_private"
+      relative: false
+    source: path
     version: "1.0.0+1"
   file_selector:
     dependency: "direct main"
@@ -1062,9 +1060,11 @@ packages:
   signale:
     dependency: "direct main"
     description:
-      path: "/Users/Laurie/Desktop/nightmare-space/signale"
-      relative: false
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: "346dc65012ba6b19f5f4de86598da8a0e45816a8"
+      url: "https://github.com/nightmare-space/signale"
+    source: git
     version: "0.0.12"
   simple_animations:
     dependency: "direct main"

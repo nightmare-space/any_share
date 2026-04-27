@@ -36,7 +36,7 @@ class _DirMessageItemState extends State<DirMessageItem> {
   Timer? timer;
   Future<void> downloadFile(String? urlPath, String savePath) async {
     if (fileDownratio != 0.0) {
-      showToast(S.current.fileIsDownloading);
+      showToast(l10n.fileIsDownloading);
       return;
     }
     String baseDirPath = '$savePath/${widget.info!.dirName}';
@@ -44,7 +44,7 @@ class _DirMessageItemState extends State<DirMessageItem> {
     try {
       await Directory(baseDirPath).create();
     } catch (e) {
-      showToast('${S.current.exceptionOrcur}：$e');
+      showToast('${l10n.exceptionOrcur}：$e');
       return;
     }
     computeNetSpeed();
