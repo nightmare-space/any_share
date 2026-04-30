@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/app/controller/controller.dart';
+import '../controllers/controllers.dart';
 import 'package:speed_share/global/global.dart';
 import 'package:speed_share/global/network/dio_manager.dart';
-import 'package:speed_share/model/model.dart';
+import 'package:speed_share/models/models.dart';
 
 class JoinUtil {
   static Future<bool> sendJoinEvent(

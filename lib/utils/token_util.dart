@@ -1,36 +1,26 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:shelf/shelf.dart' as shelf;
-import 'package:shelf/shelf_io.dart' as io;
 import 'package:speed_share/global/network/dio_manager.dart';
-import 'server_util.dart';
-
-// Router fileRouter = Router();
+import '../services/file_server.dart';
 
 /// 用来处理token请求的响应
 /// 主要是为速享提供筛选IP地址的能力
-
 void handleTokenCheck(int port) {
-  // 用来为其他设备检测网络互通的方案
   // 其他设备会通过消息中的IP地址对 `/check_token` 发起 get 请求
-  // 如果有响应说明胡互通
-  fileRouter.get('/check_token', (shelf.Request request) {
-    return shelf.Response.ok('success', headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': '*',
-      'Access-Control-Allow-Methods': '*',
-      'Access-Control-Allow-Credentials': 'true',
-    });
+  // 如果有响应说明互通
+  FileServer.router.get('/check_token', (shelf.Request request) {
+    return shelf.Response.ok(
+      'success',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*',
+        'Access-Control-Allow-Methods': '*',
+        'Access-Control-Allow-Credentials': 'true',
+      },
+    );
   });
-
-  io.serve(
-    fileRouter,
-    InternetAddress.anyIPv4,
-    port,
-    shared: true,
-  );
 }
 
 // 发起http get请求，用来校验网络是否互通

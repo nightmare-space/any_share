@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/app/controller/controller.dart';
-import 'package:speed_share/app/controller/utils/join_util.dart';
+import '../controllers/controllers.dart';
+import 'package:speed_share/utils/join_util.dart';
 import 'package:speed_share/modules/qrscan_page.dart';
 
 /// 解析二维码
