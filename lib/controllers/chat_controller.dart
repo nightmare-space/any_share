@@ -10,15 +10,17 @@ import 'package:path/path.dart' as p;
 import 'package:flutter/material.dart' hide Router;
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/app/controller/controller.dart';
+import 'controller.dart';
 import 'package:speed_share/config/config.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/global/global.dart';
 import 'package:speed_share/global/network/dio_manager.dart';
-import 'package:speed_share/model/model.dart';
+import 'package:speed_share/models/model.dart';
 import 'package:speed_share/modules/item/item.dart';
+import 'package:speed_share/utils/token_util.dart';
 import 'package:speed_share/utils/utils.dart' hide FileUtil;
-import 'utils/utils.dart';
+import 'package:speed_share/utils/utils.dart' hide FileUtil;
+import '../services/file_server.dart';
 
 int get type {
   if (GetPlatform.isWeb) {
@@ -156,7 +158,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
         String webUrl = '${urlPrefix}message';
         Response res = await Dio().get(webUrl);
         Map<String, dynamic> data = jsonDecode(res.data);
-        MessageBaseInfo info = MessageInfoFactory.fromJson(data)!;
+        MessageBaseInfo info = MessageBaseInfo.resolveMessage(data);
         dispatch(info, children);
       } catch (e) {
         // Log.e('web 轮训消息error $e');
@@ -170,7 +172,9 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   Future<void> getSuccessBindPort() async {
     if (!GetPlatform.isWeb) {
       shelfBindPort ??= await getSafePort(Config.shelfPortRangeStart, Config.shelfPortRangeEnd);
+      // TODO: Refactor
       handleTokenCheck(shelfBindPort!);
+      await FileServer.start(port: shelfBindPort!);
     }
   }
 
@@ -194,7 +198,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
         suffix = '/';
       } else if (entity is File) {
         size = await entity.length();
-        ServerUtil.serveFile(entity.path, shelfBindPort!);
+        FileServer.addFile(entity.path);
       }
       DirPartMessage dirPartMessage = DirPartMessage(path: event.path + suffix, size: size, partOf: dirName);
       sendMessage(dirPartMessage);
@@ -237,7 +241,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
         Log.w('-' * 10);
         String hash = shortHash(xFile);
         webFileSendCache[hash] = xFile;
-        final BroswerFileMessage sendFileInfo = BroswerFileMessage(
+        final BrowserFileMessage sendFileInfo = BrowserFileMessage(
           // 用来客户端显示
           fileName: xFile.name,
           hash: hash,
@@ -312,9 +316,10 @@ class ChatController extends GetxController with WidgetsBindingObserver {
 
   // 基于一个文件路径发送消息
   // send a file message base file path
+  // TODO: 如果是一次性发出多个文件，消息列表没必要全分隔开
   Future<void> sendFileFromPath(String filePath) async {
     await getSuccessBindPort();
-    ServerUtil.serveFile(filePath, shelfBindPort!);
+    FileServer.addFile(filePath);
     // 替换windows的路径分隔符
     filePath = filePath.replaceAll('\\', '/');
     // 读取文件大小
@@ -333,7 +338,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
       fileSize: FileUtil.formatBytes(size),
       addrs: addrs,
       port: shelfBindPort,
-      sendFrom: Global().deviceName,
+      deviceName: Global().deviceName,
     );
     // 发送消息
     sendMessage(sendFileInfo);
@@ -345,7 +350,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
 
   void handleMessage(Map<String, dynamic> data) {
     Log.e('handleMessage :$data');
-    MessageBaseInfo info = MessageInfoFactory.fromJson(data)!;
+    MessageBaseInfo info = MessageBaseInfo.resolveMessage(data);
     dispatch(info, children);
   }
 
@@ -494,7 +499,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
 
   /// 发送文本消息
   void sendTextMsg() {
-    TextMessage info = TextMessage(content: controller.text, sendFrom: Global().deviceName);
+    TextMessage info = TextMessage(content: controller.text, deviceName: Global().deviceName);
     sendMessage(info);
     children.add(MessageItemFactory.getMessageItem(info, true, context));
     update();
@@ -511,7 +516,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   void changeListToDevice(Device device) {
     backup.clear();
     for (Map map in cache) {
-      MessageBaseInfo? info = MessageInfoFactory.fromJson(map as Map<String, dynamic>);
+      MessageBaseInfo? info = MessageBaseInfo.resolveMessage(map as Map<String, dynamic>);
       if (info is JoinMessage) {
         continue;
       }

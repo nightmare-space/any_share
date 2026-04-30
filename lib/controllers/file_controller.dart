@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart';
-import 'package:speed_share/app/controller/setting_controller.dart';
+import 'setting_controller.dart';
 import 'package:speed_share/utils/ext_util.dart';
 
 const onknownKey = '未知';
@@ -94,7 +94,7 @@ class FileController extends GetxController with WidgetsBindingObserver {
       // TODO 有一种可能，用户在使用过程中打开这个开关，但是这个时候还没有对应的文件夹
       // 是不是会报错
       moveFile();
-    }else{
+    } else {
       return;
     }
     List<FileSystemEntity> list = await (Directory('$prefix/$onknownKey').list()).toList();

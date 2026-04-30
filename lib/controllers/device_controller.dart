@@ -6,8 +6,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/app/controller/history.dart';
-import 'package:speed_share/app/controller/utils/join_util.dart';
+import 'package:speed_share/models/history.dart';
+import 'package:speed_share/utils/join_util.dart';
 import 'package:speed_share/global/network/dio_manager.dart';
 
 class Device {
@@ -68,13 +68,13 @@ class DeviceController extends GetxController {
     // });
     if (File(historyPath).existsSync()) {
       // 如果文件存在的话
-      historys = Historys.fromJson(json.decode(File(historyPath).readAsStringSync()));
+      historys = HistoryMessages.fromJson(json.decode(File(historyPath).readAsStringSync()));
       JsonEncoder encoder = const JsonEncoder.withIndent('  ');
       String prettyprint = encoder.convert(historys);
       Log.i('history cache $prettyprint');
       historys.datas!.removeWhere((element) => element.url!.contains('null'));
       syncHistoryToLocal();
-      List<History> newHistorys = [];
+      List<HistoryMessage> newHistorys = [];
       // for (History history in historys.datas!) {
       //   History exist=newHistorys.firstWhere((element) => element.url=)
       // }
@@ -112,7 +112,7 @@ class DeviceController extends GetxController {
   }
 
   String historyPath = GetPlatform.isWeb ? '' : '${RuntimeEnvir.filesPath}/history';
-  Historys historys = Historys(datas: []);
+  HistoryMessages historys = HistoryMessages(datas: []);
   List<Device> connectDevice = [];
   int availableDevice() {
     int count = 0;
@@ -160,7 +160,7 @@ class DeviceController extends GetxController {
   }
 
   void appendHistory(String? name, String url, String? id) {
-    History history = History(
+    HistoryMessage history = HistoryMessage(
       deviceName: name,
       url: url,
       id: id,
@@ -169,7 +169,7 @@ class DeviceController extends GetxController {
       // 不包含才添加这行历史
       historys.datas!.add(history);
     } else {
-      History exist = historys.datas!.firstWhere((element) => element.id == history.id);
+      HistoryMessage exist = historys.datas!.firstWhere((element) => element.id == history.id);
       exist.url = url;
     }
     syncHistoryToLocal();
