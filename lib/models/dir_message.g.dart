@@ -18,7 +18,7 @@ DirMessage _$DirMessageFromJson(Map<String, dynamic> json) => DirMessage(
   port: (json['port'] as num?)?.toInt(),
   deviceName: json['deviceName'] as String? ?? '',
   deviceId: json['deviceId'] as String?,
-  deviceType: (json['deviceType'] as num?)?.toInt(),
+  deviceType: $enumDecodeNullable(_$DeviceTypeEnumMap, json['deviceType']),
   msgType: json['msgType'] as String? ?? 'dir',
 )..url = json['url'] as String?;
 
@@ -27,7 +27,7 @@ Map<String, dynamic> _$DirMessageToJson(DirMessage instance) =>
       'msgType': instance.msgType,
       'deviceName': instance.deviceName,
       'deviceId': instance.deviceId,
-      'deviceType': instance.deviceType,
+      'deviceType': _$DeviceTypeEnumMap[instance.deviceType],
       'dirName': instance.dirName,
       'fullSize': instance.fullSize,
       'canDownload': instance.canDownload,
@@ -38,6 +38,12 @@ Map<String, dynamic> _$DirMessageToJson(DirMessage instance) =>
       'port': instance.port,
     };
 
+const _$DeviceTypeEnumMap = {
+  DeviceType.phone: 'phone',
+  DeviceType.desktop: 'desktop',
+  DeviceType.browser: 'browser',
+};
+
 DirPartMessage _$DirPartMessageFromJson(Map<String, dynamic> json) =>
     DirPartMessage(
       path: json['path'] as String?,
@@ -46,7 +52,7 @@ DirPartMessage _$DirPartMessageFromJson(Map<String, dynamic> json) =>
       size: (json['size'] as num?)?.toInt(),
       deviceName: json['deviceName'] as String? ?? '',
       deviceId: json['deviceId'] as String?,
-      deviceType: (json['deviceType'] as num?)?.toInt(),
+      deviceType: $enumDecodeNullable(_$DeviceTypeEnumMap, json['deviceType']),
       msgType: json['msgType'] as String? ?? 'dirPart',
     );
 
@@ -55,7 +61,7 @@ Map<String, dynamic> _$DirPartMessageToJson(DirPartMessage instance) =>
       'msgType': instance.msgType,
       'deviceName': instance.deviceName,
       'deviceId': instance.deviceId,
-      'deviceType': instance.deviceType,
+      'deviceType': _$DeviceTypeEnumMap[instance.deviceType],
       'path': instance.path,
       'stat': instance.stat,
       'partOf': instance.partOf,

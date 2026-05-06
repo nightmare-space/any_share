@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:speed_share/common/device_type.dart';
 import 'message_base_info.dart';
 part 'notify_message.g.dart';
 

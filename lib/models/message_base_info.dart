@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:speed_share/common/device_type.dart';
 
 import 'browser_file_message.dart';
 import 'clipboard_message.dart';
@@ -58,7 +59,7 @@ class MessageBaseInfo {
 
   /// 设备类型
   /// Device Type
-  int? deviceType;
+  DeviceType? deviceType;
 
   factory MessageBaseInfo.fromJson(Map<String, dynamic> json) => _$MessageBaseInfoFromJson(json);
 

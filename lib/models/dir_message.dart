@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:speed_share/common/device_type.dart';
 import 'models.dart';
 part 'dir_message.g.dart';
 

@@ -14,7 +14,7 @@ BrowserFileMessage _$BrowserFileMessageFromJson(Map<String, dynamic> json) =>
       blob: json['blob'] as String?,
       deviceName: json['deviceName'] as String? ?? '',
       deviceId: json['deviceId'] as String?,
-      deviceType: (json['deviceType'] as num?)?.toInt(),
+      deviceType: $enumDecodeNullable(_$DeviceTypeEnumMap, json['deviceType']),
       msgType: json['msgType'] as String? ?? 'webfile',
     );
 
@@ -23,9 +23,15 @@ Map<String, dynamic> _$BrowserFileMessageToJson(BrowserFileMessage instance) =>
       'msgType': instance.msgType,
       'deviceName': instance.deviceName,
       'deviceId': instance.deviceId,
-      'deviceType': instance.deviceType,
+      'deviceType': _$DeviceTypeEnumMap[instance.deviceType],
       'fileName': instance.fileName,
       'fileSize': instance.fileSize,
       'hash': instance.hash,
       'blob': instance.blob,
     };
+
+const _$DeviceTypeEnumMap = {
+  DeviceType.phone: 'phone',
+  DeviceType.desktop: 'desktop',
+  DeviceType.browser: 'browser',
+};
