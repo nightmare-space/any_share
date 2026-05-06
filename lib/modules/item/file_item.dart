@@ -5,12 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
-import 'package:speed_share/app/controller/chat_controller.dart';
-import 'package:speed_share/app/controller/download_controller.dart';
-import 'package:speed_share/app/controller/setting_controller.dart';
-import 'package:speed_share/app/controller/utils/server_util.dart';
+import '../../../controllers/chat_controller.dart';
+import '../../../controllers/download_controller.dart';
+import '../../../controllers/setting_controller.dart';
+import 'package:speed_share/utils/server_util.dart';
 import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/model/model.dart';
+import 'package:speed_share/models/models.dart';
 import 'package:path/path.dart' as p;
 import 'package:get/get.dart' hide Response;
 import 'package:speed_share/modules/dialog/show_qr_page.dart';
@@ -64,7 +64,7 @@ class _FileItemState extends State<FileItem> {
     if (downloadController.progress.containsKey(url) && downloadController.progress[url]!.progress != 0.0) {
       return false;
     }
-    if (!settingController.enableAutoDownload) return false;
+    if (!settingController.enableAutoDownloadSetting.value) return false;
     String type = url.getType;
     String savePath = '${settingController.savePath}/$type/${p.basename(url)}';
     File file = File(savePath);
@@ -189,99 +189,107 @@ class _FileItemState extends State<FileItem> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Builder(builder: (context) {
-              return GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  // if (fileDownratio == 1.0 && !timer.isActive) {
-                  //   OpenFile.open(savePath);
-                  // }
-                },
-                child: buildPreviewWidget(url),
-              );
-            }),
+            Builder(
+              builder: (context) {
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    // if (fileDownratio == 1.0 && !timer.isActive) {
+                    //   OpenFile.open(savePath);
+                    // }
+                  },
+                  child: buildPreviewWidget(url),
+                );
+              },
+            ),
             // 展示下载进度条
             if (!widget.sendByUser! && !GetPlatform.isWeb)
-              GetBuilder<DownloadController>(builder: (context) {
-                DownloadInfo info = downloadController.getInfo(url)!;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    SizedBox(
-                      height: $(8),
-                    ),
-                    ClipRRect(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(25.0),
+              GetBuilder<DownloadController>(
+                builder: (context) {
+                  DownloadInfo info = downloadController.getInfo(url)!;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        height: $(8),
                       ),
-                      child: Builder(builder: (context) {
-                        double pro = info.progress;
-                        return LinearProgressIndicator(
-                          backgroundColor: Theme.of(context).colorScheme.surface3,
-                          valueColor: AlwaysStoppedAnimation(
-                            pro == 1.0 ? Theme.of(context).primaryColor : Theme.of(context).primaryColor.withOpacity(0.4),
-                          ),
-                          value: pro,
-                        );
-                      }),
-                    ),
-                    SizedBox(
-                      height: $(4),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Builder(builder: (_) {
-                          double pro = downloadController.getProgress(url);
-                          if (pro == 1.0) {
-                            return Icon(
-                              Icons.check,
-                              size: $(16),
-                              color: Colors.green,
-                            );
-                          }
-                          return Text(
-                            '${info.speed}/s',
-                            style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: $(12),
-                            ),
-                          );
-                        }),
-                        Row(
-                          children: [
-                            SizedBox(
-                              child: Text(
-                                FileUtil.formatBytes(info.count),
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: $(12),
-                                ),
-                              ),
-                            ),
-                            Text(
-                              '/',
-                              style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: $(12),
-                              ),
-                            ),
-                            SizedBox(
-                              child: Text(
-                                widget.info!.fileSize!,
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: $(12),
-                                ),
-                              ),
-                            ),
-                          ],
+                      ClipRRect(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(25.0),
                         ),
-                      ],
-                    ),
-                  ],
-                );
-              }),
+                        child: Builder(
+                          builder: (context) {
+                            double pro = info.progress;
+                            return LinearProgressIndicator(
+                              backgroundColor: Theme.of(context).colorScheme.surface3,
+                              valueColor: AlwaysStoppedAnimation(
+                                pro == 1.0 ? Theme.of(context).primaryColor : Theme.of(context).primaryColor.withOpacity(0.4),
+                              ),
+                              value: pro,
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: $(4),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Builder(
+                            builder: (_) {
+                              double pro = downloadController.getProgress(url);
+                              if (pro == 1.0) {
+                                return Icon(
+                                  Icons.check,
+                                  size: $(16),
+                                  color: Colors.green,
+                                );
+                              }
+                              return Text(
+                                '${info.speed}/s',
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: $(12),
+                                ),
+                              );
+                            },
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                child: Text(
+                                  FileUtil.formatBytes(info.count),
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: $(12),
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                '/',
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: $(12),
+                                ),
+                              ),
+                              SizedBox(
+                                child: Text(
+                                  widget.info!.fileSize!,
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: $(12),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
+              ),
           ],
         ),
       ),
@@ -323,40 +331,41 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> {
   Future<int> server(String? path) async {
-    final app = Router();
+    // TODO: Reimplement server logic here, the previous implementation is commented out below
+    // final app = Router();
     int singlePort = Random().nextInt(10000) + 10000;
-    Log.i(singlePort);
-    int? port = Get.find<ChatController>().shelfBindPort;
-    app.get('/', (Request request) {
-      corsHeader[HttpHeaders.contentTypeHeader] = ContentType.html.toString();
-      return Response.ok(
-        singleFileDownloadHtml
-            .replaceAll('placeholder3', ":$port$path")
-            .replaceAll(
-              'placeholder2',
-              FileUtil.formatBytes(File(path!).lengthSync()),
-            )
-            .replaceAll('placeholder1', p.basename(path)),
-        headers: corsHeader,
-      );
-    });
-    app.get('/icon.png', (Request request) async {
-      corsHeader[HttpHeaders.contentTypeHeader] = 'image/png';
-      final ByteData byteData = await rootBundle.load(
-        '${Config.flutterPackage}assets/icon/${getIconFromPath(path!)}.png',
-      );
-      final Uint8List picBytes = byteData.buffer.asUint8List();
-      return Response.ok(
-        picBytes,
-        headers: corsHeader,
-      );
-    });
-    io.serve(
-      app,
-      InternetAddress.anyIPv4,
-      singlePort,
-      shared: true,
-    );
+    // Log.i(singlePort);
+    // int? port = Get.find<ChatController>().shelfBindPort;
+    // app.get('/', (Request request) {
+    //   corsHeader[HttpHeaders.contentTypeHeader] = ContentType.html.toString();
+    //   return Response.ok(
+    //     singleFileDownloadHtml
+    //         .replaceAll('placeholder3', ":$port$path")
+    //         .replaceAll(
+    //           'placeholder2',
+    //           FileUtil.formatBytes(File(path!).lengthSync()),
+    //         )
+    //         .replaceAll('placeholder1', p.basename(path)),
+    //     headers: corsHeader,
+    //   );
+    // });
+    // app.get('/icon.png', (Request request) async {
+    //   corsHeader[HttpHeaders.contentTypeHeader] = 'image/png';
+    //   final ByteData byteData = await rootBundle.load(
+    //     '${Config.flutterPackage}assets/icon/${getIconFromPath(path!)}.png',
+    //   );
+    //   final Uint8List picBytes = byteData.buffer.asUint8List();
+    //   return Response.ok(
+    //     picBytes,
+    //     headers: corsHeader,
+    //   );
+    // });
+    // io.serve(
+    //   app,
+    //   InternetAddress.anyIPv4,
+    //   singlePort,
+    //   shared: true,
+    // );
     return singlePort;
   }
 
@@ -380,11 +389,13 @@ class _MenuState extends State<Menu> {
                   children: [
                     InkWell(
                       onTap: () async {
-                        int port = await server(widget.info!.filePath);
-                        Get.back();
-                        Get.dialog(ShowQRPage(
-                          port: port,
-                        ));
+                        // int port = await server(widget.info!.filePath);
+                        // Get.back();
+                        // Get.dialog(
+                        //   ShowQRPage(
+                        //     port: port,
+                        //   ),
+                        // );
                       },
                       child: SizedBox(
                         height: $(40),
@@ -398,7 +409,7 @@ class _MenuState extends State<Menu> {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

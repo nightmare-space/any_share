@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/app/controller/controller.dart';
-import 'package:speed_share/config/config.dart';
+import '../../controllers/controllers.dart';
+import 'package:speed_share/common/config.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/modules/dialog/show_qr_page.dart';
 import 'package:speed_share/utils/utils.dart';
@@ -68,9 +68,11 @@ class Header extends StatelessWidget {
               ),
               NiIconButton(
                 onTap: () {
-                  Get.dialog(ShowQRPage(
-                    port: controller.messageBindPort,
-                  ));
+                  Get.dialog(
+                    ShowQRPage(
+                      port: controller.messageBindPort,
+                    ),
+                  );
                 },
                 child: Image.asset(
                   'assets/icon/qr.png',
@@ -81,9 +83,11 @@ class Header extends StatelessWidget {
               ),
               NiIconButton(
                 onTap: () {
-                  Get.dialog(HeaderMenu(
-                    offset: Offset(MediaQuery.of(context).size.width, 40),
-                  ));
+                  Get.dialog(
+                    HeaderMenu(
+                      offset: Offset(MediaQuery.of(context).size.width, 40),
+                    ),
+                  );
                 },
                 child: const Icon(Icons.more_vert),
               ),
@@ -134,38 +138,41 @@ class _HeaderSwiperState extends State<HeaderSwiper> {
   Widget build(BuildContext context) {
     return Expanded(
       child: PageTransitionSwitcher(
-        transitionBuilder: (
-          Widget child,
-          Animation<double> animation,
-          Animation<double> secondaryAnimation,
-        ) {
-          return FadeThroughTransition(
-            animation: animation,
-            secondaryAnimation: secondaryAnimation,
-            fillColor: Colors.transparent,
-            child: child,
-          );
-        },
+        transitionBuilder:
+            (
+              Widget child,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+            ) {
+              return FadeThroughTransition(
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                fillColor: Colors.transparent,
+                child: child,
+              );
+            },
         duration: const Duration(milliseconds: 600),
         child: [
           Align(
             alignment: Alignment.centerLeft,
-            child: GetBuilder<DeviceController>(builder: (_) {
-              return RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: l10n.headerNotice(deviceController.availableDevice()),
-                      style: TextStyle(
-                        fontSize: $(16),
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontWeight: FontWeight.w500,
+            child: GetBuilder<DeviceController>(
+              builder: (_) {
+                return RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: l10n.headerNotice(deviceController.availableDevice()),
+                        style: TextStyle(
+                          fontSize: $(16),
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            }),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
           Row(
             children: [

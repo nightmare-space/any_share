@@ -1,18 +1,27 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:settings/settings.dart';
-import 'package:speed_share/app/controller/chat_controller.dart';
-import 'package:speed_share/app/controller/setting_controller.dart';
+import '../controllers/chat_controller.dart';
+import '../controllers/download_controller.dart';
+import '../controllers/file_controller.dart';
+import '../controllers/setting_controller.dart';
 import 'package:speed_share_extension/speed_share_extension.dart';
 import 'package:window_manager/window_manager.dart';
-import 'app/controller/device_controller.dart';
-import 'config/config.dart';
-import 'global/global.dart';
-import 'material_app_entry_point.dart';
+import '../controllers/device_controller.dart';
+import 'common/config.dart';
+import 'services/clipboard_service.dart';
+import 'services/desktop_service.dart';
+import 'services/discovery_service.dart';
+import 'root_view.dart';
 import 'package:file_manager/file_manager.dart' as file_manager;
 import 'dart:async';
+
+import 'utils/assets_util.dart';
 
 // 初始化hive的设置
 Future<void> initSetting() async {
@@ -22,6 +31,8 @@ Future<void> initSetting() async {
   } else {
     path = RuntimeEnvir.configPath;
   }
+  // make sure the directory exists
+  Directory(path).createSync(recursive: true);
   await initSettingStore(path);
 }
 
@@ -56,6 +67,8 @@ Future<void> main() async {
       Get.put(SettingController());
       Get.put(DeviceController());
       Get.put(ChatController());
+      Get.put(FileController());
+      Get.put(DownloadController());
       WidgetsFlutterBinding.ensureInitialized();
       if (!GetPlatform.isIOS) {
         String dir;
@@ -82,10 +95,48 @@ Future<void> main() async {
           await windowManager.ensureInitialized();
         }
       }
-      Global().initGlobal();
+      initApp();
     },
     (error, stackTrace) {
       Log.e('Uncaught exception : $error \n$stackTrace');
     },
   );
+}
+
+ClipboardService? clipboard;
+DesktopService? desktop;
+
+Future<void> initApp() async {
+  Log.v('init');
+
+  if (GetPlatform.isWeb || GetPlatform.isIOS) return;
+
+  if (RuntimeEnvir.packageName != Config.packageName && !GetPlatform.isDesktop) {
+    Config.flutterPackage = 'packages/speed_share/';
+    Config.package = 'speed_share';
+  }
+
+  final view = PlatformDispatcher.instance.implicitView!;
+  final pd = view.platformDispatcher;
+
+  Log.i('当前系统语言 ${pd.locales}');
+  Log.i('当前系统主题 ${pd.platformBrightness}');
+  Log.i('physicalSize:${view.physicalSize.str()}');
+  Log.i('DP Size:${Get.size.str()}');
+  Log.i('devicePixelRatio:${view.devicePixelRatio}');
+  Log.i('Android DPI:${view.devicePixelRatio * 160}');
+
+  DiscoveryService.instance.init();
+
+  if (!GetPlatform.isMobile && !GetPlatform.isWeb) {
+    ClipboardService.instance.init();
+    DesktopService.instance.init();
+  }
+
+  unpackWebResource();
+  await initApi('Speed Share', Config.versionName);
+}
+
+extension SizeExt on Size {
+  String str() => 'Size(${width.toStringAsFixed(1)}, ${height.toStringAsFixed(1)})';
 }

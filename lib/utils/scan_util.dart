@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import '../controllers/controllers.dart';
-import 'package:speed_share/utils/join_util.dart';
 import 'package:speed_share/modules/qrscan_page.dart';
 
 /// 解析二维码
@@ -22,11 +21,6 @@ class ScanUtil {
     }
     Log.v('cameraScanResult -> $cameraScanResult');
     ChatController controller = Get.find();
-    JoinUtil.sendJoinEvent(
-      controller.addrs,
-      controller.shelfBindPort,
-      controller.messageBindPort,
-      cameraScanResult,
-    );
+    controller.sendJoinEvent(cameraScanResult);
   }
 }

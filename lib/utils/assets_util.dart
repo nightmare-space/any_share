@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:archive/archive.dart';
 import 'package:flutter/services.dart';
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/config/config.dart';
+import 'package:speed_share/common/config.dart';
 
 /// 解压web资源
+/// Upack web resources
 Future<void> unpackWebResource() async {
   ByteData byteData = await rootBundle.load(
     '${Config.flutterPackage}assets/web.zip',

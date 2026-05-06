@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:shelf/shelf.dart' as shelf;
-import 'package:speed_share/global/network/dio_manager.dart';
-import '../services/file_server.dart';
+import 'package:speed_share/services/dio_manager.dart';
+import '../services/file_service.dart';
 
 /// 用来处理token请求的响应
 /// 主要是为速享提供筛选IP地址的能力
@@ -36,14 +36,14 @@ Future<String?> getToken(String url) async {
     }
   });
   try {
-    response = await DioInstance.get(
-      '$url/check_token',
+    response = await DioClient.get(
+      '$url/ping',
       cancelToken: cancelToken,
     );
     if (!lock.isCompleted) {
       lock.complete(response.data);
     }
-    Log.i('/check_token 响应 ${response.data}');
+    Log.i('/ping 响应 ${response.data}');
   } catch (e) {
     if (!lock.isCompleted) {
       lock.complete(null);

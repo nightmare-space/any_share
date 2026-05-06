@@ -45,28 +45,6 @@ class _PersonalPageState extends State<PersonalPage> {
           //   },
           // ),
           personalItem(
-            title: l10n.projectBoard,
-            onTap: () {
-              Get.to(ViewMetric(
-                uiWidth: 600,
-                screenWidth: Get.size.width,
-                child: const ProjBoardV2(),
-              ));
-            },
-          ),
-          personalItem(
-            title: l10n.privacyAgreement,
-            onTap: () {
-              Get.to(const PrivacyPage());
-            },
-          ),
-          personalItem(
-            title: l10n.setting,
-            onTap: () {
-              Get.to(const SettingPage());
-            },
-          ),
-          personalItem(
             title: l10n.joinQQGroup,
             onTap: () async {
               const String url = 'mqqapi://card/show_pslcard?src_type=internal&version=1&uin=673706601&card_type=group&source=qrcode';
@@ -88,23 +66,25 @@ class _PersonalPageState extends State<PersonalPage> {
             title: l10n.aboutSpeedShare,
             onTap: () async {
               String license = await rootBundle.loadString('LICENSE');
-              Get.to(AboutPage(
-                applicationName: l10n.appName,
-                appVersion: Config.versionName,
-                versionCode: Config.versionCode,
-                logo: Padding(
-                  padding: EdgeInsets.only(top: $(32)),
-                  child: SizedBox(
-                    width: $(100),
-                    height: $(100),
-                    child: Image.asset('assets/icon/app_icon_1024.png'),
+              Get.to(
+                AboutPage(
+                  applicationName: l10n.appName,
+                  appVersion: Config.versionName,
+                  versionCode: Config.versionCode,
+                  logo: Padding(
+                    padding: EdgeInsets.only(top: $(32)),
+                    child: SizedBox(
+                      width: $(100),
+                      height: $(100),
+                      child: Image.asset('assets/icon/app_icon_1024.png'),
+                    ),
                   ),
+                  otherVersionLink: 'http://nightmare.press/YanTool/resources/SpeedShare/?C=N;O=A',
+                  openSourceLink: 'https://github.com/nightmare-space/speed_share',
+                  license: license,
+                  canOpenDrawer: false,
                 ),
-                otherVersionLink: 'http://nightmare.press/YanTool/resources/SpeedShare/?C=N;O=A',
-                openSourceLink: 'https://github.com/nightmare-space/speed_share',
-                license: license,
-                canOpenDrawer: false,
-              ));
+              );
             },
           ),
         ],

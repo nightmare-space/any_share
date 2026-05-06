@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/app/controller/chat_controller.dart';
+import '../../../controllers/chat_controller.dart';
 import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/model/model.dart';
+import 'package:speed_share/models/models.dart';
 import 'package:file_selector/file_selector.dart';
 
 class DirMessageItem extends StatefulWidget {
@@ -172,22 +172,24 @@ class _DirMessageItemState extends State<DirMessageItem> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Builder(builder: (_) {
-                            if (fileDownratio == 1.0) {
-                              return Icon(
-                                Icons.check,
-                                size: $(16),
-                                color: Colors.green,
+                          Builder(
+                            builder: (_) {
+                              if (fileDownratio == 1.0) {
+                                return Icon(
+                                  Icons.check,
+                                  size: $(16),
+                                  color: Colors.green,
+                                );
+                              }
+                              return Text(
+                                '$speed/s',
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: $(12),
+                                ),
                               );
-                            }
-                            return Text(
-                              '$speed/s',
-                              style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: $(12),
-                              ),
-                            );
-                          }),
+                            },
+                          ),
                           Row(
                             children: [
                               SizedBox(
@@ -206,15 +208,17 @@ class _DirMessageItemState extends State<DirMessageItem> {
                                   fontSize: $(12),
                                 ),
                               ),
-                              Builder(builder: (context) {
-                                return Text(
-                                  FileUtil.formatBytes(widget.info!.fullSize!),
-                                  style: TextStyle(
-                                    color: Colors.black54,
-                                    fontSize: $(12),
-                                  ),
-                                );
-                              }),
+                              Builder(
+                                builder: (context) {
+                                  return Text(
+                                    FileUtil.formatBytes(widget.info!.fullSize!),
+                                    style: TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: $(12),
+                                    ),
+                                  );
+                                },
+                              ),
                             ],
                           ),
                         ],

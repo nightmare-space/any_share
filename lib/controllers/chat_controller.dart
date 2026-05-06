@@ -10,28 +10,16 @@ import 'package:path/path.dart' as p;
 import 'package:flutter/material.dart' hide Router;
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'package:global_repository/global_repository.dart';
-import 'controller.dart';
-import 'package:speed_share/config/config.dart';
+import 'package:speed_share/services/discovery_service.dart';
+import 'controllers.dart';
+import 'package:speed_share/common/config.dart';
 import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/global/global.dart';
-import 'package:speed_share/global/network/dio_manager.dart';
-import 'package:speed_share/models/model.dart';
+import 'package:speed_share/services/dio_manager.dart';
+import 'package:speed_share/models/models.dart';
 import 'package:speed_share/modules/item/item.dart';
 import 'package:speed_share/utils/token_util.dart';
 import 'package:speed_share/utils/utils.dart' hide FileUtil;
-import 'package:speed_share/utils/utils.dart' hide FileUtil;
-import '../services/file_server.dart';
-
-int get type {
-  if (GetPlatform.isWeb) {
-    return web;
-  } else if (GetPlatform.isAndroid) {
-    return phone;
-  } else if (GetPlatform.isDesktop) {
-    return desktop;
-  }
-  return 3;
-}
+import '../services/file_service.dart';
 
 class ChatController extends GetxController with WidgetsBindingObserver {
   ChatController() {
@@ -106,8 +94,8 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     String udpData = '';
     udpData += await UniqueUtil.getDevicesId();
     udpData += ',$messageBindPort';
-    // 将设备ID与聊天服务器成功创建的端口UDP广播出去
-    Global().startSendBoardcast(udpData);
+    // 将设备 ID 与聊天服务器成功创建的端口 UDP 广播出去
+    DiscoveryService.instance.startBroadcast(udpData);
     // 保存本地的IP地址列表
     if (!GetPlatform.isWeb) {
       await refreshLocalAddress();
@@ -147,7 +135,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     }
     Uri uri = Uri.parse(urlPrefix);
     int port = uri.port;
-    deviceController.onDeviceConnect(shortHash(''), l10n.device, phone, 'http://${uri.host}', port);
+    deviceController.onDeviceConnect(shortHash(''), l10n.device, null, 'http://${uri.host}', port);
     // Log.i('$urlPrefix/${info.messagePort}');
 
     sendJoinEvent('http://${uri.host}:$port');
@@ -181,7 +169,13 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   Future<void> sendDirFromPath(String dirPath) async {
     Directory dir = Directory(dirPath);
     String dirName = p.basename(dirPath);
-    DirMessage dirMessage = DirMessage(dirName: dirName, fullSize: 0, deviceName: Global().deviceName, addrs: addrs, port: shelfBindPort);
+    DirMessage dirMessage = DirMessage(
+      dirName: dirName,
+      fullSize: 0,
+      deviceName: deviceController.deviceName,
+      addrs: addrs,
+      port: shelfBindPort,
+    );
     // 发送消息
     sendMessage(dirMessage);
     // 将消息添加到本地列表
@@ -246,7 +240,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
           fileName: xFile.name,
           hash: hash,
           fileSize: FileUtil.formatBytes(await xFile.length()),
-          deviceName: Global().deviceName,
+          deviceName: deviceController.deviceName,
           blob: xFile.path,
         );
         // 发送消息
@@ -338,7 +332,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
       fileSize: FileUtil.formatBytes(size),
       addrs: addrs,
       port: shelfBindPort,
-      deviceName: Global().deviceName,
+      deviceName: deviceController.deviceName,
     );
     // 发送消息
     sendMessage(sendFileInfo);
@@ -355,35 +349,27 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   }
 
   Future<void> dispatch(MessageBaseInfo info, List<Widget?> children) async {
-    if (info.deviceId == Global().uniqueKey) {
+    if (info.deviceId == deviceController.uniqueKey) {
       return;
     }
     switch (info.runtimeType) {
       // 剪切板消息
       case ClipboardMessage:
-        if (!settingController.clipboardShare) {
+        if (!settingController.clipboardShareSetting.value) {
           return;
         }
         ClipboardMessage clipboardMessage = info as ClipboardMessage;
         Clipboard.setData(ClipboardData(text: clipboardMessage.content ?? ''));
-        // 置为false是为了不让此次复制行为再同步出去
-        Global().canShareClip = false;
-        Future.delayed(const Duration(milliseconds: 300), () {
-          Global().canShareClip = true;
-        });
-        if (settingController.enbaleConstIsland) {
-          // ConstIsland.onClipboardReceive(clipboardMessage.deviceName);
-        } else {
-          showToast('${clipboardMessage.deviceName}的剪切板已复制');
-        }
+        // TODO: 需要重新实现剪切板重复复制的问题
+        showToast('${clipboardMessage.deviceName}的剪切板已复制');
         break;
       // 设备加入消息
       case JoinMessage:
         JoinMessage joinMessage = info as JoinMessage;
         // 当连接设备不是本机的时候
-        if (info.deviceId != Global().uniqueKey) {
+        if (info.deviceId != deviceController.uniqueKey) {
           Log.i('JoinMessage -> $joinMessage');
-          Log.i('Global().uniqueKey -> ${Global().uniqueKey}');
+          Log.i('deviceController.uniqueKey -> ${deviceController.uniqueKey}');
           // 这个不带端口，主要是为了筛选IP
           String? urlPrefix = await getCorrectUrlWithAddressAndPort(joinMessage.addrs!, joinMessage.filePort);
           Log.i('计算结果:$urlPrefix');
@@ -404,7 +390,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
             for (Map<String, dynamic> data in messageCache) {
               try {
                 // ignore: unused_local_variable
-                Response res = await DioInstance.post('$urlPrefix:${joinMessage.messagePort}', data: data);
+                Response res = await DioClient.post('$urlPrefix:${joinMessage.messagePort}', data: data);
               } catch (e) {
                 Log.e('cache send error : $e');
               }
@@ -422,12 +408,9 @@ class ChatController extends GetxController with WidgetsBindingObserver {
         // C加入A的房间，自然是不能再拿到这个文件的信息了
         fileMessage.url ??= '';
         // TODO: 低优先级，先下掉灵动岛提示，后续单独适配android和ios
-        onNewFileReceive?.call(
-          FileDynamicIsland(info: info, sendByUser: false),
-        );
-        if (settingController.enbaleConstIsland) {
-          // ConstIsland.onFileReceive(fileMessage.toJson());
-        }
+        // onNewFileReceive?.call(
+        //   FileDynamicIsland(info: info, sendByUser: false),
+        // );
         break;
       case DirMessage:
         DirMessage dirMessage = info as DirMessage;
@@ -489,9 +472,10 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   List<Map<String, dynamic>> messageCache = [];
   // 给Web端用的
   List<Map<String, dynamic>> messageWebCache = [];
+
   void sendMessage(MessageBaseInfo info) {
-    info.deviceType = type;
-    info.deviceId = Global().uniqueKey;
+    info.deviceType = deviceController.deviceType;
+    info.deviceId = deviceController.uniqueKey;
     messageCache.add(info.toJson());
     messageWebCache.add(info.toJson());
     deviceController.send(info.toJson());
@@ -499,7 +483,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
 
   /// 发送文本消息
   void sendTextMsg() {
-    TextMessage info = TextMessage(content: controller.text, deviceName: Global().deviceName);
+    TextMessage info = TextMessage(content: controller.text, deviceName: deviceController.deviceName);
     sendMessage(info);
     children.add(MessageItemFactory.getMessageItem(info, true, context));
     update();
@@ -520,7 +504,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
       if (info is JoinMessage) {
         continue;
       }
-      if (info!.deviceType == device.deviceType) {
+      if (info.deviceType == device.deviceType) {
         dispatch(info, backup);
       }
     }
@@ -546,5 +530,33 @@ class ChatController extends GetxController with WidgetsBindingObserver {
       default:
     }
     // Log.v('didChangeAppLifecycleState : $state');
+  }
+
+  Future<void> sendJoinEvent(String url) async {
+    DeviceController deviceController = Get.find();
+    if (!deviceController.ipIsConnect(url)) {
+      return;
+    }
+    Log.i('sendJoinEvent : $url');
+    ChatController controller = Get.find();
+    await controller.initLock.future;
+    JoinMessage message = JoinMessage();
+    message.deviceName = deviceController.deviceName;
+    message.deviceId = deviceController.uniqueKey;
+    message.addrs = addrs;
+    message.deviceType = deviceController.deviceType;
+    message.filePort = shelfBindPort;
+    message.messagePort = messageBindPort;
+    // Log.i(message);
+    try {
+      Response res = await DioClient.post(
+        '$url/',
+        data: message.toJson(),
+      );
+      Log.i('sendJoinEvent result : ${res.data}');
+      // deviceController.onDeviceConnect(res.data, name, type, urlPrefix, port)
+    } on DioException catch (e) {
+      Log.e('$url 发送加入消息异常，但不一定会影响使用\n详情：${e.message} ${e.response}');
+    }
   }
 }

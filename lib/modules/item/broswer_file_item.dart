@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart' as gr;
-import 'package:speed_share/app/controller/controller.dart';
+import '../../controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/model/model.dart';
+import 'package:speed_share/models/models.dart';
 import 'package:speed_share/modules/widget/icon.dart';
 import 'package:speed_share/themes/theme.dart';
 import 'package:speed_share/utils/utils.dart';
 
 class BroswerFileItem extends StatefulWidget {
   /// 消息model
-  final BroswerFileMessage? info;
+  final BrowserFileMessage? info;
 
   /// 是否是本机发送的消息
   final bool? sendByUser;
@@ -28,7 +28,7 @@ class _BroswerFileItemState extends State<BroswerFileItem> {
   ChatController chatController = Get.find();
   SettingController settingController = Get.find();
   DownloadController downloadController = Get.find();
-  BroswerFileMessage? info;
+  BrowserFileMessage? info;
 
   DateTime? startTime;
   bool isStarted = false;

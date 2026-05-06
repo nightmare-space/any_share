@@ -6,9 +6,9 @@ import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart' hide context;
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:settings/settings.dart';
-import 'package:speed_share/app/controller/controller.dart';
+import 'package:speed_share/services/clipboard_service.dart';
+import '../../controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/global/global.dart';
 import 'package:speed_share/modules/file/file_page.dart';
 import 'package:speed_share/modules/widget/header.dart';
 import 'package:speed_share/modules/widget/icon.dart';
@@ -43,12 +43,14 @@ class _HomePageState extends State<HomePage> {
     handleSendFile();
     Future.delayed(Duration.zero, () async {
       if (privacySetting.get() == null) {
-        await Get.to(PrivacyAgreePage(
-          onAgreeTap: () {
-            privacySetting.set(true);
-            Navigator.of(context).pop();
-          },
-        ));
+        await Get.to(
+          PrivacyAgreePage(
+            onAgreeTap: () {
+              privacySetting.set(true);
+              Navigator.of(context).pop();
+            },
+          ),
+        );
         request();
       }
       SystemChrome.setSystemUIOverlayStyle(
@@ -77,13 +79,10 @@ class _HomePageState extends State<HomePage> {
       MethodChannel channel = const MethodChannel('send_channel');
       channel.setMethodCallHandler((call) async {
         if (call.method == 'clip_changed') {
-          if (!Global().canShareClip) {
-            return;
-          }
           if (call.arguments != null) {
-            Global().setClipboard(call.arguments);
+            ClipboardService.instance.setClipboard(call.arguments);
           } else {
-            Global().onClipboardChanged();
+            ClipboardService.instance.onClipboardChanged();
           }
         }
         if (call.method == 'send_file') {
@@ -169,34 +168,38 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 SizedBox(height: $(4)),
-                Builder(builder: (context) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: colorScheme.surfaceContainer,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    height: $(240),
-                    width: double.infinity,
-                    child: Builder(builder: (context) {
-                      if (chatController.children.isEmpty) {
-                        return Center(
-                          child: Text(
-                            l10n.chatWindow,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                          ),
-                        );
-                      }
-                      return ListView.builder(
-                        itemCount: chatController.children.length,
-                        itemBuilder: (c, i) {
-                          return chatController.children[i];
+                Builder(
+                  builder: (context) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: colorScheme.surfaceContainer,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      height: $(240),
+                      width: double.infinity,
+                      child: Builder(
+                        builder: (context) {
+                          if (chatController.children.isEmpty) {
+                            return Center(
+                              child: Text(
+                                l10n.chatWindow,
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                ),
+                              ),
+                            );
+                          }
+                          return ListView.builder(
+                            itemCount: chatController.children.length,
+                            itemBuilder: (c, i) {
+                              return chatController.children[i];
+                            },
+                          );
                         },
-                      );
-                    }),
-                  );
-                }),
+                      ),
+                    );
+                  },
+                ),
               ],
             );
           },

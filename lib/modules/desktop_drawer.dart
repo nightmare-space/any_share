@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/app/controller/controller.dart';
+import 'package:speed_share/common/device_type.dart';
+import '../controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/speed_share.dart';
 
@@ -20,14 +22,14 @@ class DesktopDrawer extends StatefulWidget {
 }
 
 class _DesktopDrawerState extends State<DesktopDrawer> {
-  String getIcon(int? type) {
+  String getIcon(DeviceType? type) {
     switch (type) {
-      case 0:
+      case DeviceType.phone:
         return 'assets/icon/phone.png';
-      case 1:
+      case DeviceType.desktop:
         return 'assets/icon/computer.png';
-      case 2:
-        return 'assets/icon/broswer.png';
+      case DeviceType.browser:
+        return 'assets/icon/browser.png';
       default:
         return 'assets/icon/computer.png';
     }
@@ -44,36 +46,38 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
             padding: EdgeInsets.all($(12)),
             child: Row(
               children: [
-                GetBuilder<DeviceController>(builder: (controller) {
-                  if (GetPlatform.isWeb) {
+                GetBuilder<DeviceController>(
+                  builder: (controller) {
+                    if (GetPlatform.isWeb) {
+                      return Column(
+                        children: [
+                          messageMenu(),
+                          fileMenu(),
+                        ],
+                      );
+                    }
                     return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (personHeader != null)
+                          Column(
+                            children: [
+                              SizedBox(
+                                width: $(200),
+                                child: personHeader,
+                              ),
+                              SizedBox(height: $(8)),
+                            ],
+                          ),
+                        homeMenu(),
                         messageMenu(),
                         fileMenu(),
+                        localFileMenu(controller),
+                        settingMenu(controller),
                       ],
                     );
-                  }
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (personHeader != null)
-                        Column(
-                          children: [
-                            SizedBox(
-                              width: $(200),
-                              child: personHeader,
-                            ),
-                            SizedBox(height: $(8)),
-                          ],
-                        ),
-                      homeMenu(),
-                      messageMenu(),
-                      fileMenu(),
-                      localFileMenu(controller),
-                      settingMenu(controller),
-                    ],
-                  );
-                }),
+                  },
+                ),
               ],
             ),
           ),
@@ -95,19 +99,24 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
         setState(() {});
         widget.onChange?.call(v);
       },
-      builder: (_) {
+      builder: (context) {
         return Row(
           children: [
-            Image.asset(
-              'assets/icon/setting.png',
-              color: Theme.of(_).textTheme.bodyMedium!.color,
+            // Image.asset(
+            //   'assets/icon/setting.png',
+            //   color: Theme.of(context).textTheme.bodyMedium!.color,
+            //   width: $(16),
+            // ),
+            SvgPicture.asset(
+              'assets/icon/v2/setting.svg',
               width: $(16),
+              color: Theme.of(context).textTheme.bodyMedium!.color,
             ),
             SizedBox(width: $(4)),
             Text(
               l10n.setting,
               style: TextStyle(
-                color: Theme.of(_).textTheme.bodyMedium!.color,
+                color: Theme.of(context).textTheme.bodyMedium!.color,
               ),
             ),
           ],
@@ -124,19 +133,19 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
         setState(() {});
         widget.onChange?.call(v);
       },
-      builder: (_) {
+      builder: (context) {
         return Row(
           children: [
-            Image.asset(
-              'assets/icon/file.png',
+            SvgPicture.asset(
+              'assets/icon/v2/folder.svg',
               width: $(16),
-              color: Theme.of(_).textTheme.bodyMedium!.color,
+              color: Theme.of(context).textTheme.bodyMedium!.color,
             ),
             SizedBox(width: $(4)),
             Text(
               l10n.fileManagerLocal,
               style: TextStyle(
-                color: Theme.of(_).textTheme.bodyMedium!.color,
+                color: Theme.of(context).textTheme.bodyMedium!.color,
               ),
             ),
           ],
@@ -146,40 +155,42 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
   }
 
   GetBuilder<DeviceController> fileMenu() {
-    return GetBuilder<DeviceController>(builder: (_) {
-      return Column(
-        children: [
-          for (int i = 0; i < _.connectDevice.length; i++)
-            DrawerItem(
-              groupValue: widget.value,
-              value: i + 2,
-              onChange: (v) {
-                widget.onChange?.call(v);
-                chatController.changeListToDevice(_.connectDevice[i]);
-                setState(() {});
-              },
-              builder: (context) {
-                return Row(
-                  children: [
-                    Image.asset(
-                      getIcon(_.connectDevice[i].deviceType),
-                      width: $(16),
-                      color: Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                    SizedBox(width: $(4)),
-                    Text(
-                      '${l10n.fileManager}(${_.connectDevice[i].deviceName})',
-                      style: TextStyle(
+    return GetBuilder<DeviceController>(
+      builder: (dc) {
+        return Column(
+          children: [
+            for (int i = 0; i < dc.connectDevice.length; i++)
+              DrawerItem(
+                groupValue: widget.value,
+                value: i + 2,
+                onChange: (v) {
+                  widget.onChange?.call(v);
+                  chatController.changeListToDevice(dc.connectDevice[i]);
+                  setState(() {});
+                },
+                builder: (context) {
+                  return Row(
+                    children: [
+                      Image.asset(
+                        getIcon(dc.connectDevice[i].deviceType),
+                        width: $(16),
                         color: Theme.of(context).textTheme.bodyMedium!.color,
                       ),
-                    ),
-                  ],
-                );
-              },
-            ),
-        ],
-      );
-    });
+                      SizedBox(width: $(4)),
+                      Text(
+                        '${l10n.fileManager}(${dc.connectDevice[i].deviceName})',
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+          ],
+        );
+      },
+    );
   }
 
   DrawerItem messageMenu() {
@@ -191,19 +202,24 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
         chatController.restoreList();
         widget.onChange?.call(v);
       },
-      builder: (_) {
+      builder: (context) {
         return Row(
           children: [
-            Image.asset(
-              'assets/icon/all.png',
+            SvgPicture.asset(
+              'assets/icon/v2/message.svg',
               width: $(16),
-              color: Theme.of(_).textTheme.bodyMedium!.color,
+              color: Theme.of(context).textTheme.bodyMedium!.color,
             ),
+            // Image.asset(
+            //   'assets/icon/all.png',
+            //   width: $(16),
+            //   color: Theme.of(context).textTheme.bodyMedium!.color,
+            // ),
             SizedBox(width: $(4)),
             Text(
               l10n.chatWindow,
               style: TextStyle(
-                color: Theme.of(_).textTheme.bodyMedium!.color,
+                color: Theme.of(context).textTheme.bodyMedium!.color,
               ),
             ),
           ],
@@ -220,19 +236,19 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
         setState(() {});
         widget.onChange?.call(v);
       },
-      builder: (_) {
+      builder: (context) {
         return Row(
           children: [
             Image.asset(
               'assets/icon/homev2.png',
               width: $(16),
-              color: Theme.of(_).textTheme.bodyMedium!.color,
+              color: Theme.of(context).textTheme.bodyMedium!.color,
             ),
             SizedBox(width: $(4)),
             Text(
               l10n.home,
               style: TextStyle(
-                color: Theme.of(_).textTheme.bodyMedium!.color,
+                color: Theme.of(context).textTheme.bodyMedium!.color,
               ),
             ),
           ],

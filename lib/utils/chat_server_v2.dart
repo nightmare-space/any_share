@@ -7,8 +7,8 @@ import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf/shelf.dart';
 import 'package:shelf_static/shelf_static.dart';
-import 'package:speed_share/app/controller/controller.dart';
-import 'package:speed_share/config/config.dart';
+import '../controllers/controllers.dart';
+import 'package:speed_share/common/config.dart';
 import 'package:file_manager/file_manager.dart' as file_manager;
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/utils/utils.dart';
@@ -156,17 +156,19 @@ class Server {
       Config.chatPortRangeEnd,
     ))!;
     // 用来解决前端的跨域
-    final handler = const Pipeline().addMiddleware((innerHandler) {
-      return (request) async {
-        final response = await innerHandler(request);
-        // Log.w(request.headers);
-        // Log.i(request.requestedUri);
-        if (request.method == 'OPTIONS') {
-          return Response.ok('', headers: corsHeader);
-        }
-        return response;
-      };
-    }).addHandler(app);
+    final handler = const Pipeline()
+        .addMiddleware((innerHandler) {
+          return (request) async {
+            final response = await innerHandler(request);
+            // Log.w(request.headers);
+            // Log.i(request.requestedUri);
+            if (request.method == 'OPTIONS') {
+              return Response.ok('', headers: corsHeader);
+            }
+            return response;
+          };
+        })
+        .addHandler(app);
     // ignore: unused_local_variable
     // TODO 在isolate中开
     HttpServer server = await io.serve(

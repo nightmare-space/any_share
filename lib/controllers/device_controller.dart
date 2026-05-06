@@ -6,14 +6,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart';
+import 'package:speed_share/common/device_type.dart';
+import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/models/history.dart';
-import 'package:speed_share/utils/join_util.dart';
-import 'package:speed_share/global/network/dio_manager.dart';
+import 'package:speed_share/services/dio_manager.dart';
 
 class Device {
   Device(this.id);
   String? id;
-  int? deviceType;
+  DeviceType? deviceType;
   String? deviceName;
   // url prefix
   String? url;
@@ -31,13 +32,13 @@ class Device {
     return false;
   }
 
-  static Color getColor(int? type) {
+  static Color getColor(DeviceType? type) {
     switch (type) {
-      case 0:
+      case DeviceType.phone:
         return const Color(0xffED796A);
-      case 1:
+      case DeviceType.desktop:
         return const Color(0xff6A6DED);
-      case 2:
+      case DeviceType.browser:
         return const Color(0xff317DEE);
       default:
         return Colors.indigo;
@@ -57,7 +58,7 @@ class Device {
 // 用于管理设备连接的类
 class DeviceController extends GetxController {
   DeviceController() {
-    return;
+    // return;
     // TODO
     if (GetPlatform.isWeb) {
       return;
@@ -83,7 +84,7 @@ class DeviceController extends GetxController {
         historys.datas!.forEach(
           ((element) {
             // TODO
-            sendJoinEvent(element.url!);
+            chatController.sendJoinEvent(element.url!);
           }),
         );
       });
@@ -95,11 +96,32 @@ class DeviceController extends GetxController {
     // 检测链接设备是否互通
   }
 
+  late final ChatController chatController = Get.find();
+
+  String deviceName = '';
+  String uniqueKey = '';
+  late final DeviceType deviceType;
+
+  Future<void> init() async {
+    uniqueKey = await UniqueUtil.getUniqueKey();
+    deviceName = await UniqueUtil.getDevicesId();
+
+    Log.v('deviceId -> $deviceName', 'DeviceService');
+    Log.v('uniqueKey -> $uniqueKey', 'DeviceService');
+    if (GetPlatform.isAndroid || GetPlatform.isIOS) {
+      deviceType = DeviceType.phone;
+    } else if (GetPlatform.isMacOS || GetPlatform.isWindows || GetPlatform.isLinux) {
+      deviceType = DeviceType.desktop;
+    } else {
+      deviceType = DeviceType.browser;
+    }
+  }
+
   void checkConnectStat() {
     Timer.periodic(const Duration(seconds: 2), (timer) async {
       for (Device device in connectDevice) {
         try {
-          Response response = await Dio().get('${device.url}:${device.messagePort}/check_token');
+          Response response = await Dio().get('${device.url}:${device.messagePort}/ping');
           Log.d('checkConnectStat response.data : ${response.data}');
           device.isConnect = true;
           update();
@@ -138,7 +160,7 @@ class DeviceController extends GetxController {
   void onDeviceConnect(
     String? id,
     String? name,
-    int? type,
+    DeviceType? type,
     String? urlPrefix,
     int? port,
   ) {
@@ -208,7 +230,7 @@ class DeviceController extends GetxController {
     for (String url in urls) {
       // Log.i('$url');
       try {
-        await DioInstance.post(url, data: data);
+        await DioClient.post(url, data: data);
       } catch (e) {
         // Log.e('send error : ${e}');
       }

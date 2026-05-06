@@ -1,4 +1,3 @@
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
-String url = window.document.baseUri!;
+String url = web.window.document.baseURI;

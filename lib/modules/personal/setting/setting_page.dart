@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:file_selector/file_selector.dart';
 import 'package:file_manager/file_manager.dart' as file_manager;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:speed_share/app/controller/controller.dart';
+import 'package:speed_share/common/config.dart';
+import '../../../controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/themes/theme.dart';
 
@@ -75,379 +77,462 @@ class _SettingPageState extends State<SettingPage> {
     AppBar? appBar;
     if (ResponsiveBreakpoints.of(context).isMobile) {
       appBar = AppBar(
-        systemOverlayStyle: OverlayStyle.dark,
         title: Text(l10n.setting),
+        forceMaterialTransparency: true,
       );
     }
     return Scaffold(
       appBar: appBar,
       body: SafeArea(
         left: false,
-        child: GetBuilder<SettingController>(builder: (controller) {
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
-                  child: Text(
-                    l10n.common,
-                    style: title,
+        child: GetBuilder<SettingController>(
+          builder: (controller) {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
+                    child: Text(
+                      l10n.common,
+                      style: title,
+                    ),
                   ),
-                ),
-                GetBuilder<SettingController>(
-                  builder: (_) {
-                    return SettingItem(
-                      onTap: () async {
-                        if (GetPlatform.isDesktop) {
-                          const confirmButtonText = 'Choose';
-                          final path = await getDirectoryPath(
-                            confirmButtonText: confirmButtonText,
-                          );
-                          Log.e('path:$path');
-                          if (path != null) {
-                            controller.switchDownLoadPath(path);
+                  GetBuilder<SettingController>(
+                    builder: (_) {
+                      return SettingItem(
+                        onTap: () async {
+                          if (GetPlatform.isDesktop) {
+                            const confirmButtonText = 'Choose';
+                            final path = await getDirectoryPath(
+                              confirmButtonText: confirmButtonText,
+                            );
+                            Log.e('path:$path');
+                            if (path != null) {
+                              controller.switchDownLoadPath(path);
+                            }
+                          } else {
+                            String? path = await file_manager.FileManager.selectDirectory();
+                            if (path != null) {
+                              controller.switchDownLoadPath(path);
+                            }
                           }
-                        } else {
-                          String? path = await file_manager.FileManager.selectDirectory();
-                          if (path != null) {
-                            controller.switchDownLoadPath(path);
-                          }
-                        }
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            l10n.downlaodPath,
-                            style: TextStyle(
-                              fontSize: $(18),
-                            ),
-                          ),
-                          Text(
-                            controller.savePath!,
-                            style: TextStyle(
-                              fontSize: $(16),
-                              color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-                SettingItem(
-                  onTap: () {
-                    Get.dialog(const SelectLang());
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        l10n.lang,
-                        style: TextStyle(
-                          fontSize: $(18),
-                        ),
-                      ),
-                      Text(
-                        controller.currentLocale!.toLanguageTag(),
-                        style: TextStyle(
-                          fontSize: $(16),
-                          color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SettingItem(
-                  onTap: () {
-                    controller.enableAutoChange(!controller.enableAutoDownload);
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        l10n.autoDownload,
-                        style: TextStyle(
-                          fontSize: $(18),
-                        ),
-                      ),
-                      AquaSwitch(
-                        value: controller.enableAutoDownload,
-                        onChanged: controller.enableAutoChange,
-                      ),
-                    ],
-                  ),
-                ),
-
-                // SettingItem(
-                //   onTap: () {
-                //     controller.constIslandChange(!controller.enbaleConstIsland);
-                //   },
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     children: [
-                //       Expanded(
-                //         child: Column(
-                //           crossAxisAlignment: CrossAxisAlignment.start,
-                //           mainAxisAlignment: MainAxisAlignment.center,
-                //           children: [
-                //             Text(
-                //               '开启常量岛动画',
-                //               style: TextStyle(
-                //                 fontSize: $(18),
-                //               ),
-                //             ),
-                //             // SizedBox(height: $(2)),
-                //             Text(
-                //               '模仿iOS灵动岛的动画，这个开关需要同时打开速享的悬浮窗权限',
-                //               style: TextStyle(
-                //                 fontSize: $(14),
-                //                 color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.6),
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //       ),
-                //       AquaSwitch(
-                //         value: controller.enbaleConstIsland,
-                //         onChanged: controller.constIslandChange,
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                SettingItem(
-                  onTap: () {
-                    controller.clipChange(!controller.clipboardShare);
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        l10n.clipboardshare,
-                        style: TextStyle(
-                          fontSize: $(18),
-                        ),
-                      ),
-                      AquaSwitch(
-                        value: controller.clipboardShare,
-                        onChanged: controller.clipChange,
-                      ),
-                    ],
-                  ),
-                ),
-                SettingItem(
-                  onTap: () {
-                    controller.vibrateChange(!controller.vibrate);
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        l10n.messageNote,
-                        style: TextStyle(
-                          fontSize: $(18),
-                        ),
-                      ),
-                      AquaSwitch(
-                        value: controller.vibrate,
-                        onChanged: controller.vibrateChange,
-                      ),
-                    ],
-                  ),
-                ),
-
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
-                  child: Text(
-                    l10n.fileType,
-                    style: title,
-                  ),
-                ),
-
-                SettingItem(
-                  onTap: () {
-                    controller.changeFileClassify(!controller.enableFileClassify);
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
+                        },
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              l10n.enableFileClassification,
-                              style: TextStyle(fontSize: $(18)),
-                            ),
-
-                            // SizedBox(height: $(2)),
-                            Text(
-                              '注意，文件分类开启后会自动整理下载路径的所有文件',
-                              style: TextStyle(
-                                fontSize: $(14),
-                                color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      AquaSwitch(
-                        value: controller.enableFileClassify,
-                        onChanged: controller.changeFileClassify,
-                      ),
-                    ],
-                  ),
-                ),
-                SettingItem(
-                  onTap: () {
-                    controller.changeWebServer(!controller.enableWebServer);
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              l10n.enableWebServer,
+                              l10n.downlaodPath,
                               style: TextStyle(
                                 fontSize: $(18),
                               ),
                             ),
-                            // SizedBox(height: $(2)),
                             Text(
-                              l10n.enableWebServerTips,
+                              controller.savePath!,
                               style: TextStyle(
-                                fontSize: $(14),
+                                fontSize: $(16),
                                 color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      AquaSwitch(
-                        value: controller.enableWebServer,
-                        onChanged: controller.changeWebServer,
-                      ),
-                    ],
-                  ),
-                ),
-                if (controller.enableWebServer)
-                  FutureBuilder<List<String>>(
-                    future: PlatformUtil.localAddress(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        List<Widget> children = [];
-                        for (String address in snapshot.data!) {
-                          children.add(Padding(
-                            padding: EdgeInsets.symmetric(horizontal: $(10), vertical: $(2)),
-                            child: SelectableText('$address:${chatController.messageBindPort}/sdcard'),
-                          ));
-                        }
-                        return Column(
-                          children: children,
-                        );
-                      }
-                      return const SizedBox();
+                      );
                     },
                   ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
-                  child: Text(
-                    l10n.clearCache,
-                    style: title,
+                  SettingItem(
+                    onTap: () {
+                      Get.dialog(const SelectLang());
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          l10n.lang,
+                          style: TextStyle(
+                            fontSize: $(18),
+                          ),
+                        ),
+                        Text(
+                          controller.currentLocale!.toLanguageTag(),
+                          style: TextStyle(
+                            fontSize: $(16),
+                            color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SettingItem(
-                  onTap: () async {
-                    await cache!.delete(recursive: true);
-                    getp();
-                    showToast('缓存清理完成');
-                  },
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '当前缓存大小:$cacheSize',
-                              style: TextStyle(
-                                fontSize: $(18),
+                  SettingItem(
+                    onTap: () {
+                      controller.enableAutoChange(!controller.enableAutoDownloadSetting.value);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.autoDownload,
+                          style: TextStyle(
+                            fontSize: $(18),
+                          ),
+                        ),
+                        AquaSwitch(
+                          value: controller.enableAutoDownloadSetting.value,
+                          onChanged: controller.enableAutoChange,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // SettingItem(
+                  //   onTap: () {
+                  //     controller.constIslandChange(!controller.enbaleConstIsland);
+                  //   },
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     children: [
+                  //       Expanded(
+                  //         child: Column(
+                  //           crossAxisAlignment: CrossAxisAlignment.start,
+                  //           mainAxisAlignment: MainAxisAlignment.center,
+                  //           children: [
+                  //             Text(
+                  //               '开启常量岛动画',
+                  //               style: TextStyle(
+                  //                 fontSize: $(18),
+                  //               ),
+                  //             ),
+                  //             // SizedBox(height: $(2)),
+                  //             Text(
+                  //               '模仿iOS灵动岛的动画，这个开关需要同时打开速享的悬浮窗权限',
+                  //               style: TextStyle(
+                  //                 fontSize: $(14),
+                  //                 color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.6),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       AquaSwitch(
+                  //         value: controller.enbaleConstIsland,
+                  //         onChanged: controller.constIslandChange,
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  SettingItem(
+                    onTap: () {
+                      controller.clipChange(!controller.clipboardShareSetting.value);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.clipboardshare,
+                          style: TextStyle(
+                            fontSize: $(18),
+                          ),
+                        ),
+                        AquaSwitch(
+                          value: controller.clipboardShareSetting.value,
+                          onChanged: controller.clipChange,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SettingItem(
+                    onTap: () {
+                      controller.vibrateChange(!controller.vibrate);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.messageNote,
+                          style: TextStyle(
+                            fontSize: $(18),
+                          ),
+                        ),
+                        AquaSwitch(
+                          value: controller.vibrate,
+                          onChanged: controller.vibrateChange,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
+                    child: Text(
+                      l10n.fileType,
+                      style: title,
+                    ),
+                  ),
+
+                  SettingItem(
+                    onTap: () {
+                      controller.changeFileClassify(!controller.enableFileClassify);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                l10n.enableFileClassification,
+                                style: TextStyle(fontSize: $(18)),
                               ),
-                            ),
-                            Text(
-                              '安卓SAF架构会导致从系统文件夹选择文件总是会拷贝一份，如果使用速享自带文件管理器选择，则不会增加缓存大小',
-                              style: TextStyle(
-                                fontSize: $(14),
-                                color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
+
+                              // SizedBox(height: $(2)),
+                              Text(
+                                '注意，文件分类开启后会自动整理下载路径的所有文件',
+                                style: TextStyle(
+                                  fontSize: $(14),
+                                  color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
+                                ),
                               ),
+                            ],
+                          ),
+                        ),
+                        AquaSwitch(
+                          value: controller.enableFileClassify,
+                          onChanged: controller.changeFileClassify,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SettingItem(
+                    onTap: () {
+                      controller.changeWebServer(!controller.enableWebServer);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                l10n.enableWebServer,
+                                style: TextStyle(
+                                  fontSize: $(18),
+                                ),
+                              ),
+                              // SizedBox(height: $(2)),
+                              Text(
+                                l10n.enableWebServerTips,
+                                style: TextStyle(
+                                  fontSize: $(14),
+                                  color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        AquaSwitch(
+                          value: controller.enableWebServer,
+                          onChanged: controller.changeWebServer,
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (controller.enableWebServer)
+                    FutureBuilder<List<String>>(
+                      future: PlatformUtil.localAddress(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          List<Widget> children = [];
+                          for (String address in snapshot.data!) {
+                            children.add(
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: $(10), vertical: $(2)),
+                                child: SelectableText('$address:${chatController.messageBindPort}/sdcard'),
+                              ),
+                            );
+                          }
+                          return Column(
+                            children: children,
+                          );
+                        }
+                        return const SizedBox();
+                      },
+                    ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
+                    child: Text(
+                      l10n.clearCache,
+                      style: title,
+                    ),
+                  ),
+                  SettingItem(
+                    onTap: () async {
+                      await cache!.delete(recursive: true);
+                      getp();
+                      showToast('缓存清理完成');
+                    },
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '当前缓存大小:$cacheSize',
+                                style: TextStyle(
+                                  fontSize: $(18),
+                                ),
+                              ),
+                              Text(
+                                '安卓SAF架构会导致从系统文件夹选择文件总是会拷贝一份，如果使用速享自带文件管理器选择，则不会增加缓存大小',
+                                style: TextStyle(
+                                  fontSize: $(14),
+                                  color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
+                    child: Text(
+                      l10n.aboutSpeedShare,
+                      style: title,
+                    ),
+                  ),
+                  SettingItem(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '更新日志',
+                          style: TextStyle(
+                            fontSize: $(18),
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: $(16),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Get.to(const ChangeLogPage());
+                    },
+                  ),
+                  SettingItem(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.privacyAgreement,
+                          style: TextStyle(
+                            fontSize: $(18),
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: $(16),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Get.to(const PrivacyPage());
+                    },
+                  ),
+                  SettingItem(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '关于速享',
+                          style: TextStyle(
+                            fontSize: $(18),
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: $(16),
+                        ),
+                      ],
+                    ),
+                    onTap: () async {
+                      String license = await rootBundle.loadString('LICENSE');
+                      Get.to(
+                        AboutPage(
+                          applicationName: l10n.appName,
+                          appVersion: Config.versionName,
+                          versionCode: Config.versionCode,
+                          logo: Padding(
+                            padding: EdgeInsets.only(top: $(32)),
+                            child: SizedBox(
+                              width: $(100),
+                              height: $(100),
+                              child: Image.asset('assets/icon/app_icon_1024.png'),
                             ),
-                          ],
+                          ),
+                          otherVersionLink: 'http://nightmare.press/YanTool/resources/SpeedShare/?C=N;O=A',
+                          openSourceLink: 'https://github.com/nightmare-space/speed_share',
+                          license: license,
+                          canOpenDrawer: false,
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
-                  child: Text(
-                    l10n.aboutSpeedShare,
-                    style: title,
+                  SettingItem(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.developer,
+                          style: TextStyle(
+                            fontSize: $(18),
+                          ),
+                        ),
+                        Text(
+                          '梦魇兽',
+                          style: TextStyle(
+                            fontSize: $(18),
+                            fontWeight: FontWeight.normal,
+                            color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.4),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SettingItem(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        l10n.developer,
-                        style: TextStyle(
-                          fontSize: $(18),
+                  SettingItem(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.ui,
+                          style: TextStyle(
+                            fontSize: $(18),
+                          ),
                         ),
-                      ),
-                      Text(
-                        '梦魇兽',
-                        style: TextStyle(
-                          fontSize: $(18),
-                          fontWeight: FontWeight.normal,
-                          color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.4),
+                        Text(
+                          '柚凛/梦魇兽',
+                          style: TextStyle(
+                            fontSize: $(18),
+                            fontWeight: FontWeight.normal,
+                            color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.4),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                SettingItem(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        l10n.ui,
-                        style: TextStyle(
-                          fontSize: $(18),
-                        ),
-                      ),
-                      Text(
-                        '柚凛/梦魇兽',
-                        style: TextStyle(
-                          fontSize: $(18),
-                          fontWeight: FontWeight.normal,
-                          color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.4),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        }),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

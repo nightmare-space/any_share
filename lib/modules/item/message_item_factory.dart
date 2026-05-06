@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/app/controller/controller.dart';
+import '../../controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/model/model.dart';
+import 'package:speed_share/models/models.dart';
 import 'package:speed_share/modules/item/text_item.dart';
 import 'broswer_file_item.dart';
 import 'dir_item.dart';
@@ -27,7 +27,7 @@ class MessageItemFactory {
         info: info,
         sendByUser: sendByUser,
       );
-    } else if (info is BroswerFileMessage) {
+    } else if (info is BrowserFileMessage) {
       child = BroswerFileItem(
         info: info,
         sendByUser: sendByUser,

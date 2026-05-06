@@ -1,10 +1,29 @@
 import 'dart:ui';
 
-import 'package:get/utils.dart';
+import 'package:get/get.dart';
 import 'package:signale/signale.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
+
+class DesktopService with WindowListener {
+  DesktopService._();
+
+  static final DesktopService instance = DesktopService._();
+
+  final TrayHandler trayHandler = TrayHandler();
+
+  void init() {
+    trayManager.addListener(trayHandler);
+    windowManager.addListener(this);
+  }
+
+  @override
+  void onWindowClose() {
+    windowManager.hide();
+    windowManager.setSkipTaskbar(false);
+  }
+}
 
 class TrayHandler with TrayListener {
   bool isForegroung = true;

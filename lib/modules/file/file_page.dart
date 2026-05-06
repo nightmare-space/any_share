@@ -7,7 +7,7 @@ import 'package:global_repository/global_repository.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as path;
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:speed_share/app/controller/file_controller.dart';
+import '../../../controllers/file_controller.dart';
 import 'package:file_manager/file_manager.dart' as file_manager;
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/themes/theme.dart';
@@ -74,18 +74,19 @@ class _FilePageState extends State<FilePage> {
             SizedBox(height: $(0)),
             Expanded(
               child: PageTransitionSwitcher(
-                transitionBuilder: (
-                  Widget child,
-                  Animation<double> animation,
-                  Animation<double> secondaryAnimation,
-                ) {
-                  return FadeThroughTransition(
-                    animation: animation,
-                    secondaryAnimation: secondaryAnimation,
-                    fillColor: Colors.transparent,
-                    child: child,
-                  );
-                },
+                transitionBuilder:
+                    (
+                      Widget child,
+                      Animation<double> animation,
+                      Animation<double> secondaryAnimation,
+                    ) {
+                      return FadeThroughTransition(
+                        animation: animation,
+                        secondaryAnimation: secondaryAnimation,
+                        fillColor: Colors.transparent,
+                        child: child,
+                      );
+                    },
                 duration: const Duration(milliseconds: 600),
                 layoutBuilder: (widgets) {
                   return Material(
@@ -98,8 +99,8 @@ class _FilePageState extends State<FilePage> {
                 child: [
                   // TODO(lin):
                   file_manager.FileManagerView(
-                      // controller: file_manager.FMController()...enterHomeDir(),
-                      ),
+                    // controller: file_manager.FMController()...enterHomeDir(),
+                  ),
                   fileList(context),
                 ][pageIndex],
               ),
@@ -852,7 +853,8 @@ class CardWrapper extends StatelessWidget {
         borderRadius: BorderRadius.circular($(12)),
       ),
       height: height ?? $(120),
-      padding: padding ??
+      padding:
+          padding ??
           EdgeInsets.symmetric(
             vertical: $(4),
             horizontal: $(12),

@@ -6,7 +6,7 @@ import 'package:file_manager/file_manager.dart' as file_manager;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/app/controller/controller.dart';
+import '../../controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/modules/desktop_drawer.dart';
 import 'package:speed_share/modules/file/file_page.dart';
@@ -36,7 +36,9 @@ class _DesktopHomeState extends State<DesktopHome> {
         if (GetPlatform.isAndroid) {
           for (var value in detail.files) {
             Log.w(value.path);
-            String filePath = path.fromUri(Uri.parse(value.path).path).replaceAll(
+            String filePath = path
+                .fromUri(Uri.parse(value.path).path)
+                .replaceAll(
                   '/raw/',
                   '',
                 );

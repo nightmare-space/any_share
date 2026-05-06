@@ -2,16 +2,20 @@ import 'dart:math';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response;
-import 'package:global_repository/global_repository.dart';
+import 'package:global_repository/global_repository.dart' hide GestureWithScale;
+import 'package:image_picker/image_picker.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:speed_share/app/controller/chat_controller.dart';
-import 'package:speed_share/app/controller/device_controller.dart';
-import 'package:speed_share/config/config.dart';
+import 'package:speed_share/common/device_type.dart';
+import '../../controllers/chat_controller.dart';
+import '../../controllers/device_controller.dart';
+import 'package:speed_share/common/config.dart';
 import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/global/widgets/pop_button.dart';
+import 'package:speed_share/widgets/pop_button.dart';
 import 'package:speed_share/themes/app_colors.dart';
 import 'package:speed_share/themes/theme.dart';
 import 'package:file_manager/file_manager.dart' as file_manager;
+
+import 'widget/gesture.dart';
 
 // 聊天窗口
 class ShareChatV2 extends StatefulWidget {
@@ -24,7 +28,7 @@ class ShareChatV2 extends StatefulWidget {
 }
 
 class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStateMixin {
-  ChatController controller = Get.find();
+  ChatController chatController = Get.find();
   late AnimationController menuAnim;
   int index = 0;
   // 输入框控制器
@@ -93,7 +97,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
   GestureDetector chatList(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        controller.focusNode.unfocus();
+        chatController.focusNode.unfocus();
       },
       child: Material(
         borderRadius: BorderRadius.circular($(10)),
@@ -102,15 +106,15 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
         child: GetBuilder<ChatController>(
           builder: (context) {
             List<Widget?> children = [];
-            if (controller.backup.isNotEmpty) {
-              children = controller.backup;
+            if (chatController.backup.isNotEmpty) {
+              children = chatController.backup;
             } else {
-              children = controller.children;
+              children = chatController.children;
             }
             return ListView.builder(
               physics: const BouncingScrollPhysics(),
               padding: EdgeInsets.fromLTRB($(0), $(0), $(0), $(80)),
-              controller: controller.scrollController,
+              controller: chatController.scrollController,
               itemCount: children.length,
               cacheExtent: 99999,
               itemBuilder: (c, i) {
@@ -150,13 +154,13 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
             Text(
               l10n.allDevices,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    fontWeight: bold,
-                    fontSize: $(16),
-                  ),
+                fontWeight: bold,
+                fontSize: $(16),
+              ),
             ),
             SizedBox(width: $(4)),
             ValueListenableBuilder<bool>(
-              valueListenable: controller.connectState,
+              valueListenable: chatController.connectState,
               builder: (_, value, __) {
                 return Container(
                   width: $(10),
@@ -183,8 +187,84 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
       child: SingleChildScrollView(
         padding: EdgeInsets.only(bottom: $(16)),
         physics: const NeverScrollableScrollPhysics(),
-        child: Row(
+        child: Wrap(
           children: [
+            SizedBox(
+              width: $(80),
+              height: $(80),
+              child: InkWell(
+                borderRadius: BorderRadius.circular($(10)),
+                onTap: () {
+                  menuAnim.reverse();
+                  Future.delayed(const Duration(milliseconds: 100), () async {
+                    final ImagePicker picker = ImagePicker();
+                    final List<XFile> photos = await picker.pickMultiImage();
+                    for (var photo in photos) {
+                      chatController.sendFileFromPath(photo.path);
+                    }
+                  });
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icon/v2/img.svg',
+                      width: $(36),
+                      height: $(36),
+                      color: Theme.of(context).primaryColor,
+                      package: Config.package,
+                    ),
+                    SizedBox(height: $(4)),
+                    Text(
+                      '图片',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: bold,
+                        fontSize: $(12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              width: $(80),
+              height: $(80),
+              child: InkWell(
+                borderRadius: BorderRadius.circular($(10)),
+                onTap: () {
+                  menuAnim.reverse();
+                  Future.delayed(const Duration(milliseconds: 100), () async {
+                    final ImagePicker picker = ImagePicker();
+                    final List<XFile> videos = await picker.pickMultiVideo();
+                    for (var video in videos) {
+                      chatController.sendFileFromPath(video.path);
+                    }
+                  });
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icon/v2/video.svg',
+                      width: $(36),
+                      height: $(36),
+                      color: Theme.of(context).primaryColor,
+                      package: Config.package,
+                    ),
+                    SizedBox(height: $(4)),
+                    Text(
+                      '视频',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: bold,
+                        fontSize: $(12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             SizedBox(
               width: $(80),
               height: $(80),
@@ -194,9 +274,9 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                   menuAnim.reverse();
                   Future.delayed(const Duration(milliseconds: 100), () {
                     if (GetPlatform.isDesktop || GetPlatform.isWeb) {
-                      controller.sendFileForBroswerAndDesktop();
+                      chatController.sendFileForBroswerAndDesktop();
                     } else if (GetPlatform.isAndroid) {
-                      controller.sendFileForAndroid(
+                      chatController.sendFileForAndroid(
                         useSystemPicker: true,
                       );
                     }
@@ -207,16 +287,18 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.image,
-                        size: $(36),
+                      SvgPicture.asset(
+                        'assets/icon/v2/file.svg',
+                        width: $(36),
+                        height: $(36),
                         color: Theme.of(context).primaryColor,
+                        package: Config.package,
                       ),
                       SizedBox(height: $(4)),
                       Text(
-                        l10n.systemManager,
+                        '文件',
                         style: TextStyle(
-                          color: AppColors.fontColor,
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontWeight: bold,
                           fontSize: $(12),
                         ),
@@ -226,89 +308,43 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                 ),
               ),
             ),
-            if (GetPlatform.isAndroid && !GetPlatform.isWeb)
-              Theme(
-                data: Theme.of(context),
-                child: Builder(
-                  builder: (context) {
-                    return SizedBox(
-                      width: $(80),
-                      height: $(80),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular($(10)),
-                        onTap: () {
-                          menuAnim.reverse();
-                          Future.delayed(const Duration(milliseconds: 100), () {
-                            controller.sendFileForAndroid(
-                              context: context,
-                            );
-                          });
-                        },
-                        child: Tooltip(
-                          message: l10n.inlineManagerTips,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.file_copy,
-                                size: $(36),
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              SizedBox(height: $(4)),
-                              Text(
-                                l10n.inlineManager,
-                                style: TextStyle(
-                                  color: AppColors.fontColor,
-                                  fontWeight: bold,
-                                  fontSize: $(12),
-                                ),
-                              ),
-                            ],
-                          ),
+            SizedBox(
+              width: $(80),
+              height: $(80),
+              child: InkWell(
+                borderRadius: BorderRadius.circular($(10)),
+                onTap: () {
+                  menuAnim.reverse();
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    chatController.sendDir();
+                  });
+                },
+                child: Tooltip(
+                  message: l10n.systemManagerTips,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icon/v2/dir.svg',
+                        width: $(36),
+                        height: $(36),
+                        color: Theme.of(context).primaryColor,
+                        package: Config.package,
+                      ),
+                      SizedBox(height: $(4)),
+                      Text(
+                        '文件夹',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontWeight: bold,
+                          fontSize: $(12),
                         ),
                       ),
-                    );
-                  },
-                ),
-              ),
-            if (!GetPlatform.isWeb)
-              SizedBox(
-                width: $(80),
-                height: $(80),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular($(10)),
-                  onTap: () async {
-                    menuAnim.reverse();
-                    Future.delayed(const Duration(milliseconds: 100), () {
-                      controller.sendDir();
-                    });
-                  },
-                  child: Tooltip(
-                    message: l10n.inlineManagerTips,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icon/dir.svg',
-                          package: file_manager.Config.package,
-                          width: $(36),
-                          height: $(36),
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        SizedBox(height: $(4)),
-                        Text(
-                          l10n.directory,
-                          style: TextStyle(
-                            color: AppColors.fontColor,
-                            fontWeight: bold,
-                            fontSize: $(12),
-                          ),
-                        ),
-                      ],
-                    ),
+                    ],
                   ),
                 ),
               ),
+            ),
           ],
         ),
       ),
@@ -343,8 +379,8 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                           child: GetBuilder<ChatController>(
                             builder: (_) {
                               return TextField(
-                                focusNode: controller.focusNode,
-                                controller: controller.controller,
+                                focusNode: chatController.focusNode,
+                                controller: chatController.controller,
                                 autofocus: false,
                                 maxLines: 8,
                                 minLines: 1,
@@ -361,19 +397,19 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                                   textBaseline: TextBaseline.ideographic,
                                 ),
                                 onSubmitted: (_) {
-                                  if (controller.inputMultiline) {
-                                    controller.controller.value = TextEditingValue(
-                                      text: '${controller.controller.text}\n',
+                                  if (chatController.inputMultiline) {
+                                    chatController.controller.value = TextEditingValue(
+                                      text: '${chatController.controller.text}\n',
                                       selection: TextSelection.collapsed(
-                                        offset: controller.controller.selection.end + 1,
+                                        offset: chatController.controller.selection.end + 1,
                                       ),
                                     );
-                                    controller.focusNode.requestFocus();
+                                    chatController.focusNode.requestFocus();
                                     return;
                                   }
-                                  controller.sendTextMsg();
+                                  chatController.sendTextMsg();
                                   Future.delayed(const Duration(milliseconds: 100), () {
-                                    controller.focusNode.requestFocus();
+                                    chatController.focusNode.requestFocus();
                                   });
                                 },
                               );
@@ -385,8 +421,8 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                     SizedBox(width: $(8)),
                     GestureWithScale(
                       onTap: () {
-                        if (controller.hasInput) {
-                          controller.sendTextMsg();
+                        if (chatController.hasInput) {
+                          chatController.sendTextMsg();
                         } else {
                           if (menuAnim.isCompleted) {
                             menuAnim.reverse();
@@ -412,7 +448,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                               );
                             },
                             child: Icon(
-                              controller.hasInput ? Icons.send : Icons.add,
+                              chatController.hasInput ? Icons.send : Icons.add,
                               size: $(20),
                             ),
                           ),
@@ -470,14 +506,14 @@ class _LeftNavState extends State<LeftNav> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  String getIcon(int? type) {
+  String getIcon(DeviceType? type) {
     switch (type) {
-      case 0:
+      case DeviceType.phone:
         return 'assets/icon/phone.png';
-      case 1:
+      case DeviceType.desktop:
         return 'assets/icon/computer.png';
-      case 2:
-        return 'assets/icon/broswer.png';
+      case DeviceType.browser:
+        return 'assets/icon/browser.png';
       default:
         return 'assets/icon/computer.png';
     }

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/app/controller/controller.dart';
-import 'package:speed_share/app/controller/utils/join_util.dart';
-import 'package:speed_share/config/config.dart';
+import '../../controllers/controllers.dart';
+import 'package:speed_share/common/config.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/themes/app_colors.dart';
 
@@ -104,11 +103,6 @@ class _JoinChatState extends State<JoinChat> {
     Log.i('SendJoinEvent : $url');
     ChatController chatController = Get.find();
     await chatController.initLock.future;
-    JoinUtil.sendJoinEvent(
-      chatController.addrs,
-      chatController.shelfBindPort,
-      chatController.messageBindPort,
-      url,
-    );
+    chatController.sendJoinEvent(url);
   }
 }

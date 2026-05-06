@@ -8,7 +8,7 @@ import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/utils/ext_util.dart';
 import 'package:speed_share/utils/path_util.dart';
 
-import 'controller.dart';
+import 'controllers.dart';
 
 class DownloadInfo {
   double progress = 0;

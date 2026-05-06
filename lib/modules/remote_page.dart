@@ -2,11 +2,12 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/app/controller/controller.dart';
+import '../controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/themes/theme.dart';
 import 'widget/header.dart';
 
+/// TODO: 展示出谁在访问哪个文件/文件夹
 class RemotePage extends StatefulWidget {
   const RemotePage({Key? key}) : super(key: key);
 
@@ -27,18 +28,19 @@ class _RemotePageState extends State<RemotePage> {
         return false;
       },
       child: PageTransitionSwitcher(
-        transitionBuilder: (
-          Widget child,
-          Animation<double> animation,
-          Animation<double> secondaryAnimation,
-        ) {
-          return FadeThroughTransition(
-            animation: animation,
-            secondaryAnimation: secondaryAnimation,
-            fillColor: Colors.transparent,
-            child: child,
-          );
-        },
+        transitionBuilder:
+            (
+              Widget child,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+            ) {
+              return FadeThroughTransition(
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                fillColor: Colors.transparent,
+                child: child,
+              );
+            },
         duration: const Duration(milliseconds: 600),
         layoutBuilder: (widgets) {
           return Material(
@@ -162,6 +164,75 @@ class _RemotePageState extends State<RemotePage> {
           ],
         );
       },
+    );
+  }
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Bottom Navigation Demo',
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Colors.blue,
+      ),
+      home: const HomePage1(),
+    );
+  }
+}
+
+class HomePage1 extends StatefulWidget {
+  const HomePage1({super.key});
+
+  @override
+  State<HomePage1> createState() => _HomePage1State();
+}
+
+class _HomePage1State extends State<HomePage1> {
+  int _currentIndex = 0;
+
+  final List<Widget> _pages = const [
+    Center(child: Text('首页')),
+    Center(child: Text('搜索')),
+    Center(child: Text('我的')),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _pages[_currentIndex],
+      bottomNavigationBar: SizedBox(
+        height: 60,
+        child: NavigationBar(
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+          selectedIndex: _currentIndex,
+          onDestinationSelected: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home),
+              label: '首页',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.search_outlined),
+              selectedIcon: Icon(Icons.search),
+              label: '搜索',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person_outline),
+              selectedIcon: Icon(Icons.person),
+              label: '我的',
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

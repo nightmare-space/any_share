@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/utils.dart';
 import 'package:global_repository/global_repository.dart';
@@ -25,16 +26,13 @@ class SettingController extends GetxController {
   }
 
   /// 开启自动下载
-  bool enableAutoDownload = false;
-  SettingNode enableAutoDownloadSetting = 'enableAutoDownload'.setting;
+  Setting enableAutoDownloadSetting = 'enableAutoDownload'.setting;
 
   /// 开启剪切板共享
-  bool clipboardShare = true;
-  SettingNode clipboardShareSetting = 'clipboardShare'.setting;
+  Setting clipboardShareSetting = 'clipboardShare'.setting;
 
-  /// 开启常量岛 const island
-  bool enbaleConstIsland = false;
-  SettingNode enbaleConstIslandSetting = 'enbaleConstIsland'.setting;
+  @Deprecated('Const Island is deprecated')
+  Setting enbaleConstIslandSetting = 'enbaleConstIsland'.setting;
 
   /// 开启消息振动
   bool vibrate = true;
@@ -81,19 +79,25 @@ class SettingController extends GetxController {
     currentLocaleKey = key;
     currentLocaleSetting.set(key);
     currentLocale = languageMap[key];
+    Get.updateLocale(currentLocale!);
     update();
   }
 
   // 初始化配置
   void initConfig() {
-    clipboardShare = clipboardShareSetting.get() ?? true;
+    Stopwatch stopwatch = Stopwatch()..start();
+    if (clipboardShareSetting.value == null) {
+      clipboardShareSetting.set(true);
+    }
     vibrate = vibrateSetting.get() ?? true;
-    enableAutoDownload = enableAutoDownloadSetting.get() ?? false;
-    enbaleConstIsland = enbaleConstIslandSetting.get() ?? false;
+    if (enableAutoDownloadSetting.value == null) {
+      enableAutoDownloadSetting.set(false);
+    }
     enableFileClassify = enableFileClassifySetting.get() ?? false;
     enableWebServer = enableWebServerSetting.get() ?? false;
     currentLocaleKey = currentLocaleSetting.get() ?? '中文';
     currentLocale = languageMap[currentLocaleKey];
+    Log.i('Settings init in ${stopwatch.elapsedMilliseconds} ms');
     String defaultPath = '/sdcard/SpeedShare';
     if (GetPlatform.isWindows || GetPlatform.isWeb) {
       defaultPath = '${dirname(Platform.resolvedExecutable)}/SpeedShare';
@@ -101,14 +105,7 @@ class SettingController extends GetxController {
     savePath = savePathSetting.get() ?? defaultPath;
   }
 
-  void constIslandChange(bool value) {
-    enbaleConstIsland = value;
-    enbaleConstIslandSetting.set(value);
-    update();
-  }
-
   void clipChange(bool value) {
-    clipboardShare = value;
     clipboardShareSetting.set(value);
     update();
   }
@@ -120,14 +117,15 @@ class SettingController extends GetxController {
   }
 
   void enableAutoChange(bool value) {
-    enableAutoDownload = value;
+    enableAutoDownloadSetting.set(value);
     update();
     Future.delayed(
       const Duration(milliseconds: 100),
       () {
+        // TODO: Remove
         if (!isVIP) {
           showToast(l10n.vipTips);
-          enableAutoDownload = !value;
+          enableAutoDownloadSetting.set(!value);
           update();
         } else {
           enableAutoDownloadSetting.set(value);

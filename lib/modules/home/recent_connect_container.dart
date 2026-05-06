@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart';
-import 'package:speed_share/app/controller/controller.dart';
-import 'package:speed_share/app/controller/history.dart';
+import '../../controllers/controllers.dart';
+import 'package:speed_share/models/history.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/modules/file/file_page.dart';
 
 /// 主页中，最近连接的卡片
+@Deprecated('This widget is deprecated, because it is not used anymore. It will be removed in future versions.')
 class RecentConnectContainer extends StatefulWidget {
   const RecentConnectContainer({Key? key}) : super(key: key);
 
@@ -51,7 +52,7 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
             child: GetBuilder<DeviceController>(
               builder: (ctl) {
                 List<Widget> children = [];
-                for (History history in ctl.historys.datas!) {
+                for (HistoryMessage history in ctl.historys.datas!) {
                   children.add(
                     SizedBox(
                       child: Column(
@@ -110,37 +111,39 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
                                   ),
                                 ),
                               ),
-                              Builder(builder: (context) {
-                                Device? device;
-                                try {
-                                  device = ctl.connectDevice.firstWhere(
-                                    (element) {
-                                      return element.id == history.id;
-                                    },
-                                  );
-                                  // ignore: empty_catches
-                                } catch (e) {}
-                                if (device == null) {
-                                  return const SizedBox();
-                                }
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    color: device.isConnect! ? Theme.of(context).primaryColor.withOpacity(0.08) : Colors.red.withOpacity(0.08),
-                                    borderRadius: BorderRadius.circular($(12)),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: $(4),
-                                    vertical: $(2),
-                                  ),
-                                  child: Text(
-                                    device.isConnect! ? l10n.connected : l10n.disconnected,
-                                    style: TextStyle(
-                                      color: device.isConnect! ? Theme.of(context).primaryColor : Colors.red,
-                                      fontSize: $(12),
+                              Builder(
+                                builder: (context) {
+                                  Device? device;
+                                  try {
+                                    device = ctl.connectDevice.firstWhere(
+                                      (element) {
+                                        return element.id == history.id;
+                                      },
+                                    );
+                                    // ignore: empty_catches
+                                  } catch (e) {}
+                                  if (device == null) {
+                                    return const SizedBox();
+                                  }
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: device.isConnect! ? Theme.of(context).primaryColor.withOpacity(0.08) : Colors.red.withOpacity(0.08),
+                                      borderRadius: BorderRadius.circular($(12)),
                                     ),
-                                  ),
-                                );
-                              }),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: $(4),
+                                      vertical: $(2),
+                                    ),
+                                    child: Text(
+                                      device.isConnect! ? l10n.connected : l10n.disconnected,
+                                      style: TextStyle(
+                                        color: device.isConnect! ? Theme.of(context).primaryColor : Colors.red,
+                                        fontSize: $(12),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ],
                           ),
                         ],

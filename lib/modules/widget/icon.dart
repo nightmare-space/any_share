@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:global_repository/global_repository.dart' hide FileUtil;
-import 'package:speed_share/config/config.dart';
+import 'package:speed_share/common/config.dart';
 import 'package:speed_share/utils/ext_util.dart';
 import 'package:speed_share/utils/file_util.dart';
 
