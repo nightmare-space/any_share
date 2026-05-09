@@ -6,6 +6,7 @@ import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:settings/settings.dart';
+import 'package:speed_share/common/device_type.dart';
 import '../controllers/chat_controller.dart';
 import '../controllers/download_controller.dart';
 import '../controllers/file_controller.dart';
@@ -65,7 +66,7 @@ Future<void> main() async {
         await initSetting();
       }
       Get.put(SettingController());
-      Get.put(DeviceController());
+      Get.put(DeviceController()..init());
       Get.put(ChatController());
       Get.put(FileController());
       Get.put(DownloadController());
@@ -122,7 +123,8 @@ Future<void> initApp() async {
   Log.i('当前系统语言 ${pd.locales}');
   Log.i('当前系统主题 ${pd.platformBrightness}');
   Log.i('physicalSize:${view.physicalSize.str()}');
-  Log.i('DP Size:${Get.size.str()}');
+  Size dpSize = view.physicalSize / view.devicePixelRatio;
+  Log.i('DP Size:${dpSize.str()}');
   Log.i('devicePixelRatio:${view.devicePixelRatio}');
   Log.i('Android DPI:${view.devicePixelRatio * 160}');
 

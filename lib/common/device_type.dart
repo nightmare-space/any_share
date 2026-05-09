@@ -1,5 +1,9 @@
 enum DeviceType {
-  phone,
-  desktop,
+  android,
+  ios,
+  mac,
+  windows,
+  linux,
   browser,
+  unknown,
 }

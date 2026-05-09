@@ -37,6 +37,7 @@ class NiIconButton extends StatelessWidget {
   }
 }
 
+@Deprecated('Deprecated')
 class FilePage extends StatefulWidget {
   const FilePage({Key? key}) : super(key: key);
 

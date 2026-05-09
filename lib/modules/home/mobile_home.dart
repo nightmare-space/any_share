@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -5,7 +6,6 @@ import 'package:global_repository/global_repository.dart';
 import 'package:speed_share/modules/file/file_page.dart';
 import 'package:speed_share/modules/personal/personal.dart';
 import 'package:speed_share/modules/personal/setting/setting_page.dart';
-import 'package:speed_share/modules/remote_page.dart';
 import 'package:speed_share/modules/share_chat_window.dart';
 
 class MobileHome extends StatefulWidget {
@@ -36,18 +36,27 @@ class _MobileHomeState extends State<MobileHome> {
                         ),
                       ),
                       const SizedBox(),
-                      const RemotePage(),
-                      const FilePage(),
                       const SizedBox(),
                     ][page];
                   }
-                  return [
-                    const ShareChatV2(),
-                    const RemotePage(),
-                    const FilePage(),
-                    // const PersonalPage(),
-                    const SettingPage(),
-                  ][page];
+                  return PageTransitionSwitcher(
+                    transitionBuilder:
+                        (
+                          Widget child,
+                          Animation<double> animation,
+                          Animation<double> secondaryAnimation,
+                        ) {
+                          return FadeThroughTransition(
+                            animation: animation,
+                            secondaryAnimation: secondaryAnimation,
+                            child: child,
+                          );
+                        },
+                    child: [
+                      const ShareChatV2(),
+                      const SettingPage(),
+                    ][page],
+                  );
                 },
               ),
             ),
@@ -59,46 +68,20 @@ class _MobileHomeState extends State<MobileHome> {
         child: NavigationBar(
           labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
           selectedIndex: page,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           onDestinationSelected: (index) {
             page = index;
             setState(() {});
           },
           destinations: [
             NavigationDestination(
-              icon: Image.asset(
-                'assets/icon/homev2_sel.png',
+              icon: SvgPicture.asset(
+                'assets/icon/v2/message.svg',
                 width: $(24),
                 height: $(24),
-                color: Theme.of(context).colorScheme.onSurface,
-                gaplessPlayback: false,
-              ),
-              selectedIcon: Image.asset(
-                'assets/icon/homev2.png',
-                width: $(24),
-                height: $(24),
-                color: Theme.of(context).colorScheme.onSurface,
-                gaplessPlayback: false,
+                color: Theme.of(context).primaryColor,
               ),
               label: '首页',
-            ),
-            NavigationDestination(
-              icon: Image.asset(
-                'assets/icon/remote_file.png',
-                width: $(24),
-                height: $(24),
-                color: page == 1 ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface,
-                gaplessPlayback: false,
-              ),
-              label: '远程文件',
-            ),
-            NavigationDestination(
-              icon: SvgPicture.asset(
-                'assets/icon/v2/dir.svg',
-                width: $(24),
-                height: $(24),
-                color: page == 2 ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface,
-              ),
-              label: '本地文件',
             ),
             NavigationDestination(
               icon: Icon(Icons.settings_outlined),

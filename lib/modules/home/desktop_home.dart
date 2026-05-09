@@ -1,19 +1,17 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
-
-import 'package:desktop_drop/desktop_drop.dart';
-import 'package:file_manager/file_manager.dart' as file_manager;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:path/path.dart' as path;
 import 'package:global_repository/global_repository.dart';
-import '../../controllers/controllers.dart';
+import 'package:speed_share/controllers/controllers.dart';
+import 'package:speed_share/routes/app_pages.dart';
+import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/modules/desktop_drawer.dart';
-import 'package:speed_share/modules/file/file_page.dart';
-import 'package:speed_share/modules/home/home_page.dart';
 import 'package:speed_share/modules/personal/setting/setting_page.dart';
 import 'package:speed_share/modules/share_chat_window.dart';
-import 'package:path/path.dart' as path;
 import 'package:speed_share/themes/app_colors.dart';
 
 class DesktopHome extends StatefulWidget {
@@ -24,59 +22,82 @@ class DesktopHome extends StatefulWidget {
 }
 
 class _DesktopHomeState extends State<DesktopHome> {
-  int page = GetPlatform.isWeb ? 1 : 0;
+  String page = AppPages.initial;
   ChatController controller = Get.find();
   bool dropping = false;
 
+  Future<void> _onPerformDrop(PerformDropEvent event) async {
+    Log.d('files -> ${event.session.items}');
+
+    final fileUris = <Uri>[];
+    for (final item in event.session.items) {
+      final reader = item.dataReader;
+      if (reader == null) continue;
+      final completer = Completer<Uri?>();
+      final progress = reader.getValue(
+        Formats.fileUri,
+        (Uri? uri) {
+          if (!completer.isCompleted) completer.complete(uri);
+        },
+        onError: (e) {
+          if (!completer.isCompleted) completer.complete(null);
+        },
+      );
+      if (progress == null) completer.complete(null);
+      final uri = await completer.future;
+      if (uri != null && uri.scheme == 'file') {
+        fileUris.add(uri);
+      }
+    }
+
+    setState(() {});
+
+    if (fileUris.isEmpty) return;
+
+    if (GetPlatform.isAndroid) {
+      for (final uri in fileUris) {
+        // TODO: Check!
+        final filePath = path.fromUri(uri).replaceAll('/raw/', '');
+        controller.sendFileFromPath(filePath);
+      }
+      return;
+    }
+
+    if (fileUris.length == 1 && await FileSystemEntity.isDirectory(fileUris.first.toFilePath())) {
+      controller.sendDirFromPath(fileUris.first.toFilePath());
+    } else {
+      for (final uri in fileUris) {
+        controller.sendFileFromPath(uri.toFilePath());
+      }
+    }
+  }
+
+  Widget getPage() {
+    return {
+      AppPages.initial: const ShareChatV2(),
+      AppPages.setting: const SettingPage(),
+    }[page]!;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DropTarget(
-      onDragDone: (detail) async {
-        Log.d('files -> ${detail.files}');
-        if (GetPlatform.isAndroid) {
-          for (var value in detail.files) {
-            Log.w(value.path);
-            String filePath = path
-                .fromUri(Uri.parse(value.path).path)
-                .replaceAll(
-                  '/raw/',
-                  '',
-                );
-            controller.sendFileFromPath(filePath);
-            // Log.w(p
-            //     .fromUri(Uri.parse(value.path).path)
-            //     .replaceAll('/raw/', ''));
-          }
-        }
-        setState(() {});
-        if (detail.files.isNotEmpty) {
-          // if()
-          // Log.d(detail.files.first.runtimeType);
-          if (await FileSystemEntity.isDirectory(detail.files.first.path)) {
-            // 说明拖拽上来的是一个文件夹
-            controller.sendDirFromPath(detail.files.first.path);
-          } else {
-            controller.sendXFiles(detail.files);
-          }
-        }
+    return DropRegion(
+      formats: Formats.standardFormats,
+      hitTestBehavior: HitTestBehavior.opaque,
+      onDropOver: (event) {
+        return event.session.allowedOperations.firstOrNull ?? DropOperation.none;
       },
-      onDragUpdated: (details) {
-        setState(() {
-          // offset = details.localPosition;
-        });
-      },
-      onDragEntered: (detail) {
+      onDropEnter: (event) {
         setState(() {
           dropping = true;
-          // offset = detail.localPosition;
         });
       },
-      onDragExited: (detail) {
+      onDropLeave: (event) {
         setState(() {
           dropping = false;
-          // offset = null;
         });
       },
+      onPerformDrop: _onPerformDrop,
       child: Stack(
         children: [
           Scaffold(
@@ -98,65 +119,8 @@ class _DesktopHomeState extends State<DesktopHome> {
                         ),
                         GetBuilder<DeviceController>(
                           builder: (controller) {
-                            if (GetPlatform.isWeb) {
-                              return Expanded(
-                                child: [
-                                  const SizedBox(),
-                                  Container(
-                                    color: Theme.of(context).colorScheme.surface,
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: $(8)),
-                                      child: const ShareChatV2(),
-                                    ),
-                                  ),
-                                  for (int i = 0; i < controller.connectDevice.length; i++)
-                                    Builder(
-                                      builder: (context) {
-                                        Uri uri = Uri.tryParse(
-                                          controller.connectDevice[i].url!,
-                                        )!;
-                                        // TODO: Fix me
-                                        file_manager.FMController fmController = Get.find();
-                                        // TODO: Fix me, need change base dir path(/User or /sdcard) by device type
-                                        return file_manager.FileManagerView(
-                                          controller: fmController,
-                                        );
-                                      },
-                                    ),
-                                  const SizedBox(),
-                                  const SizedBox(),
-                                ][page],
-                              );
-                            }
                             return Expanded(
-                              child: [
-                                HomePage(
-                                  onMessageWindowTap: () {
-                                    page = 1;
-                                    setState(() {});
-                                  },
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: $(8)),
-                                  child: const ShareChatV2(),
-                                ),
-                                for (int i = 0; i < controller.connectDevice.length; i++)
-                                  Builder(
-                                    builder: (context) {
-                                      Uri uri = Uri.tryParse(
-                                        controller.connectDevice[i].url!,
-                                      )!;
-                                      // TODO: Fix me
-                                      file_manager.FMController fmController = Get.find();
-                                      // TODO: Fix me, need change base dir path(/User or /sdcard) by device type
-                                      return file_manager.FileManagerView(
-                                        controller: fmController,
-                                      );
-                                    },
-                                  ),
-                                const FilePage(),
-                                const SettingPage(),
-                              ][page],
+                              child: getPage(),
                             );
                           },
                         ),

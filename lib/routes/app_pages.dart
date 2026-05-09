@@ -8,12 +8,13 @@ import 'package:speed_share/modules/adaptive/adapive_entry.dart';
 import 'package:speed_share/modules/send_file_bottom_sheet.dart';
 import 'package:speed_share/themes/theme.dart';
 
-Debouncer debouncer = Debouncer(delay: const Duration(seconds: 1));
-int time = 0;
+Debouncer _doublePopdebouncer = Debouncer(delay: const Duration(seconds: 1));
+int _time = 0;
 
-class SpeedPages {
-  SpeedPages._();
+class AppPages {
+  AppPages._();
   static const initial = '/home';
+  static const setting = '/setting';
 
   static final routes = [
     GetPage(
@@ -29,20 +30,17 @@ class SpeedPages {
           return PopScope(
             canPop: true,
             onPopInvokedWithResult: (didPop, result) {
-              // TODO: Reimplement this
-              if (time == 0) {
-                time++;
+              if (_time == 0) {
+                _time++;
                 showToast(l10n.backAgainTip);
               } else {
                 Navigator.of(context).pop();
               }
-              debouncer.call(() {
-                time = 0;
+              _doublePopdebouncer.call(() {
+                _time = 0;
               });
             },
-            child: const ThemeWrapper(
-              child: AdaptiveEntryPoint(),
-            ),
+            child: const AdaptiveEntryPoint(),
           );
         },
       ),

@@ -6,6 +6,7 @@ import 'package:global_repository/global_repository.dart' hide GestureWithScale;
 import 'package:image_picker/image_picker.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:speed_share/common/device_type.dart';
+import 'package:speed_share/common/device_type_extension.dart';
 import '../../controllers/chat_controller.dart';
 import '../../controllers/device_controller.dart';
 import 'package:speed_share/common/config.dart';
@@ -149,7 +150,6 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
         child: Row(
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (ResponsiveBreakpoints.of(context).isMobile) const PopButton(),
             SizedBox(width: $(12)),
             Text(
               l10n.allDevices,
@@ -506,19 +506,6 @@ class _LeftNavState extends State<LeftNav> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  String getIcon(DeviceType? type) {
-    switch (type) {
-      case DeviceType.phone:
-        return 'assets/icon/phone.png';
-      case DeviceType.desktop:
-        return 'assets/icon/computer.png';
-      case DeviceType.browser:
-        return 'assets/icon/browser.png';
-      default:
-        return 'assets/icon/computer.png';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -598,12 +585,12 @@ class _LeftNavState extends State<LeftNav> with SingleTickerProviderStateMixin {
             MenuButton(
               value: 0,
               enable: index == 0,
-              child: Image.asset(
-                'assets/icon/all.png',
-                width: $(24),
-                height: $(24),
+              child: SvgPicture.asset(
+                'assets/icon/v2/message.svg',
+                width: $(36),
+                height: $(36),
+                color: Theme.of(context).primaryColor,
                 package: Config.package,
-                color: colorScheme.onSurface,
               ),
               onChange: (value) {
                 index = value;
@@ -622,8 +609,8 @@ class _LeftNavState extends State<LeftNav> with SingleTickerProviderStateMixin {
                       MenuButton(
                         value: i + 1,
                         enable: index == i + 1,
-                        child: Image.asset(
-                          getIcon(deviceController.connectDevice[i].deviceType),
+                        child: SvgPicture.asset(
+                          deviceController.connectDevice[i].deviceType!.iconPath,
                           width: $(32),
                           height: $(32),
                           package: Config.package,

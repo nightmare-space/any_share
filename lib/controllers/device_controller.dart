@@ -32,23 +32,6 @@ class Device {
     return false;
   }
 
-  static Color getColor(DeviceType? type) {
-    switch (type) {
-      case DeviceType.phone:
-        return const Color(0xffED796A);
-      case DeviceType.desktop:
-        return const Color(0xff6A6DED);
-      case DeviceType.browser:
-        return const Color(0xff317DEE);
-      default:
-        return Colors.indigo;
-    }
-  }
-
-  Color get deviceColor {
-    return getColor(deviceType);
-  }
-
   @override
   String toString() {
     return 'id:$id deviceType:$deviceType deviceName:$deviceName address:$url';
@@ -108,12 +91,18 @@ class DeviceController extends GetxController {
 
     Log.v('deviceId -> $deviceName', 'DeviceService');
     Log.v('uniqueKey -> $uniqueKey', 'DeviceService');
-    if (GetPlatform.isAndroid || GetPlatform.isIOS) {
-      deviceType = DeviceType.phone;
-    } else if (GetPlatform.isMacOS || GetPlatform.isWindows || GetPlatform.isLinux) {
-      deviceType = DeviceType.desktop;
+    if (GetPlatform.isAndroid) {
+      deviceType = DeviceType.android;
+    } else if (GetPlatform.isIOS) {
+      deviceType = DeviceType.ios;
+    } else if (GetPlatform.isMacOS) {
+      deviceType = DeviceType.mac;
+    } else if (GetPlatform.isWindows) {
+      deviceType = DeviceType.windows;
+    } else if (GetPlatform.isLinux) {
+      deviceType = DeviceType.linux;
     } else {
-      deviceType = DeviceType.browser;
+      deviceType = DeviceType.unknown;
     }
   }
 

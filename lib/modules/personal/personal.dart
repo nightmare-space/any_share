@@ -24,13 +24,6 @@ class _PersonalPageState extends State<PersonalPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Header(),
-          if (personHeader != null)
-            Column(
-              children: [
-                personHeader!,
-                SizedBox(height: $(8)),
-              ],
-            ),
           SizedBox(height: $(12)),
           // personalItem(
           //   title: S.of(context).aboutSpeedShare,

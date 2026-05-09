@@ -17,6 +17,7 @@ import 'package:speed_share/themes/theme.dart';
 
 import 'recent_connect_container.dart';
 
+@Deprecated('DesktopHome is deprecated')
 class HomePage extends StatefulWidget {
   const HomePage({
     Key? key,

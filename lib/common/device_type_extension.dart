@@ -33,9 +33,9 @@ extension DeviceTypeExt on DeviceType {
       case DeviceType.linux:
         return Color(TailwindColor.purple700.value);
       case DeviceType.browser:
-        return Color(TailwindColor.red700.value);
+        return Color(TailwindColor.pink700.value);
       default:
-        return Color(TailwindColor.red700.value);
+        throw UnimplementedError('Unknown device type: $this');
     }
   }
 }
@@ -46,7 +46,9 @@ enum TailwindColor {
   teal700(0xff2C7A7B),
   blue700(0xff2B6CB0),
   indigo700(0xff4C51BF),
-  purple700(0xff6B46C1);
+  purple700(0xff6B46C1),
+  pink700(0xffB83280),
+  green700(0xff2F855A);
 
   const TailwindColor(this.value);
 
