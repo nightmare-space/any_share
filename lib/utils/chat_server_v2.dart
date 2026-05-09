@@ -21,6 +21,7 @@ final corsHeader = {
   'Access-Control-Allow-Credentials': 'true',
 };
 
+// TODO: Convert to service
 class Server {
   // 启动消息服务端
   static Future<int> start() async {

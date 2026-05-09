@@ -1,22 +1,20 @@
 import 'dart:ui';
-
-import 'package:flutter_svg/svg.dart';
-
+import 'assets.dart';
 import 'device_type.dart';
 
 extension DeviceTypeExt on DeviceType {
   String get iconPath {
     switch (this) {
       case DeviceType.android:
-        return 'assets/icon/v2/android-logo.svg';
+        return SvgAssets.androidLogo;
       case DeviceType.ios:
-        return 'assets/icon/v2/ios-logo.svg';
+        return SvgAssets.iosLogo;
       case DeviceType.mac:
       case DeviceType.windows:
       case DeviceType.linux:
       case DeviceType.browser:
       default:
-        return 'assets/icon/v2/desktop-logo.svg';
+        return SvgAssets.desktop;
     }
   }
 

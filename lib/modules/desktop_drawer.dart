@@ -49,11 +49,6 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
               ],
             ),
           ),
-          Container(
-            width: 1,
-            height: MediaQuery.of(context).size.height,
-            color: Colors.black26,
-          ),
         ],
       ),
     );

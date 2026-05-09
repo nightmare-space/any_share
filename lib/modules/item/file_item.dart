@@ -1,25 +1,19 @@
 import 'dart:io';
 import 'dart:math';
+
 import 'package:flutter/material.dart' hide Router;
 import 'package:flutter/services.dart';
 import 'package:global_repository/global_repository.dart';
-import 'package:shelf/shelf.dart';
-import 'package:shelf_router/shelf_router.dart';
-import '../../../controllers/chat_controller.dart';
-import '../../../controllers/download_controller.dart';
-import '../../../controllers/setting_controller.dart';
-import 'package:speed_share/utils/server_util.dart';
-import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/models/models.dart';
 import 'package:path/path.dart' as p;
 import 'package:get/get.dart' hide Response;
-import 'package:speed_share/modules/dialog/show_qr_page.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+
 import 'package:speed_share/modules/widget/icon.dart';
-import 'package:speed_share/speed_share.dart';
 import 'package:speed_share/themes/theme.dart';
 import 'package:speed_share/utils/ext_util.dart';
-import 'package:url_launcher/url_launcher_string.dart';
-import 'package:shelf/shelf_io.dart' as io;
+import 'package:speed_share/controllers/controllers.dart';
+import 'package:speed_share/generated/l10n.dart';
+import 'package:speed_share/models/models.dart';
 
 class FileItem extends StatefulWidget {
   /// 消息model
@@ -221,6 +215,7 @@ class _FileItemState extends State<FileItem> {
                           builder: (context) {
                             double pro = info.progress;
                             return LinearProgressIndicator(
+                              // TODO: Remove surface3
                               backgroundColor: Theme.of(context).colorScheme.surface3,
                               valueColor: AlwaysStoppedAnimation(
                                 pro == 1.0 ? Theme.of(context).primaryColor : Theme.of(context).primaryColor.withOpacity(0.4),

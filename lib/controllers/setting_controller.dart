@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:get/utils.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart';
 import 'package:settings/settings.dart';
+
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/speed_share.dart';
 
@@ -36,13 +36,13 @@ class SettingController extends GetxController {
 
   /// 开启消息振动
   bool vibrate = true;
-  SettingNode vibrateSetting = 'vibrate'.setting;
+  Setting vibrateSetting = 'vibrate'.setting;
 
   /// 开启文件分类
   bool enableFileClassify = false;
-  SettingNode enableFileClassifySetting = 'enableFileClassify'.setting;
+  Setting enableFileClassifySetting = 'enableFileClassify'.setting;
   bool enableWebServer = false;
-  SettingNode enableWebServerSetting = 'enableWebServer'.setting;
+  Setting enableWebServerSetting = 'enableWebServer'.setting;
 
   void changeFileClassify(bool value) {
     enableFileClassifySetting.set(value);

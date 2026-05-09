@@ -1,9 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+
 import 'controllers/controllers.dart';
 import 'routes/app_pages.dart';
 import 'generated/app_localizations.dart';
@@ -19,10 +18,10 @@ class RootView extends StatelessWidget {
     return GetMaterialApp(
       locale: settingController.currentLocale,
       title: '',
-      initialRoute: SpeedPages.initial,
-      getPages: SpeedPages.routes,
+      initialRoute: AppPages.initial,
+      getPages: AppPages.routes,
       // defaultTransition: GetPlatform.isAndroid ? Transition.fadeIn : null,
-      defaultTransition: Transition.native,
+      defaultTransition: Transition.fadeIn,
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       localizationsDelegates: L10n.localizationsDelegates,

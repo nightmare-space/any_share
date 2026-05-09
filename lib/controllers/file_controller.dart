@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart';
-import 'setting_controller.dart';
+
 import 'package:speed_share/utils/ext_util.dart';
+import 'setting_controller.dart';
 
 const onknownKey = '未知';
 const zipKey = '压缩包';
@@ -18,6 +19,7 @@ const apkKey = '安装包';
 
 /// 用来管理文件的类，目前主要用来展示文件用
 /// 还有整理文件
+@Deprecated('Deprecated.')
 class FileController extends GetxController with WidgetsBindingObserver {
   SettingController settingController = Get.find();
   List<FileSystemEntity> onknown = [];

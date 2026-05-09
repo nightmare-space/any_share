@@ -1,19 +1,16 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart' hide ScreenType;
 import 'package:global_repository/global_repository.dart';
-import 'package:path/path.dart' hide context;
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:settings/settings.dart';
-import 'package:speed_share/services/clipboard_service.dart';
-import '../../controllers/controllers.dart';
+
+import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/modules/file/file_page.dart';
 import 'package:speed_share/modules/widget/header.dart';
-import 'package:speed_share/modules/widget/icon.dart';
 import 'package:speed_share/modules/share_chat_window.dart';
 import 'package:speed_share/themes/theme.dart';
+import 'package:speed_share/services/clipboard_service.dart';
 
 import 'recent_connect_container.dart';
 

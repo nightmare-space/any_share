@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:speed_share/common/device_type_extension.dart';
-import '../../controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/models/models.dart';
 import 'package:speed_share/modules/item/text_item.dart';
@@ -55,7 +54,7 @@ class MessageItemFactory {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: info.deviceType?.deviceColor.withOpacity(0.15),
+                      color: info.deviceType?.deviceColor.withOpacityExact(0.15),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     padding: const EdgeInsets.symmetric(

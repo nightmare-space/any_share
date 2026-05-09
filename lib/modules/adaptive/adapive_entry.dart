@@ -1,12 +1,11 @@
-// 响应式布局
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:signale/signale.dart';
-import '../../controllers/controllers.dart';
 
-import '../home/desktop_home.dart';
-import '../home/mobile_home.dart';
+import 'package:speed_share/controllers/controllers.dart';
+import 'package:speed_share/modules/home/desktop_home.dart';
+import 'package:speed_share/modules/home/mobile_home.dart';
 
 // 自动响应布局
 class AdaptiveEntryPoint extends StatefulWidget {
@@ -34,7 +33,6 @@ class _AdaptiveEntryPointState extends State<AdaptiveEntryPoint> {
 
   @override
   Widget build(BuildContext context) {
-    // return SizedBox();
     if (ResponsiveBreakpoints.of(context).isDesktop) {
       Log.i('AdaptiveEntryPoint is desktop');
       return const DesktopHome();

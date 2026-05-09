@@ -1,18 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart' as path;
 import 'package:global_repository/global_repository.dart';
+import 'package:super_drag_and_drop/super_drag_and_drop.dart';
+
 import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/routes/app_pages.dart';
-import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/modules/desktop_drawer.dart';
 import 'package:speed_share/modules/personal/setting/setting_page.dart';
 import 'package:speed_share/modules/share_chat_window.dart';
-import 'package:speed_share/themes/app_colors.dart';
 
 class DesktopHome extends StatefulWidget {
   const DesktopHome({Key? key}) : super(key: key);
@@ -105,7 +106,6 @@ class _DesktopHomeState extends State<DesktopHome> {
               left: false,
               child: Column(
                 children: [
-                  Container(height: $(1), color: Theme.of(context).primaryColor),
                   Expanded(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,7 +143,7 @@ class _DesktopHomeState extends State<DesktopHome> {
                   child: Text(
                     l10n.dropFileTip,
                     style: TextStyle(
-                      color: AppColors.fontColor,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.bold,
                       fontSize: $(20),
                     ),

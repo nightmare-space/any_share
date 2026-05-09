@@ -511,6 +511,7 @@ class _SettingPageState extends State<SettingPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        // TODO: Move to thanks group
                         Text(
                           l10n.ui,
                           style: TextStyle(

@@ -22,7 +22,7 @@ class DioService {
     sendTimeout: const Duration(seconds: 10),
   );
 
-  // TODO: 检查一下这个是不是正常的
+  // TODO: Check this if works
   void updateOptions(BaseOptions options) {
     dio.options = dio.options.copyWith(
       baseUrl: options.baseUrl,

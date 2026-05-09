@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 export 'main.dart';
 export 'common/config.dart';
 

@@ -1,19 +1,13 @@
 import 'dart:async';
 
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:animations/animations.dart';
 import 'package:get/get.dart';
-import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/common/assets.dart';
-import 'package:speed_share/common/device_type_extension.dart';
-import '../../controllers/controllers.dart';
-import 'package:speed_share/common/config.dart';
-import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/modules/dialog/show_qr_page.dart';
-import 'package:speed_share/utils/utils.dart';
 
-import 'menu.dart';
+import 'package:global_repository/global_repository.dart';
+import 'package:speed_share/common/device_type_extension.dart';
+import 'package:speed_share/controllers/controllers.dart';
+import 'package:speed_share/generated/l10n.dart';
 
 /// 主页显示的最上面那个header
 class Header extends StatelessWidget {
@@ -26,7 +20,6 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final $ = context.$;
-    ChatController controller = Get.find();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -34,74 +27,8 @@ class Header extends StatelessWidget {
           child: Row(
             children: [
               SizedBox(width: $(4)),
-              if (!GetPlatform.isWeb)
-                ValueListenableBuilder<bool>(
-                  valueListenable: controller.connectState,
-                  builder: (_, value, __) {
-                    return Container(
-                      width: $(4),
-                      height: $(16),
-                      decoration: BoxDecoration(
-                        color: value ? Colors.green : Colors.red,
-                        borderRadius: BorderRadius.circular($(16)),
-                      ),
-                    );
-                  },
-                ),
               SizedBox(width: $(4)),
               const HeaderSwiper(),
-            ],
-          ),
-        ),
-        Transform(
-          transform: Matrix4.identity()..translate($(4)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              NiIconButton(
-                onTap: () {
-                  ScanUtil.parseScan();
-                },
-                child: SvgPicture.asset(
-                  SvgAssets.qrCodeScan,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  width: $(24),
-                ),
-              ),
-              NiIconButton(
-                onTap: () {
-                  Get.dialog(
-                    ShowQRPage(
-                      port: controller.messageBindPort,
-                    ),
-                  );
-                },
-                child: SvgPicture.asset(
-                  SvgAssets.qrCode,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  width: $(24),
-                ),
-                // child: Image.asset(
-                //   'assets/icon/qr.png',
-                //   width: $(20),
-                //   package: Config.package,
-                //   color: Theme.of(context).colorScheme.onSurface,
-                // ),
-              ),
-              NiIconButton(
-                onTap: () {
-                  Get.dialog(
-                    HeaderMenu(
-                      offset: Offset(MediaQuery.of(context).size.width, 40),
-                    ),
-                  );
-                },
-                child: SvgPicture.asset(
-                  SvgAssets.ellipsisVertical,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  width: $(24),
-                ),
-              ),
             ],
           ),
         ),

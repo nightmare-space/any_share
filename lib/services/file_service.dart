@@ -24,11 +24,14 @@ Middleware corsMiddleware() {
 Handler _corsHandler(Handler innerHandler) {
   return (request) async {
     if (request.method == 'OPTIONS') {
-      return Response.ok(null, headers: {
-        'access-control-allow-origin': '*',
-        'access-control-allow-methods': 'GET, HEAD, OPTIONS',
-        'access-control-allow-headers': '*',
-      });
+      return Response.ok(
+        null,
+        headers: {
+          'access-control-allow-origin': '*',
+          'access-control-allow-methods': 'GET, HEAD, OPTIONS',
+          'access-control-allow-headers': '*',
+        },
+      );
     }
     final response = await innerHandler(request);
     return response.change(
@@ -53,6 +56,7 @@ class _FileServer {
       return;
     }
     _port = port;
+    // TODO: Move app server
     _router.get('/ping', (Request request) {
       return Response.ok('pong');
     });

@@ -1,22 +1,22 @@
 import 'dart:math';
+
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart' hide GestureWithScale;
 import 'package:image_picker/image_picker.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+
 import 'package:speed_share/common/assets.dart';
-import 'package:speed_share/common/device_type.dart';
 import 'package:speed_share/common/device_type_extension.dart';
-import '../../controllers/chat_controller.dart';
-import '../../controllers/device_controller.dart';
+import 'package:speed_share/controllers/controllers.dart';
+import 'package:speed_share/modules/widget/menu.dart';
+import 'package:speed_share/utils/scan_util.dart';
 import 'package:speed_share/common/config.dart';
 import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/widgets/pop_button.dart';
-import 'package:speed_share/themes/app_colors.dart';
 import 'package:speed_share/themes/theme.dart';
-import 'package:file_manager/file_manager.dart' as file_manager;
 
+import 'dialog/show_qr_page.dart';
 import 'widget/gesture.dart';
 
 // 聊天窗口
@@ -143,34 +143,75 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
     );
   }
 
-  Material appbar(BuildContext context) {
-    return Material(
-      color: colorScheme.surface,
-      child: SizedBox(
-        height: $(48),
-        child: Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(width: $(12)),
-            Text(
-              l10n.allDevices,
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                fontWeight: bold,
-                fontSize: $(16),
+  Widget appbar(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: $(12)),
+      child: Material(
+        color: colorScheme.surface,
+        child: SizedBox(
+          height: $(48),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                l10n.allDevices,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  fontWeight: bold,
+                  fontSize: $(16),
+                ),
               ),
-            ),
-            SizedBox(width: $(4)),
-            ValueListenableBuilder<bool>(
-              valueListenable: chatController.connectState,
-              builder: (_, value, __) {
-                return Container(
-                  width: $(10),
-                  height: $(10),
-                  decoration: BoxDecoration(color: value ? Colors.green : Colors.red, borderRadius: BorderRadius.circular($(16))),
-                );
-              },
-            ),
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  NiIconButton(
+                    onTap: () {
+                      ScanUtil.parseScan();
+                    },
+                    child: SvgPicture.asset(
+                      SvgAssets.qrCodeScan,
+                      color: Theme.of(context).colorScheme.onSurface,
+                      width: $(24),
+                    ),
+                  ),
+                  NiIconButton(
+                    onTap: () {
+                      ChatController controller = Get.find();
+                      Get.dialog(
+                        ShowQRPage(
+                          port: controller.messageBindPort,
+                        ),
+                      );
+                    },
+                    child: SvgPicture.asset(
+                      SvgAssets.qrCode,
+                      color: Theme.of(context).colorScheme.onSurface,
+                      width: $(24),
+                    ),
+                    // child: Image.asset(
+                    //   'assets/icon/qr.png',
+                    //   width: $(20),
+                    //   package: Config.package,
+                    //   color: Theme.of(context).colorScheme.onSurface,
+                    // ),
+                  ),
+                  NiIconButton(
+                    onTap: () {
+                      Get.dialog(
+                        HeaderMenu(
+                          offset: Offset(MediaQuery.of(context).size.width, 40),
+                        ),
+                      );
+                    },
+                    child: SvgPicture.asset(
+                      SvgAssets.ellipsisVertical,
+                      color: Theme.of(context).colorScheme.onSurface,
+                      width: $(24),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

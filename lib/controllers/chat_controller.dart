@@ -1,17 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:dio/dio.dart';
-import 'package:file_manager/file_manager.dart' as file_manager;
-import 'package:file_selector/file_selector.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:path/path.dart' as p;
 import 'package:flutter/material.dart' hide Router;
+import 'package:file_manager/file_manager.dart' as file_manager;
+import 'package:file_selector/file_selector.dart';
+import 'package:dio/dio.dart';
+import 'package:path/path.dart' as p;
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'package:global_repository/global_repository.dart';
+
 import 'package:speed_share/services/discovery_service.dart';
-import 'controllers.dart';
 import 'package:speed_share/common/config.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/services/dio_manager.dart';
@@ -19,7 +20,8 @@ import 'package:speed_share/models/models.dart';
 import 'package:speed_share/modules/item/item.dart';
 import 'package:speed_share/utils/token_util.dart';
 import 'package:speed_share/utils/utils.dart' hide FileUtil;
-import '../services/file_service.dart';
+import 'package:speed_share/services/file_service.dart';
+import 'controllers.dart';
 
 class ChatController extends GetxController with WidgetsBindingObserver {
   ChatController() {
@@ -81,8 +83,6 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   SettingController settingController = Get.find();
   Map<String, XFile> webFileSendCache = {};
 
-  ValueNotifier<bool> connectState = ValueNotifier(false);
-
   // 创建聊天房间，调用时机为app启动时
   Future<void> createChatRoom() async {
     WidgetsBinding.instance.addObserver(this);
@@ -112,7 +112,6 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   Future<void> initChat() async {
     // 清除消息列表
     children.clear();
-    connectState.value = true;
     // 监听消息
     // listenMessage();
     if (GetPlatform.isWeb) {
@@ -497,6 +496,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     update();
   }
 
+  // TODO: reimplement this
   void changeListToDevice(Device device) {
     backup.clear();
     for (Map map in cache) {

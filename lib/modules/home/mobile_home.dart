@@ -1,11 +1,10 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+
+import 'package:animations/animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
+
 import 'package:speed_share/common/assets.dart';
-import 'package:speed_share/modules/file/file_page.dart';
-import 'package:speed_share/modules/personal/personal.dart';
 import 'package:speed_share/modules/personal/setting/setting_page.dart';
 import 'package:speed_share/modules/share_chat_window.dart';
 
@@ -27,19 +26,6 @@ class _MobileHomeState extends State<MobileHome> {
             Expanded(
               child: Builder(
                 builder: (context) {
-                  if (GetPlatform.isWeb) {
-                    return [
-                      Container(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: $(8)),
-                          child: const ShareChatV2(),
-                        ),
-                      ),
-                      const SizedBox(),
-                      const SizedBox(),
-                    ][page];
-                  }
                   return PageTransitionSwitcher(
                     transitionBuilder:
                         (
@@ -85,8 +71,12 @@ class _MobileHomeState extends State<MobileHome> {
               label: '首页',
             ),
             NavigationDestination(
-              icon: Icon(Icons.settings_outlined),
-              selectedIcon: Icon(Icons.settings),
+              icon: SvgPicture.asset(
+                SvgAssets.setting,
+                width: $(24),
+                height: $(24),
+                color: Theme.of(context).primaryColor,
+              ),
               label: '设置',
             ),
           ],

@@ -75,40 +75,5 @@ class _GestureWithScaleState extends State<GestureWithScale> with SingleTickerPr
         child: widget.child,
       ),
     );
-    return Transform(
-      alignment: Alignment.center,
-      transform: Matrix4.identity()
-        ..scale(
-          1.0 - animationController!.value * widget.radio,
-        ),
-      child: GestureDetector(
-        onTap: () {
-          if (widget.onTap == null) {
-            return;
-          }
-          setState(() {});
-          HapticFeedback.heavyImpact();
-          animationController!.reverse();
-          widget.onTap!();
-        },
-        onPanDown: (_) {
-          if (widget.onTap == null) {
-            return;
-          }
-          animationController!.forward();
-          HapticFeedback.heavyImpact();
-          setState(() {});
-        },
-        onTapCancel: () {
-          if (widget.onTap == null) {
-            return;
-          }
-          animationController!.reverse();
-          HapticFeedback.heavyImpact();
-          setState(() {});
-        },
-        child: widget.child,
-      ),
-    );
   }
 }

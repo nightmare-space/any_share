@@ -1,11 +1,12 @@
-import 'package:file_manager/view/file_manager_page.dart';
 import 'package:flutter/material.dart';
+
+import 'package:file_manager/view/file_manager_page.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_workers/utils/debouncer.dart';
 import 'package:global_repository/global_repository.dart';
+
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/modules/adaptive/adapive_entry.dart';
-import 'package:speed_share/modules/send_file_bottom_sheet.dart';
 import 'package:speed_share/themes/theme.dart';
 
 Debouncer _doublePopdebouncer = Debouncer(delay: const Duration(seconds: 1));
