@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:global_repository/global_repository.dart';
+import 'package:speed_share/common/device_type_extension.dart';
 import '../../controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/models/models.dart';
@@ -9,6 +10,7 @@ import 'dir_item.dart';
 import 'file_item.dart';
 
 class MessageItemFactory {
+  // TODO: Use extension
   static Widget? getMessageItem(MessageBaseInfo? info, bool sendByUser, BuildContext context) {
     final $ = context.$;
     Widget? child;
@@ -53,7 +55,7 @@ class MessageItemFactory {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: Device.getColor(info.deviceType).withOpacity(0.15),
+                      color: info.deviceType?.deviceColor.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     padding: const EdgeInsets.symmetric(
@@ -65,7 +67,7 @@ class MessageItemFactory {
                         info.deviceName ?? '',
                         style: TextStyle(
                           fontSize: $(12),
-                          color: Device.getColor(info.deviceType),
+                          color: info.deviceType?.deviceColor,
                         ),
                       ),
                     ),
@@ -74,7 +76,7 @@ class MessageItemFactory {
                   if (info is ClipboardMessage)
                     Container(
                       decoration: BoxDecoration(
-                        color: Device.getColor(info.deviceType).withOpacity(0.15),
+                        color: info.deviceType?.deviceColor.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       margin: EdgeInsets.only(left: $(4)),
@@ -85,7 +87,7 @@ class MessageItemFactory {
                       child: Center(
                         child: Text(
                           l10n.clipboard,
-                          style: TextStyle(fontSize: $(12), color: Device.getColor(info.deviceType)),
+                          style: TextStyle(fontSize: $(12), color: info.deviceType?.deviceColor),
                         ),
                       ),
                     ),

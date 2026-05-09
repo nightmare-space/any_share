@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
+import 'package:speed_share/common/device_type_extension.dart';
 import '../../controllers/controllers.dart';
 import 'package:speed_share/common/config.dart';
 import 'package:speed_share/generated/l10n.dart';
@@ -182,7 +183,7 @@ class _HeaderSwiperState extends State<HeaderSwiper> {
                   for (Device device in controller.availableDevices()) {
                     children.add(
                       Material(
-                        color: device.deviceColor.withOpacity(0.1),
+                        color: device.deviceType?.deviceColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular($(8)),
                         child: SizedBox(
                           height: $(32),
