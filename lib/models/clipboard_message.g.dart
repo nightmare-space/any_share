@@ -13,22 +13,14 @@ ClipboardMessage _$ClipboardMessageFromJson(Map<String, dynamic> json) =>
         content: json['content'] as String?,
       )
       ..deviceId = json['deviceId'] as String?
-      ..deviceType = $enumDecodeNullable(
-        _$DeviceTypeEnumMap,
-        json['deviceType'],
+      ..deviceType = const DeviceTypeConverter().fromJson(
+        json['deviceType'] as String?,
       );
 
-Map<String, dynamic> _$ClipboardMessageToJson(ClipboardMessage instance) =>
-    <String, dynamic>{
-      'msgType': instance.msgType,
-      'deviceName': instance.deviceName,
-      'deviceId': instance.deviceId,
-      'deviceType': _$DeviceTypeEnumMap[instance.deviceType],
-      'content': instance.content,
-    };
-
-const _$DeviceTypeEnumMap = {
-  DeviceType.phone: 'phone',
-  DeviceType.desktop: 'desktop',
-  DeviceType.browser: 'browser',
+Map<String, dynamic> _$ClipboardMessageToJson(ClipboardMessage instance) => <String, dynamic>{
+  'msgType': instance.msgType,
+  'deviceName': instance.deviceName,
+  'deviceId': instance.deviceId,
+  'deviceType': const DeviceTypeConverter().toJson(instance.deviceType),
+  'content': instance.content,
 };

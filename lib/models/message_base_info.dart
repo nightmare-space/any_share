@@ -59,6 +59,8 @@ class MessageBaseInfo {
 
   /// 设备类型
   /// Device Type
+
+  @DeviceTypeConverter()
   DeviceType? deviceType;
 
   factory MessageBaseInfo.fromJson(Map<String, dynamic> json) => _$MessageBaseInfoFromJson(json);
@@ -69,4 +71,21 @@ class MessageBaseInfo {
   String toString() {
     return json.encode(this);
   }
+}
+
+class DeviceTypeConverter implements JsonConverter<DeviceType?, String?> {
+  const DeviceTypeConverter();
+
+  @override
+  DeviceType? fromJson(String? json) {
+    if (json == null) return null;
+
+    return DeviceType.values.firstWhere(
+      (e) => e.name == json,
+      orElse: () => DeviceType.unknown,
+    );
+  }
+
+  @override
+  String? toJson(DeviceType? object) => object?.name;
 }

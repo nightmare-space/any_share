@@ -13,9 +13,8 @@ TextMessage _$TextMessageFromJson(Map<String, dynamic> json) =>
         msgType: json['msgType'] as String? ?? 'text',
       )
       ..deviceId = json['deviceId'] as String?
-      ..deviceType = $enumDecodeNullable(
-        _$DeviceTypeEnumMap,
-        json['deviceType'],
+      ..deviceType = const DeviceTypeConverter().fromJson(
+        json['deviceType'] as String?,
       );
 
 Map<String, dynamic> _$TextMessageToJson(TextMessage instance) =>
@@ -23,12 +22,6 @@ Map<String, dynamic> _$TextMessageToJson(TextMessage instance) =>
       'msgType': instance.msgType,
       'deviceName': instance.deviceName,
       'deviceId': instance.deviceId,
-      'deviceType': _$DeviceTypeEnumMap[instance.deviceType],
+      'deviceType': const DeviceTypeConverter().toJson(instance.deviceType),
       'content': instance.content,
     };
-
-const _$DeviceTypeEnumMap = {
-  DeviceType.phone: 'phone',
-  DeviceType.desktop: 'desktop',
-  DeviceType.browser: 'browser',
-};

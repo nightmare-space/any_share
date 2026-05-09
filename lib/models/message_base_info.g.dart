@@ -10,7 +10,9 @@ MessageBaseInfo _$MessageBaseInfoFromJson(Map<String, dynamic> json) =>
     MessageBaseInfo(
       msgType: json['msgType'] as String?,
       deviceName: json['deviceName'] as String? ?? '',
-      deviceType: $enumDecodeNullable(_$DeviceTypeEnumMap, json['deviceType']),
+      deviceType: const DeviceTypeConverter().fromJson(
+        json['deviceType'] as String?,
+      ),
       deviceId: json['deviceId'] as String?,
     );
 
@@ -19,11 +21,5 @@ Map<String, dynamic> _$MessageBaseInfoToJson(MessageBaseInfo instance) =>
       'msgType': instance.msgType,
       'deviceName': instance.deviceName,
       'deviceId': instance.deviceId,
-      'deviceType': _$DeviceTypeEnumMap[instance.deviceType],
+      'deviceType': const DeviceTypeConverter().toJson(instance.deviceType),
     };
-
-const _$DeviceTypeEnumMap = {
-  DeviceType.phone: 'phone',
-  DeviceType.desktop: 'desktop',
-  DeviceType.browser: 'browser',
-};

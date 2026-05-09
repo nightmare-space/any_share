@@ -17,9 +17,8 @@ NotifyMessage _$NotifyMessageFromJson(Map<String, dynamic> json) =>
       )
       ..deviceName = json['deviceName'] as String?
       ..deviceId = json['deviceId'] as String?
-      ..deviceType = $enumDecodeNullable(
-        _$DeviceTypeEnumMap,
-        json['deviceType'],
+      ..deviceType = const DeviceTypeConverter().fromJson(
+        json['deviceType'] as String?,
       );
 
 Map<String, dynamic> _$NotifyMessageToJson(NotifyMessage instance) =>
@@ -27,14 +26,8 @@ Map<String, dynamic> _$NotifyMessageToJson(NotifyMessage instance) =>
       'msgType': instance.msgType,
       'deviceName': instance.deviceName,
       'deviceId': instance.deviceId,
-      'deviceType': _$DeviceTypeEnumMap[instance.deviceType],
+      'deviceType': const DeviceTypeConverter().toJson(instance.deviceType),
       'hash': instance.hash,
       'addrs': instance.addrs,
       'port': instance.port,
     };
-
-const _$DeviceTypeEnumMap = {
-  DeviceType.phone: 'phone',
-  DeviceType.desktop: 'desktop',
-  DeviceType.browser: 'browser',
-};

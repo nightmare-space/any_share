@@ -19,9 +19,8 @@ FileMessage _$FileMessageFromJson(Map<String, dynamic> json) =>
         msgType: json['msgType'] as String? ?? 'file',
       )
       ..deviceId = json['deviceId'] as String?
-      ..deviceType = $enumDecodeNullable(
-        _$DeviceTypeEnumMap,
-        json['deviceType'],
+      ..deviceType = const DeviceTypeConverter().fromJson(
+        json['deviceType'] as String?,
       )
       ..url = json['url'] as String?;
 
@@ -30,7 +29,7 @@ Map<String, dynamic> _$FileMessageToJson(FileMessage instance) =>
       'msgType': instance.msgType,
       'deviceName': instance.deviceName,
       'deviceId': instance.deviceId,
-      'deviceType': _$DeviceTypeEnumMap[instance.deviceType],
+      'deviceType': const DeviceTypeConverter().toJson(instance.deviceType),
       'fileName': instance.fileName,
       'filePath': instance.filePath,
       'fileSize': instance.fileSize,
@@ -38,9 +37,3 @@ Map<String, dynamic> _$FileMessageToJson(FileMessage instance) =>
       'url': instance.url,
       'port': instance.port,
     };
-
-const _$DeviceTypeEnumMap = {
-  DeviceType.phone: 'phone',
-  DeviceType.desktop: 'desktop',
-  DeviceType.browser: 'browser',
-};

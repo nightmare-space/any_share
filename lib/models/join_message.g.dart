@@ -6,29 +6,26 @@ part of 'join_message.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-JoinMessage _$JoinMessageFromJson(
-  Map<String, dynamic> json,
-) => JoinMessage(msgType: json['msgType'] as String? ?? 'join')
-  ..deviceName = json['deviceName'] as String?
-  ..deviceId = json['deviceId'] as String?
-  ..deviceType = $enumDecodeNullable(_$DeviceTypeEnumMap, json['deviceType'])
-  ..addrs = (json['addrs'] as List<dynamic>?)?.map((e) => e as String?).toList()
-  ..messagePort = (json['messagePort'] as num?)?.toInt()
-  ..filePort = (json['filePort'] as num?)?.toInt();
+JoinMessage _$JoinMessageFromJson(Map<String, dynamic> json) =>
+    JoinMessage(msgType: json['msgType'] as String? ?? 'join')
+      ..deviceName = json['deviceName'] as String?
+      ..deviceId = json['deviceId'] as String?
+      ..deviceType = const DeviceTypeConverter().fromJson(
+        json['deviceType'] as String?,
+      )
+      ..addrs = (json['addrs'] as List<dynamic>?)
+          ?.map((e) => e as String?)
+          .toList()
+      ..messagePort = (json['messagePort'] as num?)?.toInt()
+      ..filePort = (json['filePort'] as num?)?.toInt();
 
 Map<String, dynamic> _$JoinMessageToJson(JoinMessage instance) =>
     <String, dynamic>{
       'msgType': instance.msgType,
       'deviceName': instance.deviceName,
       'deviceId': instance.deviceId,
-      'deviceType': _$DeviceTypeEnumMap[instance.deviceType],
+      'deviceType': const DeviceTypeConverter().toJson(instance.deviceType),
       'addrs': instance.addrs,
       'messagePort': instance.messagePort,
       'filePort': instance.filePort,
     };
-
-const _$DeviceTypeEnumMap = {
-  DeviceType.phone: 'phone',
-  DeviceType.desktop: 'desktop',
-  DeviceType.browser: 'browser',
-};
