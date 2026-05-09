@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
+import 'package:speed_share/common/assets.dart';
 import 'package:speed_share/common/device_type_extension.dart';
 import '../../controllers/controllers.dart';
 import 'package:speed_share/common/config.dart';
@@ -62,7 +63,7 @@ class Header extends StatelessWidget {
                   ScanUtil.parseScan();
                 },
                 child: SvgPicture.asset(
-                  GlobalAssets.qrCode,
+                  SvgAssets.qrCodeScan,
                   color: Theme.of(context).colorScheme.onSurface,
                   width: $(24),
                 ),
@@ -75,12 +76,17 @@ class Header extends StatelessWidget {
                     ),
                   );
                 },
-                child: Image.asset(
-                  'assets/icon/qr.png',
-                  width: $(20),
-                  package: Config.package,
+                child: SvgPicture.asset(
+                  SvgAssets.qrCode,
                   color: Theme.of(context).colorScheme.onSurface,
+                  width: $(24),
                 ),
+                // child: Image.asset(
+                //   'assets/icon/qr.png',
+                //   width: $(20),
+                //   package: Config.package,
+                //   color: Theme.of(context).colorScheme.onSurface,
+                // ),
               ),
               NiIconButton(
                 onTap: () {
@@ -90,7 +96,11 @@ class Header extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Icon(Icons.more_vert),
+                child: SvgPicture.asset(
+                  SvgAssets.ellipsisVertical,
+                  color: Theme.of(context).colorScheme.onSurface,
+                  width: $(24),
+                ),
               ),
             ],
           ),

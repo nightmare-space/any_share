@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
+import 'package:speed_share/common/assets.dart';
 import 'package:speed_share/modules/file/file_page.dart';
 import 'package:speed_share/modules/personal/personal.dart';
 import 'package:speed_share/modules/personal/setting/setting_page.dart';
@@ -76,7 +77,7 @@ class _MobileHomeState extends State<MobileHome> {
           destinations: [
             NavigationDestination(
               icon: SvgPicture.asset(
-                'assets/icon/v2/message.svg',
+                SvgAssets.message,
                 width: $(24),
                 height: $(24),
                 color: Theme.of(context).primaryColor,

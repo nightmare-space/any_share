@@ -5,6 +5,7 @@ import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart' hide GestureWithScale;
 import 'package:image_picker/image_picker.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:speed_share/common/assets.dart';
 import 'package:speed_share/common/device_type.dart';
 import 'package:speed_share/common/device_type_extension.dart';
 import '../../controllers/chat_controller.dart';
@@ -208,7 +209,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SvgPicture.asset(
-                      'assets/icon/v2/img.svg',
+                      SvgAssets.img,
                       width: $(36),
                       height: $(36),
                       color: Theme.of(context).primaryColor,
@@ -246,7 +247,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SvgPicture.asset(
-                      'assets/icon/v2/video.svg',
+                      SvgAssets.video,
                       width: $(36),
                       height: $(36),
                       color: Theme.of(context).primaryColor,
@@ -288,7 +289,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
-                        'assets/icon/v2/file.svg',
+                        SvgAssets.file,
                         width: $(36),
                         height: $(36),
                         color: Theme.of(context).primaryColor,
@@ -325,7 +326,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
-                        'assets/icon/v2/dir.svg',
+                        SvgAssets.dir,
                         width: $(36),
                         height: $(36),
                         color: Theme.of(context).primaryColor,
@@ -586,7 +587,7 @@ class _LeftNavState extends State<LeftNav> with SingleTickerProviderStateMixin {
               value: 0,
               enable: index == 0,
               child: SvgPicture.asset(
-                'assets/icon/v2/message.svg',
+                SvgAssets.message,
                 width: $(36),
                 height: $(36),
                 color: Theme.of(context).primaryColor,
