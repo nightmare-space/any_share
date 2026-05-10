@@ -5,42 +5,42 @@ import 'package:get/utils.dart';
 import 'package:global_repository/global_repository.dart' hide FileUtil;
 import 'package:speed_share/common/assets.dart';
 import 'package:speed_share/common/config.dart';
-import 'package:speed_share/utils/ext_util.dart';
+import 'package:speed_share/common/extensions/file_type_ext.dart';
 import 'package:speed_share/utils/file_util.dart';
 
 Widget getIconByExt(String path, BuildContext context) {
   final $ = context.$;
   Widget? child;
 
-  if (path.isVideo) {
+  if (path.isVideoFile) {
     child = Image.asset(
       'assets/icon/video.png',
       width: $(36),
       height: $(36),
       package: Config.package,
     );
-  } else if (path.isDoc) {
+  } else if (path.isDocumentFile) {
     child = SvgPicture.asset(
       SvgAssets.doc,
       width: $(36),
       height: $(36),
       package: Config.package,
     );
-  } else if (path.isZip) {
+  } else if (path.isArchiveFile) {
     child = SvgPicture.asset(
       SvgAssets.zip,
       width: $(36),
       height: $(36),
       package: Config.package,
     );
-  } else if (path.isAudio) {
+  } else if (path.isAudioFile) {
     child = SvgPicture.asset(
       SvgAssets.audio,
       width: $(36),
       height: $(36),
       package: Config.package,
     );
-  } else if (path.isApk) {
+  } else if (path.isApkFile) {
     if (GetPlatform.isDesktop) {
       return const Icon(Icons.adb);
     }
@@ -56,7 +56,7 @@ Widget getIconByExt(String path, BuildContext context) {
     //     return const SizedBox();
     //   },
     // );
-  } else if (path.isImg) {
+  } else if (path.isImageFile) {
     return Hero(
       tag: path,
       child: GestureDetector(

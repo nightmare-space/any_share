@@ -13,7 +13,7 @@ import '../../../controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/themes/theme.dart';
 
-import '../../widget/switch/xliv_switch.dart';
+import '../../../widgets/switch/xliv_switch.dart';
 import 'dialog/select_language.dart';
 
 Future<int> getCacheSize(Directory cacheDir) async {

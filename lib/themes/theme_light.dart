@@ -16,6 +16,12 @@ ThemeData light(
     primaryIconTheme: lightThemeData.primaryIconTheme.copyWith(
       color: colorScheme.onSurface,
     ),
+
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: <TargetPlatform, PageTransitionsBuilder>{
+        TargetPlatform.android: ZoomPageTransitionsBuilder(),
+      },
+    ),
     iconTheme: lightThemeData.iconTheme.copyWith(
       color: colorScheme.onSurface,
     ),

@@ -4,10 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart';
+import 'package:speed_share/common/extensions/extensions.dart';
 
 import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/utils/ext_util.dart';
-import 'package:speed_share/utils/path_util.dart';
+import 'package:speed_share/utils/utils.dart' hide FileUtil;
 import 'controllers.dart';
 
 class DownloadInfo {
@@ -108,7 +108,7 @@ class DownloadController extends GetxController {
       return getSafePath(savePath);
     }
     // 开启文件分类
-    String type = url.getType;
+    String type = url.fileTypeLabel;
     String savePath = '$dir/$type/${basename(url)}';
     return getSafePath(savePath);
   }

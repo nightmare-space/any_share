@@ -39,11 +39,8 @@ class XlivSwitch extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(FlagProperty('value',
-        value: value, ifTrue: 'on', ifFalse: 'off', showName: true));
-    properties.add(ObjectFlagProperty<ValueChanged<bool>>(
-        'onChanged', onChanged,
-        ifNull: 'disabled'));
+    properties.add(FlagProperty('value', value: value, ifTrue: 'on', ifFalse: 'off', showName: true));
+    properties.add(ObjectFlagProperty<ValueChanged<bool>>('onChanged', onChanged, ifNull: 'disabled'));
   }
 }
 

@@ -1,7 +1,5 @@
-// ignore_for_file: curly_braces_in_flow_control_structures
-
 part of xlive_switch;
-// TODO 放开注释
+
 class _XlivSwitchRenderObjectWidget extends LeafRenderObjectWidget {
   const _XlivSwitchRenderObjectWidget({
     Key? key,
@@ -34,8 +32,7 @@ class _XlivSwitchRenderObjectWidget extends LeafRenderObjectWidget {
   }
 
   @override
-  void updateRenderObject(
-      BuildContext context, _RenderXliveSwitch renderObject) {
+  void updateRenderObject(BuildContext context, _RenderXliveSwitch renderObject) {
     renderObject
       ..value = value
       ..activeColor = activeColor
@@ -68,17 +65,17 @@ class _RenderXliveSwitch extends RenderConstrainedBox {
     required ValueChanged<bool> onChanged,
     required TextDirection textDirection,
     required TickerProvider vsync,
-  })  : _value = value,
-        _activeColor = activeColor,
-        _unActiveColor = unActiveColor,
-        _onChanged = onChanged,
-        _textDirection = textDirection,
-        _thumbColor = thumbColor,
-        _thumbPainter = _XliveThumbPainter(color: thumbColor),
-        _vsync = vsync,
-        super(
-            additionalConstraints: const BoxConstraints.tightFor(
-                width: _kSwitchWidth, height: _kSwitchHeight)) {
+  }) : _value = value,
+       _activeColor = activeColor,
+       _unActiveColor = unActiveColor,
+       _onChanged = onChanged,
+       _textDirection = textDirection,
+       _thumbColor = thumbColor,
+       _thumbPainter = _XliveThumbPainter(color: thumbColor),
+       _vsync = vsync,
+       super(
+         additionalConstraints: const BoxConstraints.tightFor(width: _kSwitchWidth, height: _kSwitchHeight),
+       ) {
     _tap = TapGestureRecognizer()
       ..onTapDown = _handleTapDown
       ..onTap = _handleTap
@@ -93,12 +90,13 @@ class _RenderXliveSwitch extends RenderConstrainedBox {
       value: value ? 1.0 : 0.0,
       vsync: vsync,
     );
-    _position = CurvedAnimation(
-      parent: _positionController,
-      curve: Curves.bounceOut,
-    )
-      ..addListener(markNeedsPaint)
-      ..addStatusListener(_handlePositionStateChanged);
+    _position =
+        CurvedAnimation(
+            parent: _positionController,
+            curve: Curves.bounceOut,
+          )
+          ..addListener(markNeedsPaint)
+          ..addStatusListener(_handlePositionStateChanged);
     _reactionController = AnimationController(
       duration: _kReactionDuration,
       vsync: vsync,
@@ -137,10 +135,11 @@ class _RenderXliveSwitch extends RenderConstrainedBox {
     _position!
       ..curve = Curves.bounceOut
       ..reverseCurve = Curves.bounceOut.flipped;
-    if (value)
+    if (value) {
       _positionController.forward();
-    else
+    } else {
       _positionController.reverse();
+    }
   }
 
   TickerProvider get vsync => _vsync;
@@ -171,10 +170,10 @@ class _RenderXliveSwitch extends RenderConstrainedBox {
     markNeedsPaint();
   }
 
-  ValueChanged<bool> get onChanged => _onChanged;
-  ValueChanged<bool> _onChanged;
+  ValueChanged<bool>? get onChanged => _onChanged;
+  ValueChanged<bool>? _onChanged;
 
-  set onChanged(ValueChanged<bool> value) {
+  set onChanged(ValueChanged<bool>? value) {
     if (value == _onChanged) return;
     final bool wasInteractive = isInteractive;
     _onChanged = value;
@@ -201,10 +200,11 @@ class _RenderXliveSwitch extends RenderConstrainedBox {
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
-    if (value)
+    if (value) {
       _positionController.forward();
-    else
+    } else {
       _positionController.reverse();
+    }
     if (isInteractive) {
       switch (_reactionController.status) {
         case AnimationStatus.forward:
@@ -230,9 +230,11 @@ class _RenderXliveSwitch extends RenderConstrainedBox {
 
   void _handlePositionStateChanged(AnimationStatus status) {
     if (isInteractive) {
-      if (status == AnimationStatus.completed && !_value)
-        onChanged(true);
-      else if (status == AnimationStatus.dismissed && _value) onChanged(false);
+      if (status == AnimationStatus.completed && !_value) {
+        onChanged!(true);
+      } else if (status == AnimationStatus.dismissed && _value) {
+        onChanged!(false);
+      }
     }
   }
 
@@ -241,7 +243,7 @@ class _RenderXliveSwitch extends RenderConstrainedBox {
   }
 
   void _handleTap() {
-    if (isInteractive) onChanged(!_value);
+    if (isInteractive) onChanged!(!_value);
   }
 
   void _handleTapUp(TapUpDetails details) {
@@ -274,10 +276,11 @@ class _RenderXliveSwitch extends RenderConstrainedBox {
   }
 
   void _handleDragEnd(DragEndDetails details) {
-    if (_position!.value >= 0.5)
+    if (_position!.value >= 0.5) {
       _positionController.forward();
-    else
+    } else {
       _positionController.reverse();
+    }
     _reactionController.reverse();
   }
 
@@ -326,16 +329,9 @@ class _RenderXliveSwitch extends RenderConstrainedBox {
 
     final Paint paint = Paint()..color = trackColor!;
 
-    final Rect trackRect = Rect.fromLTWH(
-        offset.dx + (size.width - _kTrackWidth) / 2.0,
-        offset.dy + (size.height - _kTrackHeight) / 2.0,
-        _kTrackWidth,
-        _kTrackHeight);
-    final RRect outerRRect = RRect.fromRectAndRadius(
-        trackRect, const Radius.circular(_kTrackRadius));
-    final RRect innerRRect = RRect.fromRectAndRadius(
-        trackRect.deflate(borderThickness),
-        const Radius.circular(_kTrackRadius));
+    final Rect trackRect = Rect.fromLTWH(offset.dx + (size.width - _kTrackWidth) / 2.0, offset.dy + (size.height - _kTrackHeight) / 2.0, _kTrackWidth, _kTrackHeight);
+    final RRect outerRRect = RRect.fromRectAndRadius(trackRect, const Radius.circular(_kTrackRadius));
+    final RRect innerRRect = RRect.fromRectAndRadius(trackRect.deflate(borderThickness), const Radius.circular(_kTrackRadius));
     canvas.drawDRRect(outerRRect, innerRRect, paint);
 
     final double thumbLeft = lerpDouble(
@@ -364,13 +360,7 @@ class _RenderXliveSwitch extends RenderConstrainedBox {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder description) {
     super.debugFillProperties(description);
-    description.add(FlagProperty('value',
-        value: value, ifTrue: 'checked', ifFalse: 'unchecked', showName: true));
-    description.add(FlagProperty('isInteractive',
-        value: isInteractive,
-        ifTrue: 'enabled',
-        ifFalse: 'disabled',
-        showName: true,
-        defaultValue: true));
+    description.add(FlagProperty('value', value: value, ifTrue: 'checked', ifFalse: 'unchecked', showName: true));
+    description.add(FlagProperty('isInteractive', value: isInteractive, ifTrue: 'enabled', ifFalse: 'disabled', showName: true, defaultValue: true));
   }
 }

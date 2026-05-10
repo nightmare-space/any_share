@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart';
 
-import 'package:speed_share/utils/ext_util.dart';
+import 'package:speed_share/common/extensions/file_type_ext.dart';
 import 'setting_controller.dart';
 
 const onknownKey = '未知';
@@ -117,7 +117,7 @@ class FileController extends GetxController with WidgetsBindingObserver {
     }
     List<FileSystemEntity> img = await (Directory('$prefix/$picKey').list()).toList();
     for (var element in img) {
-      if (element.path.isImg) imgFiles.add(element);
+      if (element.path.isImageFile) imgFiles.add(element);
     }
     List<FileSystemEntity> dirs = await (Directory('$prefix/$dirKey').list()).toList();
     for (var element in dirs) {
@@ -152,17 +152,17 @@ class FileController extends GetxController with WidgetsBindingObserver {
     for (var element in video) {
       String path = element.path;
       if (element is File) {
-        if (path.isVideo) {
+        if (path.isVideoFile) {
           moveFileSafe(element, '$prefix/$videoKey/${basename(element.path)}');
-        } else if (path.isDoc) {
+        } else if (path.isDocumentFile) {
           moveFileSafe(element, '$prefix/$docKey/${basename(element.path)}');
-        } else if (path.isAudio) {
+        } else if (path.isAudioFile) {
           moveFileSafe(element, '$prefix/$audioKey/${basename(element.path)}');
-        } else if (path.isApk) {
+        } else if (path.isApkFile) {
           moveFileSafe(element, '$prefix/$apkKey/${basename(element.path)}');
-        } else if (path.isImg) {
+        } else if (path.isImageFile) {
           moveFileSafe(element, '$prefix/$picKey/${basename(element.path)}');
-        } else if (path.isZip) {
+        } else if (path.isArchiveFile) {
           moveFileSafe(element, '$prefix/$zipKey/${basename(element.path)}');
         } else {
           moveFileSafe(element, '$prefix/$onknownKey/${basename(element.path)}');

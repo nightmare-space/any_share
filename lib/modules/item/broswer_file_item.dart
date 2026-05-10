@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart' as gr;
-import '../../controllers/controllers.dart';
+
+import 'package:speed_share/common/extensions/extensions.dart';
+import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/models/models.dart';
 import 'package:speed_share/modules/widget/icon.dart';
@@ -233,7 +235,7 @@ class _BroswerFileItemState extends State<BroswerFileItem> {
     return InkWell(
       child: Row(
         children: [
-          if (widget.info!.fileName!.isImg && widget.sendByUser!)
+          if (widget.info!.fileName!.isImageFile && widget.sendByUser!)
             // 文件名是图片的时候，用blob协议展示
             Hero(
               tag: widget.info!.blob!,

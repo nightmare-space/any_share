@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../controllers/setting_controller.dart';
+import 'package:speed_share/controllers/controllers.dart';
 
 Future<void> vibrate() async {
   SettingController settingController = Get.find();

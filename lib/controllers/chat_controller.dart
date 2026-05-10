@@ -11,6 +11,7 @@ import 'package:dio/dio.dart';
 import 'package:path/path.dart' as p;
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'package:global_repository/global_repository.dart';
+import 'package:speed_share/common/extensions/extensions.dart';
 
 import 'package:speed_share/services/discovery_service.dart';
 import 'package:speed_share/common/config.dart';

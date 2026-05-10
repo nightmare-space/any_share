@@ -4,18 +4,18 @@ import 'package:get/get.dart';
 import 'package:open_file/open_file.dart';
 import 'package:speed_share/modules/preview/image_preview.dart';
 import 'package:speed_share/modules/preview/video_preview.dart';
-import 'package:speed_share/utils/ext_util.dart';
+import 'package:speed_share/common/extensions/file_type_ext.dart';
 
 class FileUtil {
   static void openFile(String path) {
-    if (path.isImg) {
+    if (path.isImageFile) {
       Get.to(
         () => PreviewImage(
           path: path,
           tag: path,
         ),
       );
-    } else if (path.isVideo) {
+    } else if (path.isVideoFile) {
       Get.to(
         () => VideoPreview(
           url: path,

@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:speed_share/common/config.dart';
 
-/// 解压web资源
-/// Upack web resources
+/// 解压 web 资源，可以在浏览器访问速享页面，不仅仅是简单的 HTML 页面
+/// Unpack web resources, allowing access to the AnyShare page in the browser, not just a simple HTML page
 Future<void> unpackWebResource() async {
   ByteData byteData = await rootBundle.load(
     '${Config.flutterPackage}assets/web.zip',

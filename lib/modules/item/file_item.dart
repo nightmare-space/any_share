@@ -10,7 +10,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:speed_share/modules/widget/icon.dart';
 import 'package:speed_share/themes/theme.dart';
-import 'package:speed_share/utils/ext_util.dart';
+import 'package:speed_share/common/extensions/file_type_ext.dart';
 import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/models/models.dart';
@@ -59,7 +59,7 @@ class _FileItemState extends State<FileItem> {
       return false;
     }
     if (!settingController.enableAutoDownloadSetting.value) return false;
-    String type = url.getType;
+    String type = url.fileTypeLabel;
     String savePath = '${settingController.savePath}/$type/${p.basename(url)}';
     File file = File(savePath);
     if (!file.existsSync()) {
