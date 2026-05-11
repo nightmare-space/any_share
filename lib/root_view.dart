@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
@@ -36,27 +37,29 @@ class RootView extends StatelessWidget {
               } else {
                 adaptWidth = 414;
               }
-              return ViewMetric(
-                uiWidth: adaptWidth,
-                screenWidth: MediaQuery.of(context).size.width,
-                child: Builder(
-                  builder: (context) {
-                    ChatController chatController = Get.find();
-                    // TODO: !不优雅的写法
-                    chatController.context = context;
-                    final bool isDark = Get.rootController.themeMode == ThemeMode.dark;
-                    // Theme 中的一些值需要跟随屏幕适配，所以不能直接配置带 MaterialApp 中
-                    // Some values in Theme need to follow screen adaptation, so they cannot be directly configured with MaterialApp
-                    final ThemeData theme = isDark ? dark(context) : light(context);
-                    return GetBuilder<SettingController>(
-                      builder: (context) {
-                        return Theme(
-                          data: theme,
-                          child: child!,
-                        );
-                      },
-                    );
-                  },
+              return GestureDetector(
+                onSecondaryTap: () {
+                  Get.back();
+                },
+                child: ViewMetric(
+                  uiWidth: adaptWidth,
+                  screenWidth: MediaQuery.of(context).size.width,
+                  child: Builder(
+                    builder: (context) {
+                      ChatController chatController = Get.find();
+                      // TODO: Ungraceful!!!
+                      chatController.context = context;
+                      final bool isDark = Get.rootController.themeMode == ThemeMode.dark;
+                      // Theme 中的一些值需要跟随屏幕适配，所以不能直接配置带 MaterialApp 中
+                      // Some values in Theme need to follow screen adaptation, so they cannot be directly configured with MaterialApp
+                      final ThemeData theme = isDark ? dark(context) : light(context);
+                      return GetBuilder<SettingController>(
+                        builder: (context) {
+                          return Theme(data: theme, child: child!);
+                        },
+                      );
+                    },
+                  ),
                 ),
               );
             },
