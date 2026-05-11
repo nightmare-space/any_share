@@ -23,7 +23,7 @@ class DesktopHome extends StatefulWidget {
 }
 
 class _DesktopHomeState extends State<DesktopHome> {
-  String page = AppPages.initial;
+  String page = AppPages.home;
   ChatController controller = Get.find();
   bool dropping = false;
 
@@ -75,7 +75,7 @@ class _DesktopHomeState extends State<DesktopHome> {
 
   Widget getPage() {
     return {
-      AppPages.initial: const ShareChatV2(),
+      AppPages.home: const ShareChatV2(),
       AppPages.setting: const SettingPage(),
     }[page]!;
   }

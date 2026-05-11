@@ -84,7 +84,7 @@ class _DesktopDrawerState extends State<DesktopDrawer> {
   Widget homeMenu() {
     return DrawerItemv2(
       groupValue: widget.value,
-      value: AppPages.initial,
+      value: AppPages.home,
       onChange: (v) {
         setState(() {});
         widget.onChange?.call(v);

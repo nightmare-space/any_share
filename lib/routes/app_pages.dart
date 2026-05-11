@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:file_manager/view/file_manager_page.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_workers/utils/debouncer.dart';
 import 'package:global_repository/global_repository.dart';
+import 'package:speed_share/common/assets.dart';
+import 'package:speed_share/common/config.dart';
 
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/modules/adaptive/adapive_entry.dart';
@@ -14,7 +18,9 @@ int _time = 0;
 
 class AppPages {
   AppPages._();
-  static const initial = '/home';
+  static const home = '/home';
+  static const about = '/about';
+  static const changeLog = '/change_log';
   static const setting = '/setting';
 
   static final routes = [
@@ -25,7 +31,7 @@ class AppPages {
       ),
     ),
     GetPage(
-      name: '/home',
+      name: home,
       page: () => Builder(
         builder: (context) {
           return PopScope(
@@ -44,6 +50,57 @@ class AppPages {
             child: const AdaptiveEntryPoint(),
           );
         },
+      ),
+    ),
+    GetPage(
+      name: about,
+      page: () {
+        return Builder(
+          builder: (context) {
+            final $ = context.$;
+            return AboutPage(
+              applicationName: l10n.appName,
+              appVersion: Config.versionName,
+              versionCode: Config.versionCode,
+              logo: Padding(
+                padding: EdgeInsets.only(top: $(32)),
+                child: SizedBox(
+                  width: $(100),
+                  height: $(100),
+                  child: SvgPicture.asset(
+                    SvgAssets.appIcon,
+                    width: $(100),
+                    height: $(100),
+                  ),
+                ),
+              ),
+              otherVersionLink: 'https://bkkj.run/apps/AnyShare/',
+              openSourceLink: 'https://github.com/nightmare-space/any_share',
+              license: Get.arguments,
+              canOpenDrawer: false,
+            );
+          },
+        );
+      },
+    ),
+
+    // ChangeLogPage
+    GetPage(
+      name: changeLog,
+      page: () => ChangeLogPage(
+        icon: SizedBox(
+          child: Builder(
+            builder: (context) {
+              final $ = context.$;
+              return Padding(
+                padding: EdgeInsets.all($(4)),
+                child: SvgPicture.asset(
+                  SvgAssets.appIcon,
+                ),
+              );
+            },
+          ),
+        ),
       ),
     ),
   ];

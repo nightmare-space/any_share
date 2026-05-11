@@ -4,11 +4,14 @@ import 'package:file_selector/file_selector.dart';
 import 'package:file_manager/file_manager.dart' as file_manager;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:speed_share/common/assets.dart';
 import 'package:speed_share/common/config.dart';
+import 'package:speed_share/routes/app_pages.dart';
 import '../../../controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/themes/theme.dart';
@@ -184,43 +187,6 @@ class _SettingPageState extends State<SettingPage> {
                       ],
                     ),
                   ),
-
-                  // SettingItem(
-                  //   onTap: () {
-                  //     controller.constIslandChange(!controller.enbaleConstIsland);
-                  //   },
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       Expanded(
-                  //         child: Column(
-                  //           crossAxisAlignment: CrossAxisAlignment.start,
-                  //           mainAxisAlignment: MainAxisAlignment.center,
-                  //           children: [
-                  //             Text(
-                  //               '开启常量岛动画',
-                  //               style: TextStyle(
-                  //                 fontSize: $(18),
-                  //               ),
-                  //             ),
-                  //             // SizedBox(height: $(2)),
-                  //             Text(
-                  //               '模仿iOS灵动岛的动画，这个开关需要同时打开速享的悬浮窗权限',
-                  //               style: TextStyle(
-                  //                 fontSize: $(14),
-                  //                 color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.6),
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //       AquaSwitch(
-                  //         value: controller.enbaleConstIsland,
-                  //         onChanged: controller.constIslandChange,
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                   SettingItem(
                     onTap: () {
                       controller.clipChange(!controller.clipboardShareSetting.value);
@@ -267,42 +233,6 @@ class _SettingPageState extends State<SettingPage> {
                     child: Text(
                       l10n.fileType,
                       style: title,
-                    ),
-                  ),
-
-                  SettingItem(
-                    onTap: () {
-                      controller.changeFileClassify(!controller.enableFileClassify);
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                l10n.enableFileClassification,
-                                style: TextStyle(fontSize: $(18)),
-                              ),
-
-                              // SizedBox(height: $(2)),
-                              Text(
-                                '注意，文件分类开启后会自动整理下载路径的所有文件',
-                                style: TextStyle(
-                                  fontSize: $(14),
-                                  color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        AquaSwitch(
-                          value: controller.enableFileClassify,
-                          onChanged: controller.changeFileClassify,
-                        ),
-                      ],
                     ),
                   ),
                   SettingItem(
@@ -382,13 +312,13 @@ class _SettingPageState extends State<SettingPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '当前缓存大小:$cacheSize',
+                                '${l10n.cacheSize(cacheSize)}: $cacheSize',
                                 style: TextStyle(
                                   fontSize: $(18),
                                 ),
                               ),
                               Text(
-                                '安卓SAF架构会导致从系统文件夹选择文件总是会拷贝一份，如果使用速享自带文件管理器选择，则不会增加缓存大小',
+                                l10n.androidSAFTips,
                                 style: TextStyle(
                                   fontSize: $(14),
                                   color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacityExact(0.6),
@@ -401,31 +331,11 @@ class _SettingPageState extends State<SettingPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: $(10)),
+                    padding: EdgeInsets.symmetric(vertical: $(8), horizontal: $(10)),
                     child: Text(
                       l10n.aboutSpeedShare,
                       style: title,
                     ),
-                  ),
-                  SettingItem(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '更新日志',
-                          style: TextStyle(
-                            fontSize: $(18),
-                          ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          size: $(16),
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      Get.to(const ChangeLogPage());
-                    },
                   ),
                   SettingItem(
                     child: Row(
@@ -444,7 +354,8 @@ class _SettingPageState extends State<SettingPage> {
                       ],
                     ),
                     onTap: () {
-                      Get.to(const PrivacyPage());
+                      // AppPages.changeLog
+                      Get.toNamed(AppPages.about);
                     },
                   ),
                   SettingItem(
@@ -452,7 +363,27 @@ class _SettingPageState extends State<SettingPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '关于速享',
+                          l10n.changeLog,
+                          style: TextStyle(
+                            fontSize: $(18),
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: $(16),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Get.toNamed(AppPages.changeLog);
+                    },
+                  ),
+                  SettingItem(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.aboutSpeedShare,
                           style: TextStyle(
                             fontSize: $(18),
                           ),
@@ -465,25 +396,7 @@ class _SettingPageState extends State<SettingPage> {
                     ),
                     onTap: () async {
                       String license = await rootBundle.loadString('LICENSE');
-                      Get.to(
-                        AboutPage(
-                          applicationName: l10n.appName,
-                          appVersion: Config.versionName,
-                          versionCode: Config.versionCode,
-                          logo: Padding(
-                            padding: EdgeInsets.only(top: $(32)),
-                            child: SizedBox(
-                              width: $(100),
-                              height: $(100),
-                              child: Image.asset('assets/icon/app_icon_1024.png'),
-                            ),
-                          ),
-                          otherVersionLink: 'http://nightmare.press/YanTool/resources/SpeedShare/?C=N;O=A',
-                          openSourceLink: 'https://github.com/nightmare-space/speed_share',
-                          license: license,
-                          canOpenDrawer: false,
-                        ),
-                      );
+                      Get.toNamed('/about', arguments: license);
                     },
                   ),
                   SettingItem(
