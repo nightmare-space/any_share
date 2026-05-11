@@ -141,9 +141,6 @@ class L10nHi extends L10n {
   String get changeLog => 'बदलाव लॉग';
 
   @override
-  String get about => 'Speed Share के बारे में';
-
-  @override
   String get chatWindowNotice =>
       'अभी कोई संदेश नहीं, संदेश सूची देखने के लिए टैप करें';
 
@@ -161,13 +158,8 @@ class L10nHi extends L10n {
   String get clearSuccess => 'सफलतापूर्वक साफ़ हुआ';
 
   @override
-  String cacheSize(num number) {
-    String _temp0 = intl.Intl.pluralLogic(
-      number,
-      locale: localeName,
-      other: 'वर्तमान कैश आकार ${number}MB',
-    );
-    return '$_temp0';
+  String cacheSize(Object size) {
+    return 'वर्तमान कैश आकार $size';
   }
 
   @override
@@ -306,4 +298,8 @@ class L10nHi extends L10n {
 
   @override
   String get needWSTip => 'कृपया पहले SpeedShare में वेब सर्वर सक्षम करें';
+
+  @override
+  String get chatInputHint =>
+      'संदेश सामग्री दर्ज करें, Shift+Enter से नई पंक्ति';
 }

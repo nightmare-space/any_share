@@ -140,9 +140,6 @@ class L10nZh extends L10n {
   String get changeLog => '更新日志';
 
   @override
-  String get about => 'About Speed Share';
-
-  @override
   String get chatWindowNotice => '当前没有任何消息，点击进入到消息列表';
 
   @override
@@ -158,13 +155,8 @@ class L10nZh extends L10n {
   String get clearSuccess => '清理成功';
 
   @override
-  String cacheSize(num number) {
-    String _temp0 = intl.Intl.pluralLogic(
-      number,
-      locale: localeName,
-      other: '当前缓存大小${number}MB',
-    );
-    return '$_temp0';
+  String cacheSize(Object size) {
+    return '当前缓存大小$size';
   }
 
   @override
@@ -301,4 +293,7 @@ class L10nZh extends L10n {
 
   @override
   String get needWSTip => '请先去速享客户端中开启WebServer';
+
+  @override
+  String get chatInputHint => '请输入消息内容，Shift+Enter换行';
 }

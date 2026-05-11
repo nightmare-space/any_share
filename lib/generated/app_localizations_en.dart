@@ -140,9 +140,6 @@ class L10nEn extends L10n {
   String get changeLog => 'Change Log';
 
   @override
-  String get about => 'About Speed Share';
-
-  @override
   String get chatWindowNotice =>
       'Currently no messages, click to view the message list';
 
@@ -160,13 +157,8 @@ class L10nEn extends L10n {
   String get clearSuccess => 'Clear Success';
 
   @override
-  String cacheSize(num number) {
-    String _temp0 = intl.Intl.pluralLogic(
-      number,
-      locale: localeName,
-      other: 'Current cache size ${number}MB',
-    );
-    return '$_temp0';
+  String cacheSize(Object size) {
+    return 'Current cache size $size';
   }
 
   @override
@@ -305,4 +297,8 @@ class L10nEn extends L10n {
 
   @override
   String get needWSTip => 'Please enable WebServer in SpeedShare first';
+
+  @override
+  String get chatInputHint =>
+      'Please input message content, Shift+Enter for new line';
 }

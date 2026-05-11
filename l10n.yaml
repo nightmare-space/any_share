@@ -3,3 +3,4 @@ template-arb-file: intl_en.arb
 output-localization-file: app_localizations.dart
 output-dir: lib/generated
 output-class: L10n
+untranslated-messages-file: desiredFileName.txt

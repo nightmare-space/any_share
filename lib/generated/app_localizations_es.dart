@@ -143,9 +143,6 @@ class L10nEs extends L10n {
   String get changeLog => 'Registro de cambios';
 
   @override
-  String get about => 'About Speed Share';
-
-  @override
   String get chatWindowNotice =>
       'Actualmente no hay mensajes, haga clic para ver la lista de mensajes';
 
@@ -163,13 +160,8 @@ class L10nEs extends L10n {
   String get clearSuccess => 'Éxito al limpiar';
 
   @override
-  String cacheSize(num number) {
-    String _temp0 = intl.Intl.pluralLogic(
-      number,
-      locale: localeName,
-      other: 'Tamaño de caché actual ${number}MB',
-    );
-    return '$_temp0';
+  String cacheSize(Object size) {
+    return 'Tamaño de caché actual $size';
   }
 
   @override
@@ -313,4 +305,8 @@ class L10nEs extends L10n {
   @override
   String get needWSTip =>
       'Por favor, primero active el servidor web en la aplicación Speed Share';
+
+  @override
+  String get chatInputHint =>
+      'Ingrese el contenido del mensaje, Shift+Enter para nueva línea';
 }

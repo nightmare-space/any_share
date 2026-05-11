@@ -347,12 +347,6 @@ abstract class L10n {
   /// **'Change Log'**
   String get changeLog;
 
-  /// No description provided for @about.
-  ///
-  /// In en, this message translates to:
-  /// **'About Speed Share'**
-  String get about;
-
   /// No description provided for @chatWindowNotice.
   ///
   /// In en, this message translates to:
@@ -386,8 +380,8 @@ abstract class L10n {
   /// No description provided for @cacheSize.
   ///
   /// In en, this message translates to:
-  /// **'{number,plural, other{Current cache size {number}MB}}'**
-  String cacheSize(num number);
+  /// **'Current cache size {size}'**
+  String cacheSize(Object size);
 
   /// No description provided for @curCacheSize.
   ///
@@ -652,6 +646,12 @@ abstract class L10n {
   /// In en, this message translates to:
   /// **'Please enable WebServer in SpeedShare first'**
   String get needWSTip;
+
+  /// No description provided for @chatInputHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Please input message content, Shift+Enter for new line'**
+  String get chatInputHint;
 }
 
 class _L10nDelegate extends LocalizationsDelegate<L10n> {
