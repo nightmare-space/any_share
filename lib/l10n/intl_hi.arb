@@ -47,7 +47,7 @@
     "classifyTips": "ध्यान दें, फाइल वर्गीकरण चालू होने पर डाउनलोड फ़ोल्डर की सभी फाइलें अपने आप व्यवस्थित हो जाएँगी",
     "clearCache": "कैश साफ़ करें",
     "clearSuccess": "सफलतापूर्वक साफ़ हुआ",
-    "cacheSize": "{number,plural, other{वर्तमान कैश आकार {number}MB}}",
+    "cacheSize": "वर्तमान कैश आकार {size}",
     "curCacheSize": "वर्तमान कैश आकार",
     "nightmare": "Nightmare",
     "enableWebServer": "वेब सर्वर सक्षम करें",
@@ -91,5 +91,6 @@
     "fileQRCode": "फाइल QR कोड",
     "export": "निर्यात",
     "openQQFail": "QQ नहीं खुला, कृपया जाँच करें कि वह इंस्टॉल है",
-    "needWSTip": "कृपया पहले SpeedShare में वेब सर्वर सक्षम करें"
+    "needWSTip": "कृपया पहले SpeedShare में वेब सर्वर सक्षम करें",
+    "chatInputHint": "संदेश सामग्री दर्ज करें, Shift+Enter से नई पंक्ति"
 }

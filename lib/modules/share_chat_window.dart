@@ -85,7 +85,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
               alignment: Alignment.bottomCenter,
               child: Material(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: $(64), maxHeight: $(240)),
+                  constraints: BoxConstraints(minHeight: $(64), maxHeight: $(246)),
                   child: sendMsgContainer(context),
                 ),
               ),
@@ -428,15 +428,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                                 minLines: 1,
                                 keyboardType: GetPlatform.isDesktop ? TextInputType.text : TextInputType.multiline,
                                 decoration: InputDecoration(
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.symmetric(
-                                    vertical: GetPlatform.isWeb ? $(16) : $(10),
-                                    horizontal: $(12),
-                                  ),
-                                  hintText: 'shift+enter 即可换行',
-                                ),
-                                style: const TextStyle(
-                                  textBaseline: TextBaseline.ideographic,
+                                  hintText: l10n.chatInputHint,
                                 ),
                                 onSubmitted: (_) {
                                   if (chatController.inputMultiline) {

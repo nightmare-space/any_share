@@ -46,7 +46,7 @@
     "classifyTips": "Nota, después de que se active la clasificación de archivos, todos los archivos en la ruta de descarga se organizarán automáticamente",
     "clearCache": "Limpiar caché",
     "clearSuccess": "Éxito al limpiar",
-    "cacheSize": "{number,plural, other{Tamaño de caché actual {number}MB}}",
+    "cacheSize": "Tamaño de caché actual {size}",
     "curCacheSize": "Tamaño de caché actual",
     "nightmare": "Nightmare",
     "enableWebServer": "Habilitar servidor web",
@@ -90,5 +90,6 @@
     "fileQRCode": "Código QR del archivo",
     "export": "Exportar",
     "openQQFail": "Error al abrir QQ, compruebe si está instalado",
-    "needWSTip": "Por favor, primero active el servidor web en la aplicación Speed Share"
+    "needWSTip": "Por favor, primero active el servidor web en la aplicación Speed Share",
+    "chatInputHint": "Ingrese el contenido del mensaje, Shift+Enter para nueva línea"
 }

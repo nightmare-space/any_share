@@ -41,13 +41,12 @@
     "projectBoard": "Nightmare Series Project Board",
     "joinQQGroup": "Join Feedback Communication Group",
     "changeLog": "Change Log",
-    "about": "About Speed Share",
     "chatWindowNotice": "Currently no messages, click to view the message list",
     "enableFileClassification": "Enable file classification",
     "classifyTips": "Note, after the file classification is turned on, all files in the download path will be automatically organized",
     "clearCache": "Clear Cache",
     "clearSuccess": "Clear Success",
-    "cacheSize": "{number,plural, other{Current cache size {number}MB}}",
+    "cacheSize": "Current cache size {size}",
     "curCacheSize": "Current Cache Size",
     "nightmare": "Nightmare",
     "enableWebServer": "Enable Web Server",
@@ -91,5 +90,6 @@
     "fileQRCode": "File QR Code",
     "export": "Export",
     "openQQFail": "Open QQ Fail, Please check if it is installed",
-    "needWSTip": "Please enable WebServer in SpeedShare first"
+    "needWSTip": "Please enable WebServer in SpeedShare first",
+    "chatInputHint": "Please input message content, Shift+Enter for new line"
 }

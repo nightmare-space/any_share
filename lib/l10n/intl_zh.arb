@@ -46,7 +46,7 @@
   "classifyTips": "注意，文件分类开启后会自动整理下载路径的所有文件",
   "clearCache": "缓存清理",
   "clearSuccess": "清理成功",
-  "cacheSize": "{number,plural, other{当前缓存大小{number}MB}}",
+  "cacheSize": "当前缓存大小{size}",
   "curCacheSize": "当前缓存大小",
   "nightmare": "梦魇兽",
   "enableWebServer": "开启Web服务器",
@@ -90,5 +90,6 @@
   "fileQRCode": "文件二维码",
   "export": "导出",
   "openQQFail": "唤起QQ失败，请检查是否安装",
-  "needWSTip": "请先去速享客户端中开启WebServer"
+  "needWSTip": "请先去速享客户端中开启WebServer",
+  "chatInputHint": "请输入消息内容，Shift+Enter换行"
 }
