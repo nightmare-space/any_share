@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:get/get.dart';
 import 'package:signale/signale.dart';
+import 'package:speed_share/common/assets.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
@@ -35,7 +36,7 @@ class TrayHandler with TrayListener {
 
   Future<void> initTray() async {
     await trayManager.setIcon(
-      'assets/icon/app_icon.png',
+      SvgAssets.appIcon,
     );
     Menu menu = Menu(
       items: [

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart';
+import 'package:speed_share/common/assets.dart';
 import '../../../controllers/chat_controller.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/models/models.dart';
@@ -131,10 +132,8 @@ class _DirMessageItemState extends State<DirMessageItem> {
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: SvgPicture.asset(
-                        'assets/icon/dir.svg',
-                        width: 32,
-                        color: Colors.black,
-                        package: 'file_manager_view',
+                        SvgAssets.dir,
+                        width: $(32),
                       ),
                     ),
                     Expanded(
