@@ -36,8 +36,8 @@ class ChatController extends GetxController with WidgetsBindingObserver {
       update();
     });
     // 这里是shift+enter可以是实现换行的逻辑
-    focusNode.onKey = (FocusNode node, event) {
-      if (event.isShiftPressed) {
+    focusNode.onKeyEvent = (_, event) {
+      if (HardwareKeyboard.instance.isShiftPressed) {
         inputMultiline = true;
         update();
       } else {
@@ -52,7 +52,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   }
   // 用来屏幕适配
   // for screen adaptation
-  // TODO: 不优雅
+  // TODO: Bad!!!
   late BuildContext context;
   // 一个标记位，是否输入多行
   bool inputMultiline = false;
