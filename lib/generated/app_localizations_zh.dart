@@ -295,5 +295,5 @@ class L10nZh extends L10n {
   String get needWSTip => '请先去速享客户端中开启WebServer';
 
   @override
-  String get chatInputHint => '请输入消息内容，Shift+Enter换行';
+  String get chatInputHint => 'Shift+Enter换行';
 }

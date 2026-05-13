@@ -307,6 +307,5 @@ class L10nEs extends L10n {
       'Por favor, primero active el servidor web en la aplicación Speed Share';
 
   @override
-  String get chatInputHint =>
-      'Ingrese el contenido del mensaje, Shift+Enter para nueva línea';
+  String get chatInputHint => 'Shift+Enter para nueva línea';
 }

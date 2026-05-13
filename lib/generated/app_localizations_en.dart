@@ -299,6 +299,5 @@ class L10nEn extends L10n {
   String get needWSTip => 'Please enable WebServer in SpeedShare first';
 
   @override
-  String get chatInputHint =>
-      'Please input message content, Shift+Enter for new line';
+  String get chatInputHint => 'Shift+Enter for new line';
 }

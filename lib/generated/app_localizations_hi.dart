@@ -300,6 +300,5 @@ class L10nHi extends L10n {
   String get needWSTip => 'कृपया पहले SpeedShare में वेब सर्वर सक्षम करें';
 
   @override
-  String get chatInputHint =>
-      'संदेश सामग्री दर्ज करें, Shift+Enter से नई पंक्ति';
+  String get chatInputHint => 'Shift+Enter से नई पंक्ति';
 }

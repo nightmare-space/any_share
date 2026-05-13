@@ -91,5 +91,5 @@
     "export": "Export",
     "openQQFail": "Open QQ Fail, Please check if it is installed",
     "needWSTip": "Please enable WebServer in SpeedShare first",
-    "chatInputHint": "Please input message content, Shift+Enter for new line"
+    "chatInputHint": "Shift+Enter for new line"
 }

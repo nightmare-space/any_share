@@ -91,5 +91,5 @@
     "export": "Exportar",
     "openQQFail": "Error al abrir QQ, compruebe si está instalado",
     "needWSTip": "Por favor, primero active el servidor web en la aplicación Speed Share",
-    "chatInputHint": "Ingrese el contenido del mensaje, Shift+Enter para nueva línea"
+    "chatInputHint": "Shift+Enter para nueva línea"
 }

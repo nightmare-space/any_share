@@ -92,5 +92,5 @@
     "export": "निर्यात",
     "openQQFail": "QQ नहीं खुला, कृपया जाँच करें कि वह इंस्टॉल है",
     "needWSTip": "कृपया पहले SpeedShare में वेब सर्वर सक्षम करें",
-    "chatInputHint": "संदेश सामग्री दर्ज करें, Shift+Enter से नई पंक्ति"
+    "chatInputHint": "Shift+Enter से नई पंक्ति"
 }

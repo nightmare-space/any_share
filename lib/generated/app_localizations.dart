@@ -650,7 +650,7 @@ abstract class L10n {
   /// No description provided for @chatInputHint.
   ///
   /// In en, this message translates to:
-  /// **'Please input message content, Shift+Enter for new line'**
+  /// **'Shift+Enter for new line'**
   String get chatInputHint;
 }
 
