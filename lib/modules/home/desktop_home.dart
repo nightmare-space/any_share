@@ -59,16 +59,16 @@ class _DesktopHomeState extends State<DesktopHome> {
       for (final uri in fileUris) {
         // TODO: Check!
         final filePath = path.fromUri(uri).replaceAll('/raw/', '');
-        controller.sendFileFromPath(filePath);
+        controller.sendFileMessageByPath(filePath);
       }
       return;
     }
 
     if (fileUris.length == 1 && await FileSystemEntity.isDirectory(fileUris.first.toFilePath())) {
-      controller.sendDirFromPath(fileUris.first.toFilePath());
+      controller.sendDirMessageByPath(fileUris.first.toFilePath());
     } else {
       for (final uri in fileUris) {
-        controller.sendFileFromPath(uri.toFilePath());
+        controller.sendFileMessageByPath(uri.toFilePath());
       }
     }
   }

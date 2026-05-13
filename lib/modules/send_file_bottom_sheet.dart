@@ -93,10 +93,10 @@ class _SendFilePageState extends State<SendFilePage> with SingleTickerProviderSt
                       children: [
                         GestureDetector(
                           onTap: () async {
-                            Navigator.of(context).pop();
-                            Future.delayed(const Duration(milliseconds: 100), () {
-                              chatController.sendFileForBroswerAndDesktop();
-                            });
+                            // Navigator.of(context).pop();
+                            // Future.delayed(const Duration(milliseconds: 100), () {
+                            //   chatController.sendFileForBroswerAndDesktop();
+                            // });
                           },
                           child: Column(
                             children: [
@@ -125,7 +125,7 @@ class _SendFilePageState extends State<SendFilePage> with SingleTickerProviderSt
                               source: ImageSource.camera,
                             );
                             if (photo != null) {
-                              chatController.sendFileFromPath(photo.path);
+                              chatController.sendFileMessageByPath(photo.path);
                             }
                           },
                           child: Column(
@@ -149,10 +149,10 @@ class _SendFilePageState extends State<SendFilePage> with SingleTickerProviderSt
                         ),
                         GestureWithScale(
                           onTap: () {
-                            Navigator.of(context).pop();
-                            chatController.sendFileForAndroid(
-                              useSystemPicker: false,
-                            );
+                            // Navigator.of(context).pop();
+                            // chatController.sendFileForAndroid(
+                            //   useSystemPicker: false,
+                            // );
                           },
                           child: Column(
                             children: [

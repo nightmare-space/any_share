@@ -5,16 +5,15 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart' hide Router;
-import 'package:file_manager/file_manager.dart' as file_manager;
 import 'package:file_selector/file_selector.dart';
 import 'package:dio/dio.dart';
 import 'package:path/path.dart' as p;
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'package:global_repository/global_repository.dart';
+
 import 'package:speed_share/common/device.dart';
 import 'package:speed_share/common/extensions/extensions.dart';
 import 'package:speed_share/services/chat_service.dart';
-
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/services/dio_manager.dart';
 import 'package:speed_share/models/models.dart';
@@ -23,181 +22,83 @@ import 'package:speed_share/utils/utils.dart' hide FileUtil;
 import 'package:speed_share/services/file_service.dart';
 import 'controllers.dart';
 
+// TODO: Need Display how much device connected to the chat window's bottom
 class ChatController extends GetxController with WidgetsBindingObserver {
-  ChatController() {
-    controller.addListener(() {
-      // 这个监听主要是为了改变发送按钮为+号按钮
-      if (controller.text.isNotEmpty) {
-        hasInput = true;
-      } else {
-        hasInput = false;
-      }
-      update();
-    });
-    // 这里是shift+enter可以是实现换行的逻辑
-    focusNode.onKeyEvent = (_, event) {
-      if (HardwareKeyboard.instance.isShiftPressed) {
-        inputMultiline = true;
-        update();
-      } else {
-        inputMultiline = false;
-        update();
-      }
-      if (event.logicalKey == LogicalKeyboardKey.enter) {
-        return KeyEventResult.skipRemainingHandlers;
-      }
-      return KeyEventResult.ignored;
-    };
-  }
-  // 用来屏幕适配
-  // for screen adaptation
-  // TODO: Bad!!!
-  late BuildContext context;
-  // 一个标记位，是否输入多行
-  bool inputMultiline = false;
-  // 输入框用到的焦点
-  FocusNode focusNode = FocusNode();
-  List<Widget?> backup = [];
-  // 输入框控制器
-  TextEditingController controller = TextEditingController();
-  // 列表渲染的widget列表
-  List<Widget?> children = [];
-  // 本机的ip地址列表
-  List<String> addrs = [];
   // 列表的滑动控制器
   // scroll view controller
   ScrollController scrollController = ScrollController();
+  late final DeviceController deviceController = Get.find();
+  late final SettingController settingController = Get.find();
 
+  // TODO: Bad code
   Map<String?, int> dirItemMap = {};
   Map<String?, DirMessage> dirMsgMap = {};
   List<Map<String, dynamic>> cache = [];
-  bool hasInput = false;
-  // 发送文件需要等套接字初始化
-  Completer initLock = Completer();
-  DeviceController deviceController = Get.find();
-  SettingController settingController = Get.find();
   Map<String, XFile> webFileSendCache = {};
 
-  // 创建聊天房间，调用时机为app启动时
-  Future<void> createChatRoom() async {
+  // 储存已经发送过的消息
+  // 在第一次连接到设备的时候，会将消息同步过去
+  List<Map<String, dynamic>> messageCache = [];
+  // 给Web端用的
+  List<Map<String, dynamic>> messageWebCache = [];
+  // 用来屏幕适配
+  // for screen adaptation
+  // TODO: Bad code!!!
+  late BuildContext context;
+  // 输入框用到的焦点
+  List<Widget?> backup = [];
+
+  // 用来展示的消息列表
+  // message list for display
+  // TODO: Convert to List<Widget>
+  List<Widget?> messageItems = [];
+
+  Future<void> init() async {
     WidgetsBinding.instance.addObserver(this);
-    // 保存本地的IP地址列表
-    if (!GetPlatform.isWeb) {
-      await refreshLocalAddress();
-      update();
-    }
-    initChat();
-  }
-
-  /// 刷新本地ip地址列表
-  Future<void> refreshLocalAddress() async {
-    addrs = await PlatformUtil.localAddress();
-  }
-
-  Future<void> initChat() async {
-    // 清除消息列表
-    children.clear();
-    // 监听消息
-    // listenMessage();
+    ChatService.messageHandler = (data) {
+      Log.i('handleMessage :$data');
+      MessageBaseInfo info = MessageBaseInfo.resolveMessage(data);
+      handleMessage(info, messageItems);
+    };
     if (GetPlatform.isWeb) {
-      // web 是靠轮询得到的消息
-      initForWeb();
+      // Broswer do not have message server, so we need to simulate the message server by polling
+      String urlPrefix = url;
+      // remove end slash
+      if (urlPrefix.endsWith('/')) {
+        urlPrefix = urlPrefix.substring(0, urlPrefix.length - 1);
+      }
+      // if (!kReleaseMode) {
+      //   urlPrefix = 'http://127.0.0.1:12000';
+      // }
+      Uri uri = Uri.parse(urlPrefix);
+      int port = uri.port;
+      Device device = Device(
+        deviceController.uniqueKey,
+        deviceName: deviceController.deviceName,
+        deviceType: deviceController.deviceType,
+        url: 'http://${uri.host}',
+        messagePort: port,
+      );
+      deviceController.onDeviceConnect(device);
+      sendJoinMessageByUrl('http://${uri.host}:$port');
+      update();
+      Timer.periodic(const Duration(milliseconds: 300), (timer) async {
+        try {
+          String webUrl = '$urlPrefix${ServerRoutes.message}';
+          Response res = await Dio().get(webUrl);
+          Map<String, dynamic> data = jsonDecode(res.data);
+          MessageBaseInfo info = MessageBaseInfo.resolveMessage(data);
+          handleMessage(info, messageItems);
+        } catch (_) {}
+      });
       return;
     }
-    await Future.delayed(const Duration(milliseconds: 100));
-    if (!initLock.isCompleted) {
-      initLock.complete();
-    }
-  }
-
-  Future<void> initForWeb() async {
-    String urlPrefix = url;
-    if (!kReleaseMode) {
-      urlPrefix = 'http://127.0.0.1:12000/';
-    }
-    Uri uri = Uri.parse(urlPrefix);
-    int port = uri.port;
-    Device device = Device(
-      deviceController.uniqueKey,
-      deviceName: deviceController.deviceName,
-      deviceType: deviceController.deviceType,
-      url: 'http://${uri.host}',
-      messagePort: port,
-    );
-    deviceController.onDeviceConnect(device);
-    // Log.i('$urlPrefix/${info.messagePort}');
-
-    sendJoinEvent('http://${uri.host}:$port');
-    update();
-    Timer.periodic(const Duration(milliseconds: 300), (timer) async {
-      // Log.i('web 轮训消息结果 ${res.data}');
-      try {
-        String webUrl = '${urlPrefix}message';
-        Response res = await Dio().get(webUrl);
-        Map<String, dynamic> data = jsonDecode(res.data);
-        MessageBaseInfo info = MessageBaseInfo.resolveMessage(data);
-        dispatch(info, children);
-      } catch (e) {
-        // Log.e('web 轮训消息error $e');
-      }
-    });
-    if (!initLock.isCompleted) {
-      initLock.complete();
-    }
-  }
-
-  Future<void> sendDirFromPath(String dirPath) async {
-    Directory dir = Directory(dirPath);
-    String dirName = p.basename(dirPath);
-    DirMessage dirMessage = DirMessage(
-      dirName: dirName,
-      fullSize: 0,
-      deviceName: deviceController.deviceName,
-      addrs: addrs,
-      port: FileService.port,
-    );
-    // 发送消息
-    sendMessage(dirMessage);
-    // 将消息添加到本地列表
-    children.add(MessageItemFactory.getMessageItem(dirMessage, true, context));
-    scrollController.scrollToEnd();
-    update();
-    // TODO 这个功能难用
-    // 传相同的文件，得到的文件大小是不一样的
-    dir.list(recursive: true).listen((event) async {
-      FileSystemEntity entity = event;
-      String suffix = '';
-      int size = 0;
-      if (entity is Directory) {
-        suffix = '/';
-      } else if (entity is File) {
-        size = await entity.length();
-        FileService.addFile(entity.path);
-      }
-      DirPartMessage dirPartMessage = DirPartMessage(path: event.path + suffix, size: size, partOf: dirName);
-      sendMessage(dirPartMessage);
-      // Log.i(dirPartMessage);
-    });
-  }
-
-  /// 发送文件夹
-  /// send dir
-  Future<void> sendDir() async {
-    String? dirPath;
-    if (GetPlatform.isDesktop) {
-      dirPath = await getDirectoryPath(confirmButtonText: l10n.select);
-    } else {
-      dirPath = await file_manager.FileManager.selectDirectory();
-    }
-    Log.d('dirPath -> $dirPath');
-    if (dirPath == null) {
-      return;
-    }
-    sendDirFromPath(dirPath);
   }
 
   // 通知web浏览器开始上传文件
-  Future<void> notifyBroswerUploadFile(String? hash) async {
+  // Notify web browser to start upload file
+  // TODO: Test on v2.4
+  Future<void> notifyBrowserUploadFile(String? hash) async {
     List<String> addresses = await PlatformUtil.localAddress();
     final NotifyMessage notifyMessage = NotifyMessage(
       hash: hash,
@@ -207,9 +108,77 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     messageWebCache.add(notifyMessage.toJson());
   }
 
-  // 给 web 和桌面端提供的方法
-  Future<void> sendXFiles(List<XFile> files) async {
-    await initLock.future;
+  // TODO: Reimplement this
+  Future<void> uploadFileForWeb(XFile xFile, String urlPrefix) async {
+    try {
+      String base64Name = base64Encode(utf8.encode(xFile.name));
+      Log.w(base64Name);
+      Response response2 = await Dio().post(
+        '$urlPrefix${ServerRoutes.uploadFile}',
+        data: xFile.openRead(),
+        onSendProgress: (count, total) {
+          Log.v('count:$count total:$total pro:${count / total}');
+        },
+        options: Options(headers: {Headers.contentLengthHeader: await xFile.length(), HttpHeaders.contentTypeHeader: ContentType.binary.toString(), 'filename': base64Name, 'blob': xFile.path}),
+      );
+      Log.w(response2);
+    } catch (e) {
+      Log.e('Upload file error : $e');
+    }
+  }
+
+  void sendMessage(MessageBaseInfo info) {
+    info.deviceType = deviceController.deviceType;
+    info.deviceId = deviceController.uniqueKey;
+    messageCache.add(info.toJson());
+    messageWebCache.add(info.toJson());
+    deviceController.sendToAll(info.toJson());
+  }
+
+  // 发送文本消息
+  // Send text message
+  void sendTextMessage(String content) {
+    TextMessage info = TextMessage(content: content, deviceName: deviceController.deviceName);
+    sendMessage(info);
+    messageItems.add(MessageItemFactory.getMessageItem(info, true, context));
+    scrollController.scrollToEnd();
+    update();
+  }
+
+  // 基于一个文件路径发送消息
+  // send a file message base file path
+  // TODO: 如果是一次性发出多个文件，消息列表没必要全分隔开
+  Future<void> sendFileMessageByPath(String filePath) async {
+    FileService.addFile(filePath);
+    // 替换windows的路径分隔符
+    filePath = filePath.replaceAll('\\', '/');
+    // 读取文件大小
+    int size = await File(filePath).length();
+    // 替换windows盘符
+    filePath = filePath.replaceAll(RegExp('^[A-Z]:'), '');
+    p.Context pathContext;
+    if (GetPlatform.isWindows) {
+      pathContext = p.windows;
+    } else {
+      pathContext = p.posix;
+    }
+    final FileMessage sendFileInfo = FileMessage(
+      filePath: filePath,
+      fileName: pathContext.basename(filePath),
+      fileSize: FileUtil.formatBytes(size),
+      addrs: deviceController.addrs,
+      port: FileService.port,
+      deviceName: deviceController.deviceName,
+    );
+    // 发送消息
+    sendMessage(sendFileInfo);
+    // 将消息添加到本地列表
+    messageItems.add(MessageItemFactory.getMessageItem(sendFileInfo, true, context));
+    scrollController.scrollToEnd();
+    update();
+  }
+
+  Future<void> sendFileMessageByXFiles(List<XFile> files) async {
     if (GetPlatform.isWeb) {
       for (XFile xFile in files) {
         Log.w('-' * 10);
@@ -231,7 +200,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
         // socket.send(sendFileInfo.toString());
         sendMessage(sendFileInfo);
         // 将消息添加到本地列表
-        children.add(MessageItemFactory.getMessageItem(sendFileInfo, true, context));
+        messageItems.add(MessageItemFactory.getMessageItem(sendFileInfo, true, context));
         scrollController.scrollToEnd();
         update();
       }
@@ -242,98 +211,66 @@ class ChatController extends GetxController with WidgetsBindingObserver {
         Log.d('xFile.name -> ${xFile.name}');
         Log.d('xFile.length -> ${await xFile.length()}');
         Log.d('-' * 10);
-        sendFileFromPath(xFile.path);
+        sendFileMessageByPath(xFile.path);
       }
     }
   }
 
-  // 选择文件后并没有第一时间发送，只是发送了一条普通消息
-  Future<void> sendFileForBroswerAndDesktop() async {
-    List<XFile>? files = await getFilesForDesktopAndWeb();
-    if (files == null) {
-      return;
-    }
-    sendXFiles(files);
-  }
-
-  // web 端速享上传文件调用的方法
-  Future<void> uploadFileForWeb(XFile xFile, String urlPrefix) async {
-    try {
-      String base64Name = base64Encode(utf8.encode(xFile.name));
-      Log.w(base64Name);
-      Response response2 = await Dio().post(
-        '$urlPrefix/file_upload',
-        data: xFile.openRead(),
-        onSendProgress: (count, total) {
-          Log.v('count:$count total:$total pro:${count / total}');
-        },
-        options: Options(headers: {Headers.contentLengthHeader: await xFile.length(), HttpHeaders.contentTypeHeader: ContentType.binary.toString(), 'filename': base64Name, 'blob': xFile.path}),
-      );
-      Log.w(response2);
-    } catch (e) {
-      Log.e('Web 上传文件出错 : $e');
-    }
-  }
-
-  /// useSystemPicker: 是否使用系统文件选择器
-  Future<void> sendFileForAndroid({bool useSystemPicker = false, BuildContext? context}) async {
-    // 选择文件路径
-    List<String?> filePaths = await getFilesPathsForAndroid(useSystemPicker);
-    Log.i('filePaths -> $filePaths');
-    if (filePaths.isEmpty) {
-      return;
-    }
-    for (String? filePath in filePaths) {
-      Log.v(filePath);
-      if (filePath == null) {
-        return;
-      }
-      sendFileFromPath(filePath);
-    }
-  }
-
-  // 基于一个文件路径发送消息
-  // send a file message base file path
-  // TODO: 如果是一次性发出多个文件，消息列表没必要全分隔开
-  Future<void> sendFileFromPath(String filePath) async {
-    FileService.addFile(filePath);
-    // 替换windows的路径分隔符
-    filePath = filePath.replaceAll('\\', '/');
-    // 读取文件大小
-    int size = await File(filePath).length();
-    // 替换windows盘符
-    filePath = filePath.replaceAll(RegExp('^[A-Z]:'), '');
-    p.Context pathContext;
-    if (GetPlatform.isWindows) {
-      pathContext = p.windows;
-    } else {
-      pathContext = p.posix;
-    }
-    final FileMessage sendFileInfo = FileMessage(
-      filePath: filePath,
-      fileName: pathContext.basename(filePath),
-      fileSize: FileUtil.formatBytes(size),
-      addrs: addrs,
-      port: FileService.port,
+  Future<void> sendDirMessageByPath(String dirPath) async {
+    Directory dir = Directory(dirPath);
+    String dirName = p.basename(dirPath);
+    DirMessage dirMessage = DirMessage(
+      dirName: dirName,
+      fullSize: 0,
       deviceName: deviceController.deviceName,
+      addrs: deviceController.addrs,
+      port: FileService.port,
     );
     // 发送消息
-    sendMessage(sendFileInfo);
+    sendMessage(dirMessage);
     // 将消息添加到本地列表
-    children.add(MessageItemFactory.getMessageItem(sendFileInfo, true, context));
+    messageItems.add(MessageItemFactory.getMessageItem(dirMessage, true, context));
     scrollController.scrollToEnd();
     update();
+    // TODO 这个功能难用
+    // 传相同的文件，得到的文件大小是不一样的
+    dir.list(recursive: true).listen((event) async {
+      FileSystemEntity entity = event;
+      String suffix = '';
+      int size = 0;
+      if (entity is Directory) {
+        suffix = '/';
+      } else if (entity is File) {
+        size = await entity.length();
+        FileService.addFile(entity.path);
+      }
+      DirPartMessage dirPartMessage = DirPartMessage(path: event.path + suffix, size: size, partOf: dirName);
+      sendMessage(dirPartMessage);
+      // Log.i(dirPartMessage);
+    });
   }
 
-  void handleMessage(Map<String, dynamic> data) {
-    Log.i('handleMessage :$data');
-    MessageBaseInfo info = MessageBaseInfo.resolveMessage(data);
-    dispatch(info, children);
-  }
-
-  void prettyPrintJson(Object? json) {
-    const encoder = JsonEncoder.withIndent('  ');
-    Log.i(encoder.convert(json));
+  Future<void> sendJoinMessageByUrl(String url) async {
+    Log.i('sendJoinMessage : $url');
+    JoinMessage message = JoinMessage();
+    message.deviceName = deviceController.deviceName;
+    message.deviceId = deviceController.uniqueKey;
+    message.addrs = deviceController.addrs;
+    message.deviceType = deviceController.deviceType;
+    message.filePort = FileService.port;
+    message.messagePort = ChatService.port;
+    bool allFail = true;
+    try {
+      Response res = await DioClient.post(
+        '$url/',
+        data: message.toJson(),
+      );
+      Log.i('sendJoinMessage result : ${res.data}');
+      allFail = false;
+    } on DioException catch (_) {}
+    if (allFail) {
+      Log.e('sendJoinMessage all fail');
+    }
   }
 
   Future<void> sendHistoryMessages(Device device) async {
@@ -342,7 +279,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     }
   }
 
-  Future<void> dispatch(MessageBaseInfo info, List<Widget?> children) async {
+  Future<void> handleMessage(MessageBaseInfo info, List<Widget?> children) async {
     if (info.deviceId == deviceController.uniqueKey) {
       return;
     }
@@ -378,7 +315,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
             Device device = deviceController.availableDevices().firstWhere((element) => element.id == info.deviceId);
             Log.i('Find device in connectDevice list -> ${device.url}');
             if (!device.sendedHistoryMessage) {
-              sendJoinEvent('$urlPrefix:${joinMessage.messagePort}');
+              sendJoinMessageByUrl('$urlPrefix:${joinMessage.messagePort}');
               device.sendedHistoryMessage = true;
             }
             if (!device.sendedHistoryMessage) {
@@ -393,7 +330,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
               url: urlPrefix,
               messagePort: joinMessage.messagePort,
             );
-            sendJoinEvent('$urlPrefix:${joinMessage.messagePort}');
+            sendJoinMessageByUrl('$urlPrefix:${joinMessage.messagePort}');
             sendHistoryMessages(device);
             deviceController.onDeviceConnect(device);
           }
@@ -465,33 +402,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     }
   }
 
-  /// 给灵动岛用的
-  void Function(Widget fileWidget)? onNewFileReceive;
-  // 储存已经发送过的消息
-  // 在第一次连接到设备的时候，会将消息同步过去
-  List<Map<String, dynamic>> messageCache = [];
-  // 给Web端用的
-  List<Map<String, dynamic>> messageWebCache = [];
-
-  void sendMessage(MessageBaseInfo info) {
-    info.deviceType = deviceController.deviceType;
-    info.deviceId = deviceController.uniqueKey;
-    messageCache.add(info.toJson());
-    messageWebCache.add(info.toJson());
-    deviceController.sendToAll(info.toJson());
-  }
-
-  /// 发送文本消息
-  void sendTextMsg() {
-    TextMessage info = TextMessage(content: controller.text, deviceName: deviceController.deviceName);
-    sendMessage(info);
-    children.add(MessageItemFactory.getMessageItem(info, true, context));
-    update();
-    controller.clear();
-    scrollController.scrollToEnd();
-  }
-
-  // 当切换到所有设备时调用的函数
+  // TODO: Reimplement this
   void restoreList() {
     backup.clear();
     update();
@@ -506,7 +417,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
         continue;
       }
       if (info.deviceType == device.deviceType) {
-        dispatch(info, backup);
+        handleMessage(info, backup);
       }
     }
   }
@@ -514,90 +425,66 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   @override
   void onClose() {
     Log.e('chat controller dispose');
-    focusNode.dispose();
-    controller.dispose();
     scrollController.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.onClose();
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     switch (state) {
       case AppLifecycleState.resumed:
         // 刷新本地ip列表
-        refreshLocalAddress();
+        deviceController.addrs = await DeviceController.localAddress();
         break;
       default:
     }
     // Log.v('didChangeAppLifecycleState : $state');
   }
+}
 
-  Future<void> sendJoinEvent(String url) async {
-    DeviceController deviceController = Get.find();
-    Log.i('sendJoinEvent : $url');
-    ChatController controller = Get.find();
-    await controller.initLock.future;
-    JoinMessage message = JoinMessage();
-    message.deviceName = deviceController.deviceName;
-    message.deviceId = deviceController.uniqueKey;
-    message.addrs = addrs;
-    message.deviceType = deviceController.deviceType;
-    message.filePort = FileService.port;
-    message.messagePort = ChatService.port;
-    bool allFail = true;
-    try {
-      Response res = await DioClient.post(
-        '$url/',
-        data: message.toJson(),
-      );
-      Log.i('sendJoinEvent result : ${res.data}');
-      allFail = false;
-      // TODO: If need add target device here?
-      // ignore: unused_catch_clause
-    } on DioException catch (e) {}
-    if (allFail) {
-      Log.e('sendJoinEvent all fail');
-    }
-  } // 发起http get请求，用来校验网络是否互通
+void prettyPrintJson(Object? json) {
+  const encoder = JsonEncoder.withIndent('  ');
+  Log.i(encoder.convert(json));
+}
 
-  // 如果不通，会返回null
-  Future<String?> getToken(String url) async {
-    Completer<String?> lock = Completer();
-    CancelToken cancelToken = CancelToken();
-    Response response;
-    Future.delayed(const Duration(milliseconds: 3000), () {
-      if (!lock.isCompleted) {
-        cancelToken.cancel();
-      }
-    });
-    try {
-      response = await DioClient.get(
-        '$url/ping',
-        cancelToken: cancelToken,
-      );
-      if (!lock.isCompleted) {
-        lock.complete(response.data);
-      }
-      Log.i('$url/ping 响应 ${response.data}');
-    } catch (e) {
-      if (!lock.isCompleted) {
-        lock.complete(null);
-      }
+Future<String?> ping(String url) async {
+  Completer<String?> lock = Completer();
+  CancelToken cancelToken = CancelToken();
+  Response response;
+  Future.delayed(const Duration(milliseconds: 3000), () {
+    if (!lock.isCompleted) {
+      cancelToken.cancel();
     }
-    return await lock.future;
-  } // 得到正确的url
-
-  Future<String?> getCorrectUrlWithAddressAndPort(
-    List<String?> addresses,
-    int? port,
-  ) async {
-    for (String? address in addresses) {
-      String? token = await getToken('http://$address:$port');
-      if (token != null) {
-        return 'http://$address';
-      }
+  });
+  try {
+    response = await DioClient.get(
+      '$url${ServerRoutes.ping}',
+      cancelToken: cancelToken,
+    );
+    if (!lock.isCompleted) {
+      lock.complete(response.data);
     }
-    return null;
+    Log.i('$url${ServerRoutes.ping} response ${response.data}');
+  } catch (e) {
+    if (!lock.isCompleted) {
+      lock.complete(null);
+    }
   }
+  return await lock.future;
+}
+
+// Get correct url with address list and port, if no url is correct, return null
+// 得到正确的url地址，拿到地址列表和端口，如果没有正确的 url，返回 null
+Future<String?> getCorrectUrlWithAddressAndPort(
+  List<String?> addresses,
+  int? port,
+) async {
+  for (String? address in addresses) {
+    String? token = await ping('http://$address:$port');
+    if (token != null) {
+      return 'http://$address';
+    }
+  }
+  return null;
 }

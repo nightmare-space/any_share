@@ -102,7 +102,6 @@ class _JoinChatState extends State<JoinChat> {
     Get.back();
     Log.i('SendJoinEvent : $url');
     ChatController chatController = Get.find();
-    await chatController.initLock.future;
-    chatController.sendJoinEvent(url);
+    chatController.sendJoinMessageByUrl(url);
   }
 }

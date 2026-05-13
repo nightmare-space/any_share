@@ -35,10 +35,12 @@ Future<void> initSetting() async {
 }
 
 bool pop = false;
+Stopwatch _serverStartWatch = Stopwatch();
 
 Future<void> main() async {
   runZonedGuarded<void>(
     () async {
+      _serverStartWatch.start();
       if (!GetPlatform.isWeb) {
         WidgetsFlutterBinding.ensureInitialized();
         // 拿到应用程序路径
@@ -64,7 +66,7 @@ Future<void> main() async {
       }
       Get.put(SettingController());
       Get.put(DeviceController()..init());
-      Get.put(ChatController());
+      Get.put(ChatController()..init());
       Get.put(FileController());
       Get.put(DownloadController());
       WidgetsFlutterBinding.ensureInitialized();
@@ -134,6 +136,8 @@ Future<void> initApp() async {
   // prepare file server to provide file transfer
   await FileService.start();
   await ChatService.start();
+  _serverStartWatch.stop();
+  Log.i('Server ready time: ${_serverStartWatch.elapsedMilliseconds} ms');
   String udpData = '';
   udpData += await UniqueUtil.getDevicesId();
   udpData += ',${ChatService.port}';

@@ -9,7 +9,7 @@ import 'package:path/path.dart' as p;
 import 'package:speed_share/common/config.dart';
 
 /// Singleton file server that serves registered files via a single HTTP server.
-/// TODO: pure dart
+/// TODO: pure dart and add test
 const _tag = 'AnyShareFileServer';
 
 Middleware corsMiddleware() {

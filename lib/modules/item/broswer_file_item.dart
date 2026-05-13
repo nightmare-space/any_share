@@ -86,7 +86,7 @@ class _BroswerFileItemState extends State<BroswerFileItem> {
                       return;
                     }
                     gr.showToast(l10n.notifyBroswerTip);
-                    chatController.notifyBroswerUploadFile(widget.info!.hash);
+                    chatController.notifyBrowserUploadFile(widget.info!.hash);
                   },
                   borderRadius: BorderRadius.circular(12),
                   child: Padding(

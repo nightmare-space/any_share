@@ -18,17 +18,9 @@ class AdaptiveEntryPoint extends StatefulWidget {
 }
 
 class _AdaptiveEntryPointState extends State<AdaptiveEntryPoint> {
-  ChatController chatController = Get.put(ChatController());
-  String? address;
-
   @override
   void initState() {
     super.initState();
-    if (!GetPlatform.isWeb) {
-      chatController.createChatRoom();
-    } else {
-      chatController.initChat();
-    }
   }
 
   @override

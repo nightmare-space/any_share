@@ -21,6 +21,6 @@ class ScanUtil {
     }
     Log.v('cameraScanResult -> $cameraScanResult');
     ChatController controller = Get.find();
-    controller.sendJoinEvent(cameraScanResult);
+    controller.sendJoinMessageByUrl(cameraScanResult);
   }
 }

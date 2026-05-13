@@ -1,5 +1,8 @@
 import 'dart:math';
 
+import 'package:file_manager/file_manager.dart' as file_manager;
+import 'package:file_selector/file_selector.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response;
@@ -16,6 +19,7 @@ import 'package:speed_share/utils/scan_util.dart';
 import 'package:speed_share/common/config.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/themes/theme.dart';
+import 'package:speed_share/utils/utils.dart';
 
 import 'dialog/show_qr_page.dart';
 import 'widget/gesture.dart';
@@ -36,10 +40,37 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
   int index = 0;
   // 输入框控制器
   TextEditingController editingController = TextEditingController();
+  FocusNode focusNode = FocusNode();
+
+  bool inputMultiline = false;
+  bool hasInput = false;
 
   @override
   void initState() {
     super.initState();
+    editingController.addListener(() {
+      // 这个监听主要是为了改变发送按钮为+号按钮
+      if (editingController.text.isNotEmpty) {
+        hasInput = true;
+      } else {
+        hasInput = false;
+      }
+      setState(() {});
+    });
+    // 这里是shift+enter可以是实现换行的逻辑
+    focusNode.onKeyEvent = (_, event) {
+      if (HardwareKeyboard.instance.isShiftPressed) {
+        inputMultiline = true;
+        setState(() {});
+      } else {
+        inputMultiline = false;
+        setState(() {});
+      }
+      if (event.logicalKey == LogicalKeyboardKey.enter) {
+        return KeyEventResult.skipRemainingHandlers;
+      }
+      return KeyEventResult.ignored;
+    };
     menuAnim = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 100),
@@ -100,7 +131,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
   GestureDetector chatList(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        chatController.focusNode.unfocus();
+        focusNode.unfocus();
       },
       child: Material(
         borderRadius: BorderRadius.circular($(10)),
@@ -112,7 +143,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
             if (chatController.backup.isNotEmpty) {
               children = chatController.backup;
             } else {
-              children = chatController.children;
+              children = chatController.messageItems;
             }
             return ListView.builder(
               physics: const BouncingScrollPhysics(),
@@ -240,7 +271,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                     final ImagePicker picker = ImagePicker();
                     final List<XFile> photos = await picker.pickMultiImage();
                     for (var photo in photos) {
-                      chatController.sendFileFromPath(photo.path);
+                      chatController.sendFileMessageByPath(photo.path);
                     }
                   });
                 },
@@ -278,7 +309,7 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                     final ImagePicker picker = ImagePicker();
                     final List<XFile> videos = await picker.pickMultiVideo();
                     for (var video in videos) {
-                      chatController.sendFileFromPath(video.path);
+                      chatController.sendFileMessageByPath(video.path);
                     }
                   });
                 },
@@ -312,13 +343,27 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                 borderRadius: BorderRadius.circular($(10)),
                 onTap: () {
                   menuAnim.reverse();
-                  Future.delayed(const Duration(milliseconds: 100), () {
+                  Future.delayed(const Duration(milliseconds: 100), () async {
                     if (GetPlatform.isDesktop || GetPlatform.isWeb) {
-                      chatController.sendFileForBroswerAndDesktop();
+                      List<XFile>? files = await getFilesForDesktopAndWeb();
+                      if (files == null) {
+                        return;
+                      }
+                      chatController.sendFileMessageByXFiles(files);
                     } else if (GetPlatform.isAndroid) {
-                      chatController.sendFileForAndroid(
-                        useSystemPicker: true,
-                      );
+                      // 选择文件路径
+                      List<String?> filePaths = await getFilesPathsForAndroid(true);
+                      Log.i('filePaths -> $filePaths');
+                      if (filePaths.isEmpty) {
+                        return;
+                      }
+                      for (String? filePath in filePaths) {
+                        Log.v(filePath);
+                        if (filePath == null) {
+                          return;
+                        }
+                        chatController.sendFileMessageByPath(filePath);
+                      }
                     }
                   });
                 },
@@ -355,8 +400,18 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                 borderRadius: BorderRadius.circular($(10)),
                 onTap: () {
                   menuAnim.reverse();
-                  Future.delayed(const Duration(milliseconds: 100), () {
-                    chatController.sendDir();
+                  Future.delayed(const Duration(milliseconds: 100), () async {
+                    String? dirPath;
+                    if (GetPlatform.isDesktop) {
+                      dirPath = await getDirectoryPath(confirmButtonText: l10n.select);
+                    } else {
+                      dirPath = await file_manager.FileManager.selectDirectory();
+                    }
+                    Log.d('dirPath -> $dirPath');
+                    if (dirPath == null) {
+                      return;
+                    }
+                    chatController.sendDirMessageByPath(dirPath);
                   });
                 },
                 child: Tooltip(
@@ -419,8 +474,8 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                           child: GetBuilder<ChatController>(
                             builder: (_) {
                               return TextField(
-                                focusNode: chatController.focusNode,
-                                controller: chatController.controller,
+                                focusNode: focusNode,
+                                controller: editingController,
                                 autofocus: false,
                                 maxLines: 8,
                                 minLines: 1,
@@ -429,20 +484,20 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                                   hintText: l10n.chatInputHint,
                                 ),
                                 onSubmitted: (_) {
-                                  if (chatController.inputMultiline) {
-                                    chatController.controller.value = TextEditingValue(
-                                      text: '${chatController.controller.text}\n',
-                                      selection: TextSelection.collapsed(
-                                        offset: chatController.controller.selection.end + 1,
-                                      ),
+                                  if (inputMultiline) {
+                                    // 如果切换到多行模式，按下回车仅仅是换行，不发送消息
+                                    editingController.value = TextEditingValue(
+                                      text: '${editingController.text}\n',
+                                      // Below is history code, unused now.
+                                      // selection: TextSelection.collapsed(
+                                      //   offset: editingController.selection.end + 1,
+                                      // ),
                                     );
-                                    chatController.focusNode.requestFocus();
+                                    focusNode.requestFocus();
                                     return;
                                   }
-                                  chatController.sendTextMsg();
-                                  Future.delayed(const Duration(milliseconds: 100), () {
-                                    chatController.focusNode.requestFocus();
-                                  });
+                                  chatController.sendTextMessage(editingController.text);
+                                  editingController.clear();
                                 },
                               );
                             },
@@ -453,8 +508,9 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                     SizedBox(width: $(8)),
                     GestureWithScale(
                       onTap: () {
-                        if (chatController.hasInput) {
-                          chatController.sendTextMsg();
+                        if (hasInput) {
+                          chatController.sendTextMessage(editingController.text);
+                          editingController.clear();
                         } else {
                           if (menuAnim.isCompleted) {
                             menuAnim.reverse();
@@ -480,7 +536,8 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                               );
                             },
                             child: Icon(
-                              chatController.hasInput ? Icons.send : Icons.add,
+                              // TODO: Use custom icons
+                              hasInput ? Icons.send : Icons.add,
                               size: $(20),
                             ),
                           ),
@@ -691,8 +748,6 @@ class MenuButton extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
-            ChatController controller = Get.find();
-            controller.focusNode.unfocus();
             onChange?.call(value);
           },
           child: SizedBox(

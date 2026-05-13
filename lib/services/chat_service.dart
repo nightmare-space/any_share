@@ -10,14 +10,14 @@ import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_static/shelf_static.dart';
 import 'package:path/path.dart' as p;
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/common/config.dart';
 
+import 'package:speed_share/common/config.dart';
 import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/utils/path_util.dart';
 
 /// Singleton chat server that serves registered files via a single HTTP server.
-/// TODO: pure dart
+/// TODO: pure dart and add test
 const _tag = 'AnyShareChatServer';
 
 Middleware corsMiddleware() {
@@ -43,11 +43,19 @@ Handler _corsHandler(Handler innerHandler) {
   };
 }
 
+class ServerRoutes {
+  static const String ping = '/ping';
+  static const String uploadFile = '/file_upload';
+  static const String message = '/message';
+}
+
 class _ChatService {
   _ChatService._();
   static final _ChatService instance = _ChatService._();
   late final ChatController chatController = Get.find();
   late final SettingController settingController = Get.find();
+  // set message handler for the server
+  late final void Function(Map<String, dynamic>) messageHandler;
 
   final Router _router = Router();
   HttpServer? _server;
@@ -60,13 +68,13 @@ class _ChatService {
       return;
     }
     var pipeline = const Pipeline();
-    _router.get('/ping', (Request request) {
+    _router.get(ServerRoutes.ping, (Request request) {
       return Response.ok('pong');
     });
     // TODO: Consider change route path?
     _router.post('/', (Request request) async {
       Map<String, dynamic> data = jsonDecode(await request.readAsString());
-      chatController.handleMessage(data);
+      messageHandler(data);
       // 这儿应该返回本机信息
       return Response.ok(
         "success",
@@ -75,7 +83,7 @@ class _ChatService {
         },
       );
     });
-    _router.post('/file_upload', (Request request) async {
+    _router.post(ServerRoutes.uploadFile, (Request request) async {
       Log.w(request.headers);
       String? fileName = request.headers['filename'];
       if (fileName != null) {
@@ -116,7 +124,7 @@ class _ChatService {
       }
       return Response.ok("success");
     });
-    _router.get('/message', (Request request) {
+    _router.get(ServerRoutes.message, (Request request) {
       if (chatController.messageWebCache.isNotEmpty) {
         return Response.ok(jsonEncode(chatController.messageWebCache.removeAt(0)));
       }

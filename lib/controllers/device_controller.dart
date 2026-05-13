@@ -41,7 +41,7 @@ class DeviceController extends GetxController {
         historys.datas!.forEach(
           ((element) {
             // TODO
-            chatController.sendJoinEvent(element.url!);
+            chatController.sendJoinMessageByUrl(element.url!);
           }),
         );
       });
@@ -56,11 +56,11 @@ class DeviceController extends GetxController {
   String deviceName = '';
   String uniqueKey = '';
   late final DeviceType deviceType;
+  late List<String> addrs;
 
   Future<void> init() async {
     uniqueKey = await UniqueUtil.getUniqueKey();
     deviceName = await UniqueUtil.getDevicesId();
-
     Log.v('deviceId -> $deviceName', 'DeviceService');
     Log.v('uniqueKey -> $uniqueKey', 'DeviceService');
     if (GetPlatform.isAndroid) {
@@ -76,6 +76,18 @@ class DeviceController extends GetxController {
     } else {
       deviceType = DeviceType.unknown;
     }
+    addrs = await localAddress();
+  }
+
+  static Future<List<String>> localAddress() async {
+    List<String> address = [];
+    final List<NetworkInterface> interfaces = await NetworkInterface.list(type: InternetAddressType.any);
+    for (final NetworkInterface netInterface in interfaces) {
+      for (final InternetAddress netAddress in netInterface.addresses) {
+        address.add(netAddress.address);
+      }
+    }
+    return address;
   }
 
   void checkConnectStat() {
@@ -102,7 +114,7 @@ class DeviceController extends GetxController {
   int availableDevice() {
     int count = 0;
     for (Device device in connectDevice) {
-      if (device.isAlive ?? false) {
+      if (device.isAlive) {
         count++;
       }
     }
@@ -113,7 +125,7 @@ class DeviceController extends GetxController {
   List<Device> availableDevices() {
     List<Device> devices = [];
     for (Device device in connectDevice) {
-      if (device.isAlive ?? false) {
+      if (device.isAlive) {
         devices.add(device);
       }
     }

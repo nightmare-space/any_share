@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> {
           // );
           Log.d('send_file response realPath => $realPath');
           ChatController controller = Get.find();
-          controller.sendFileFromPath(realPath);
+          controller.sendFileMessageByPath(realPath);
         }
       });
     }
@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                       width: double.infinity,
                       child: Builder(
                         builder: (context) {
-                          if (chatController.children.isEmpty) {
+                          if (chatController.messageItems.isEmpty) {
                             return Center(
                               child: Text(
                                 l10n.chatWindow,
@@ -188,9 +188,9 @@ class _HomePageState extends State<HomePage> {
                             );
                           }
                           return ListView.builder(
-                            itemCount: chatController.children.length,
+                            itemCount: chatController.messageItems.length,
                             itemBuilder: (c, i) {
-                              return chatController.children[i];
+                              return chatController.messageItems[i];
                             },
                           );
                         },

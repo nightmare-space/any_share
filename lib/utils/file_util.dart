@@ -41,11 +41,7 @@ class FileUtil {
 
 // 用来选择文件的
 Future<List<XFile>?> getFilesForDesktopAndWeb() async {
-  final typeGroup = XTypeGroup(
-    label: 'images',
-    extensions: GetPlatform.isWeb ? [''] : null,
-  );
-  final files = await openFiles(acceptedTypeGroups: [typeGroup]);
+  final files = await openFiles();
   if (files.isEmpty) {
     return null;
   }

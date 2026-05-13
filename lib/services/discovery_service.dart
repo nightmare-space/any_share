@@ -43,7 +43,7 @@ class DiscoveryService {
       if (deviceController.ipIsConnect(address)) {
         return;
       }
-      chatController.sendJoinEvent('http://$address:$port');
+      chatController.sendJoinMessageByUrl('http://$address:$port');
     }
   }
 }
