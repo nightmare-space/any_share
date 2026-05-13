@@ -11,15 +11,14 @@ import 'package:dio/dio.dart';
 import 'package:path/path.dart' as p;
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'package:global_repository/global_repository.dart';
+import 'package:speed_share/common/device.dart';
 import 'package:speed_share/common/extensions/extensions.dart';
+import 'package:speed_share/services/chat_service.dart';
 
-import 'package:speed_share/services/discovery_service.dart';
-import 'package:speed_share/common/config.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/services/dio_manager.dart';
 import 'package:speed_share/models/models.dart';
 import 'package:speed_share/modules/item/item.dart';
-import 'package:speed_share/utils/token_util.dart';
 import 'package:speed_share/utils/utils.dart' hide FileUtil;
 import 'package:speed_share/services/file_service.dart';
 import 'controllers.dart';
@@ -72,11 +71,6 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   Map<String?, int> dirItemMap = {};
   Map<String?, DirMessage> dirMsgMap = {};
   List<Map<String, dynamic>> cache = [];
-  // 消息服务器成功绑定的端口
-  int? messageBindPort;
-  // 文件服务器成功绑定的端口
-  int? shelfBindPort;
-  int? fileServerPort;
   bool hasInput = false;
   // 发送文件需要等套接字初始化
   Completer initLock = Completer();
@@ -87,16 +81,6 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   // 创建聊天房间，调用时机为app启动时
   Future<void> createChatRoom() async {
     WidgetsBinding.instance.addObserver(this);
-    // 启动消息服务器
-    // start message server
-    messageBindPort = await Server.start();
-    // chatBindPort = await createChatServer();
-    Log.i('消息服务器端口 : $messageBindPort');
-    String udpData = '';
-    udpData += await UniqueUtil.getDevicesId();
-    udpData += ',$messageBindPort';
-    // 将设备 ID 与聊天服务器成功创建的端口 UDP 广播出去
-    DiscoveryService.instance.startBroadcast(udpData);
     // 保存本地的IP地址列表
     if (!GetPlatform.isWeb) {
       await refreshLocalAddress();
@@ -121,8 +105,6 @@ class ChatController extends GetxController with WidgetsBindingObserver {
       return;
     }
     await Future.delayed(const Duration(milliseconds: 100));
-    await getSuccessBindPort();
-    Log.i('shelf will server with $shelfBindPort port');
     if (!initLock.isCompleted) {
       initLock.complete();
     }
@@ -135,7 +117,14 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     }
     Uri uri = Uri.parse(urlPrefix);
     int port = uri.port;
-    deviceController.onDeviceConnect(shortHash(''), l10n.device, null, 'http://${uri.host}', port);
+    Device device = Device(
+      deviceController.uniqueKey,
+      deviceName: deviceController.deviceName,
+      deviceType: deviceController.deviceType,
+      url: 'http://${uri.host}',
+      messagePort: port,
+    );
+    deviceController.onDeviceConnect(device);
     // Log.i('$urlPrefix/${info.messagePort}');
 
     sendJoinEvent('http://${uri.host}:$port');
@@ -157,15 +146,6 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     }
   }
 
-  Future<void> getSuccessBindPort() async {
-    if (!GetPlatform.isWeb) {
-      shelfBindPort ??= await getSafePort(Config.shelfPortRangeStart, Config.shelfPortRangeEnd);
-      // TODO: Refactor
-      handleTokenCheck(shelfBindPort!);
-      await FileServer.start(port: shelfBindPort!);
-    }
-  }
-
   Future<void> sendDirFromPath(String dirPath) async {
     Directory dir = Directory(dirPath);
     String dirName = p.basename(dirPath);
@@ -174,7 +154,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
       fullSize: 0,
       deviceName: deviceController.deviceName,
       addrs: addrs,
-      port: shelfBindPort,
+      port: FileService.port,
     );
     // 发送消息
     sendMessage(dirMessage);
@@ -192,7 +172,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
         suffix = '/';
       } else if (entity is File) {
         size = await entity.length();
-        FileServer.addFile(entity.path);
+        FileService.addFile(entity.path);
       }
       DirPartMessage dirPartMessage = DirPartMessage(path: event.path + suffix, size: size, partOf: dirName);
       sendMessage(dirPartMessage);
@@ -219,7 +199,11 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   // 通知web浏览器开始上传文件
   Future<void> notifyBroswerUploadFile(String? hash) async {
     List<String> addresses = await PlatformUtil.localAddress();
-    final NotifyMessage notifyMessage = NotifyMessage(hash: hash, addrs: addresses, port: messageBindPort);
+    final NotifyMessage notifyMessage = NotifyMessage(
+      hash: hash,
+      addrs: addresses,
+      port: FileService.port,
+    );
     messageWebCache.add(notifyMessage.toJson());
   }
 
@@ -312,8 +296,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   // send a file message base file path
   // TODO: 如果是一次性发出多个文件，消息列表没必要全分隔开
   Future<void> sendFileFromPath(String filePath) async {
-    await getSuccessBindPort();
-    FileServer.addFile(filePath);
+    FileService.addFile(filePath);
     // 替换windows的路径分隔符
     filePath = filePath.replaceAll('\\', '/');
     // 读取文件大小
@@ -331,7 +314,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
       fileName: pathContext.basename(filePath),
       fileSize: FileUtil.formatBytes(size),
       addrs: addrs,
-      port: shelfBindPort,
+      port: FileService.port,
       deviceName: deviceController.deviceName,
     );
     // 发送消息
@@ -343,15 +326,28 @@ class ChatController extends GetxController with WidgetsBindingObserver {
   }
 
   void handleMessage(Map<String, dynamic> data) {
-    Log.e('handleMessage :$data');
+    Log.i('handleMessage :$data');
     MessageBaseInfo info = MessageBaseInfo.resolveMessage(data);
     dispatch(info, children);
+  }
+
+  void prettyPrintJson(Object? json) {
+    const encoder = JsonEncoder.withIndent('  ');
+    Log.i(encoder.convert(json));
+  }
+
+  Future<void> sendHistoryMessages(Device device) async {
+    for (Map<String, dynamic> data in messageCache) {
+      deviceController.send(data, device);
+    }
   }
 
   Future<void> dispatch(MessageBaseInfo info, List<Widget?> children) async {
     if (info.deviceId == deviceController.uniqueKey) {
       return;
     }
+    Log.i('CHatMessage:');
+    prettyPrintJson(info.toJson());
     switch (info.runtimeType) {
       // 剪切板消息
       case ClipboardMessage:
@@ -368,51 +364,55 @@ class ChatController extends GetxController with WidgetsBindingObserver {
         JoinMessage joinMessage = info as JoinMessage;
         // 当连接设备不是本机的时候
         if (info.deviceId != deviceController.uniqueKey) {
-          Log.i('JoinMessage -> $joinMessage');
-          Log.i('deviceController.uniqueKey -> ${deviceController.uniqueKey}');
+          Log.i('current uniqueKey -> ${deviceController.uniqueKey}');
           // 这个不带端口，主要是为了筛选IP
-          String? urlPrefix = await getCorrectUrlWithAddressAndPort(joinMessage.addrs!, joinMessage.filePort);
+          String? urlPrefix = await getCorrectUrlWithAddressAndPort(joinMessage.addrs!, joinMessage.messagePort);
           Log.i('计算结果:$urlPrefix');
           if (urlPrefix == null) {
             return;
           }
-          // 先回连接消息
-          sendJoinEvent('$urlPrefix:${joinMessage.messagePort}');
           try {
             // 会先尝试去找是否已经被记录了
             // will try to find object first
-            deviceController.connectDevice.firstWhere((element) => element.id == info.deviceId);
-          } catch (e) {
-            // catch住说明没有找到
-            deviceController.onDeviceConnect(info.deviceId, info.deviceName, info.deviceType, urlPrefix, joinMessage.messagePort);
-            Log.i('$urlPrefix/${joinMessage.messagePort}');
-            // 同步之前发送过的消息
-            for (Map<String, dynamic> data in messageCache) {
-              try {
-                // ignore: unused_local_variable
-                Response res = await DioClient.post('$urlPrefix:${joinMessage.messagePort}', data: data);
-              } catch (e) {
-                Log.e('cache send error : $e');
-              }
+            // 连接消息，导致 A 的连接列表不再有 B
+            Device device = deviceController.availableDevices().firstWhere((element) => element.id == info.deviceId);
+            Log.i('Find device in connectDevice list -> ${device.url}');
+            if (!device.sendedHistoryMessage) {
+              sendJoinEvent('$urlPrefix:${joinMessage.messagePort}');
+              device.sendedHistoryMessage = true;
             }
+            if (!device.sendedHistoryMessage) {
+              sendHistoryMessages(device);
+              device.sendedHistoryMessage = true;
+            }
+          } catch (e) {
+            Device device = Device(
+              info.deviceId,
+              deviceName: info.deviceName,
+              deviceType: info.deviceType,
+              url: urlPrefix,
+              messagePort: joinMessage.messagePort,
+            );
+            sendJoinEvent('$urlPrefix:${joinMessage.messagePort}');
+            sendHistoryMessages(device);
+            deviceController.onDeviceConnect(device);
           }
           return;
         }
         break;
       case FileMessage:
         FileMessage fileMessage = info as FileMessage;
+        // TODO: 这里不能根据设备列表来计算 url，应该直接用 head 请求来计算，不然因为一些原因，当前设备列表没有目标设备了
         // 文件消息，需要先计算出正确的下载地址
-        String? url = await getCorrectUrlWithAddressAndPort(fileMessage.addrs!, fileMessage.port);
-        fileMessage.url = '$url:${fileMessage.port}';
-        // 这里有种情况，A,B,C三台机器，A创建房间，B加入发送一个文件后退出了速享
-        // C加入A的房间，自然是不能再拿到这个文件的信息了
-        fileMessage.url ??= '';
-        // TODO: 低优先级，先下掉灵动岛提示，后续单独适配android和ios
-        // onNewFileReceive?.call(
-        //   FileDynamicIsland(info: info, sendByUser: false),
-        // );
+        // File Message need to calculate the correct download url first
+        // Get device first
+        Device device = deviceController.connectDevice.firstWhere((element) => element.id == fileMessage.deviceId);
+        Log.i('Find device in connectDevice list -> ${device.url}');
+        fileMessage.url = '${device.url}:${fileMessage.port}';
+        Log.i('fileMessage url -> ${fileMessage.url}');
         break;
       case DirMessage:
+        // TODO: Reimplement this, the current implementation is too hacky
         DirMessage dirMessage = info as DirMessage;
         // 保存文件夹消息所在的index
         dirItemMap[dirMessage.dirName] = children.length;
@@ -478,7 +478,7 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     info.deviceId = deviceController.uniqueKey;
     messageCache.add(info.toJson());
     messageWebCache.add(info.toJson());
-    deviceController.send(info.toJson());
+    deviceController.sendToAll(info.toJson());
   }
 
   /// 发送文本消息
@@ -535,9 +535,6 @@ class ChatController extends GetxController with WidgetsBindingObserver {
 
   Future<void> sendJoinEvent(String url) async {
     DeviceController deviceController = Get.find();
-    if (!deviceController.ipIsConnect(url)) {
-      return;
-    }
     Log.i('sendJoinEvent : $url');
     ChatController controller = Get.find();
     await controller.initLock.future;
@@ -546,18 +543,61 @@ class ChatController extends GetxController with WidgetsBindingObserver {
     message.deviceId = deviceController.uniqueKey;
     message.addrs = addrs;
     message.deviceType = deviceController.deviceType;
-    message.filePort = shelfBindPort;
-    message.messagePort = messageBindPort;
-    // Log.i(message);
+    message.filePort = FileService.port;
+    message.messagePort = ChatService.port;
+    bool allFail = true;
     try {
       Response res = await DioClient.post(
         '$url/',
         data: message.toJson(),
       );
       Log.i('sendJoinEvent result : ${res.data}');
-      // deviceController.onDeviceConnect(res.data, name, type, urlPrefix, port)
-    } on DioException catch (e) {
-      Log.e('$url 发送加入消息异常，但不一定会影响使用\n详情：${e.message} ${e.response}');
+      allFail = false;
+      // TODO: If need add target device here?
+      // ignore: unused_catch_clause
+    } on DioException catch (e) {}
+    if (allFail) {
+      Log.e('sendJoinEvent all fail');
     }
+  } // 发起http get请求，用来校验网络是否互通
+
+  // 如果不通，会返回null
+  Future<String?> getToken(String url) async {
+    Completer<String?> lock = Completer();
+    CancelToken cancelToken = CancelToken();
+    Response response;
+    Future.delayed(const Duration(milliseconds: 3000), () {
+      if (!lock.isCompleted) {
+        cancelToken.cancel();
+      }
+    });
+    try {
+      response = await DioClient.get(
+        '$url/ping',
+        cancelToken: cancelToken,
+      );
+      if (!lock.isCompleted) {
+        lock.complete(response.data);
+      }
+      Log.i('$url/ping 响应 ${response.data}');
+    } catch (e) {
+      if (!lock.isCompleted) {
+        lock.complete(null);
+      }
+    }
+    return await lock.future;
+  } // 得到正确的url
+
+  Future<String?> getCorrectUrlWithAddressAndPort(
+    List<String?> addresses,
+    int? port,
+  ) async {
+    for (String? address in addresses) {
+      String? token = await getToken('http://$address:$port');
+      if (token != null) {
+        return 'http://$address';
+      }
+    }
+    return null;
   }
 }

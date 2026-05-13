@@ -6,15 +6,10 @@ import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_static/shelf_static.dart';
 import 'package:path/path.dart' as p;
+import 'package:speed_share/common/config.dart';
 
 /// Singleton file server that serves registered files via a single HTTP server.
-///
-/// Usage:
-/// ```dart
-/// await FileServer.instance.start(port: 8080);
-/// final urlPath = FileServer.instance.addFile('/path/to/file.txt');
-/// // Accessible at http://<ip>:8080/<urlPath>
-/// ```
+/// TODO: pure dart
 const _tag = 'AnyShareFileServer';
 
 Middleware corsMiddleware() {
@@ -40,37 +35,43 @@ Handler _corsHandler(Handler innerHandler) {
   };
 }
 
-class _FileServer {
-  _FileServer._internal();
-  static final _FileServer _instance = _FileServer._internal();
-  static _FileServer get instance => _instance;
+/// TODO: Consider use isolate to server every file
+class _FileService {
+  _FileService._internal();
+  static final _FileService _instance = _FileService._internal();
+  static _FileService get instance => _instance;
 
   final Router _router = Router();
   HttpServer? _server;
-  int? _port;
+  int _port = 0;
+  int get port => _port;
   final Set<String> _registeredPaths = {};
 
   /// Start the HTTP server on [port]. Idempotent — only starts once.
-  Future<void> start({required int port}) async {
+  Future<void> start() async {
     if (_server != null) {
       return;
     }
-    _port = port;
-    // TODO: Move app server
-    _router.get('/ping', (Request request) {
-      return Response.ok('pong');
-    });
     var pipeline = const Pipeline();
     pipeline = pipeline.addMiddleware(logRequests());
     pipeline = pipeline.addMiddleware(corsMiddleware());
     final handler = pipeline.addHandler(_router);
-    _server = await io.serve(
-      handler,
-      InternetAddress.anyIPv4,
-      port,
-      shared: true,
-    );
-    Log.i('FileServer started on port $port', _tag);
+    int rangeStart = Config.shelfPortRangeStart;
+    int rangeEnd = Config.shelfPortRangeEnd;
+    _port = rangeStart;
+    while (true) {
+      try {
+        _server = await io.serve(handler, InternetAddress.anyIPv6, _port);
+        break;
+      } catch (e) {
+        Log.w('Port $_port is in use, trying another port...');
+        _port = _port + 1;
+        if (_port > rangeEnd) {
+          throw Exception('No available ports in the range $rangeStart-$rangeEnd');
+        }
+      }
+    }
+    Log.i('FileServer started on port $_port', _tag);
   }
 
   String _normalize(String filePath) {
@@ -111,9 +112,6 @@ class _FileServer {
   /// (e.g. token check) before or after the server starts.
   Router get router => _router;
 
-  /// The port the server is running on, or null if not started.
-  int? get port => _port;
-
   /// Number of registered files.
   int get registeredCount => _registeredPaths.length;
 
@@ -124,10 +122,9 @@ class _FileServer {
   Future<void> dispose() async {
     await _server?.close(force: true);
     _server = null;
-    _port = null;
     _registeredPaths.clear();
   }
 }
 
 // ignore: non_constant_identifier_names
-final FileServer = _FileServer.instance;
+final FileService = _FileService.instance;

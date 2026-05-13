@@ -5,38 +5,12 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart';
+import 'package:speed_share/common/device.dart';
 
 import 'package:speed_share/common/device_type.dart';
 import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/models/history.dart';
 import 'package:speed_share/services/dio_manager.dart';
-
-class Device {
-  Device(this.id);
-  String? id;
-  DeviceType? deviceType;
-  String? deviceName;
-  // url prefix
-  String? url;
-  int? messagePort;
-  bool? isConnect;
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  bool operator ==(Object other) {
-    if (other is Device) {
-      return id == other.id;
-    }
-    return false;
-  }
-
-  @override
-  String toString() {
-    return 'id:$id deviceType:$deviceType deviceName:$deviceName address:$url';
-  }
-}
 
 // 用于管理设备连接的类
 class DeviceController extends GetxController {
@@ -71,8 +45,6 @@ class DeviceController extends GetxController {
           }),
         );
       });
-    } else {
-      return;
     }
     checkConnectStat();
     // TODO 开启定时器
@@ -112,10 +84,12 @@ class DeviceController extends GetxController {
         try {
           Response response = await Dio().get('${device.url}:${device.messagePort}/ping');
           Log.d('checkConnectStat response.data : ${response.data}');
-          device.isConnect = true;
+          device.isAlive = true;
           update();
         } catch (e) {
-          device.isConnect = false;
+          device.isAlive = false;
+          device.sendedHistoryMessage = false;
+          device.sendedJoinMessage = false;
           update();
         }
       }
@@ -128,7 +102,7 @@ class DeviceController extends GetxController {
   int availableDevice() {
     int count = 0;
     for (Device device in connectDevice) {
-      if (device.isConnect ?? false) {
+      if (device.isAlive ?? false) {
         count++;
       }
     }
@@ -139,31 +113,19 @@ class DeviceController extends GetxController {
   List<Device> availableDevices() {
     List<Device> devices = [];
     for (Device device in connectDevice) {
-      if (device.isConnect ?? false) {
+      if (device.isAlive ?? false) {
         devices.add(device);
       }
     }
     return devices;
   }
 
-  void onDeviceConnect(
-    String? id,
-    String? name,
-    DeviceType? type,
-    String? urlPrefix,
-    int? port,
-  ) {
-    Device device = Device(id)
-      ..deviceType = type
-      ..deviceName = name
-      ..url = urlPrefix
-      ..isConnect = true
-      ..messagePort = port;
+  void onDeviceConnect(Device device) {
     if (!connectDevice.contains(device)) {
       // 第一次连接该设备
       connectDevice.add(device);
       if (!GetPlatform.isWeb) {
-        appendHistory(name, '$urlPrefix:$port', id);
+        appendHistory(device.deviceName, '${device.url}:${device.messagePort}', device.id);
       }
       Log.i('device : $device');
     }
@@ -187,7 +149,7 @@ class DeviceController extends GetxController {
   }
 
   void onDeviceClose(String? id) {
-    connectDevice.remove(Device(id));
+    connectDevice.removeWhere((device) => device.id == id);
     update();
   }
 
@@ -206,33 +168,26 @@ class DeviceController extends GetxController {
   //   'history'.set = jsonEncode(history);
   // }
 
-  send(Map<String, dynamic> data) async {
-    Set<String> urls = {};
-    for (Device device in connectDevice) {
-      // Log.i('${device.url}:${device.messagePort}');
-      urls.add('${device.url}:${device.messagePort}');
+  void sendToAll(Map<String, dynamic> data) async {
+    for (Device device in availableDevices()) {
+      send(data, device);
     }
-    // TODO之前下面三行代码是未注释的
-    // for (String url in history) {
-    //   urls.add(url);
-    // }
-    for (String url in urls) {
-      // Log.i('$url');
-      try {
-        await DioClient.post(url, data: data);
-      } catch (e) {
-        // Log.e('send error : ${e}');
-      }
+  }
+
+  void send(Map<String, dynamic> data, Device device) async {
+    try {
+      await DioClient.post('${device.url}:${device.messagePort}', data: data);
+    } catch (e) {
+      Log.e('send mesage to ${device.url} error : $e');
     }
   }
 
   /// 判断一个IP是否已经被连接了
   /// 发送连接消息的时候需要的
   bool ipIsConnect(String ip) {
-    Uri? ipUrl = Uri.tryParse(ip);
     for (Device device in availableDevices()) {
       Uri? uri = Uri.tryParse(device.url!);
-      if (uri?.host == ipUrl?.host) {
+      if (uri?.host == ip) {
         return true;
       }
     }

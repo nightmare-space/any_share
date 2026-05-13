@@ -19,10 +19,11 @@ class RootView extends StatelessWidget {
     return GetMaterialApp(
       locale: settingController.currentLocale,
       title: '',
-      initialRoute: AppPages.initial,
+      // showPerformanceOverlay: true,
+      initialRoute: AppPages.home,
       getPages: AppPages.routes,
       // defaultTransition: GetPlatform.isAndroid ? Transition.fadeIn : null,
-      defaultTransition: Transition.fadeIn,
+      defaultTransition: Transition.native,
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       localizationsDelegates: L10n.localizationsDelegates,
@@ -37,9 +38,15 @@ class RootView extends StatelessWidget {
               } else {
                 adaptWidth = 414;
               }
-              return GestureDetector(
-                onSecondaryTap: () {
-                  Get.back();
+              return Listener(
+                onPointerDown: (event) {
+                  if (event.kind == PointerDeviceKind.mouse) {
+                    switch (event.buttons) {
+                      case kSecondaryMouseButton:
+                      case kBackMouseButton:
+                        Get.back();
+                    }
+                  }
                 },
                 child: ViewMetric(
                   uiWidth: adaptWidth,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart';
+import 'package:speed_share/common/device.dart';
 import '../../controllers/controllers.dart';
 import 'package:speed_share/models/history.dart';
 import 'package:speed_share/generated/l10n.dart';
@@ -127,7 +128,7 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
                                   }
                                   return Container(
                                     decoration: BoxDecoration(
-                                      color: device.isConnect! ? Theme.of(context).primaryColor.withOpacity(0.08) : Colors.red.withOpacity(0.08),
+                                      color: device.isAlive! ? Theme.of(context).primaryColor.withOpacity(0.08) : Colors.red.withOpacity(0.08),
                                       borderRadius: BorderRadius.circular($(12)),
                                     ),
                                     padding: EdgeInsets.symmetric(
@@ -135,9 +136,9 @@ class _RecentConnectContainerState extends State<RecentConnectContainer> {
                                       vertical: $(2),
                                     ),
                                     child: Text(
-                                      device.isConnect! ? l10n.connected : l10n.disconnected,
+                                      device.isAlive! ? l10n.connected : l10n.disconnected,
                                       style: TextStyle(
-                                        color: device.isConnect! ? Theme.of(context).primaryColor : Colors.red,
+                                        color: device.isAlive! ? Theme.of(context).primaryColor : Colors.red,
                                         fontSize: $(12),
                                       ),
                                     ),

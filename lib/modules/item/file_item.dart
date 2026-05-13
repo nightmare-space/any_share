@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart' as p;
 import 'package:get/get.dart' hide Response;
+import 'package:speed_share/services/file_service.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:speed_share/modules/widget/icon.dart';
@@ -76,7 +77,7 @@ class _FileItemState extends State<FileItem> {
   String get url {
     String url;
     if (widget.sendByUser!) {
-      url = 'http://127.0.0.1:${chatController.shelfBindPort}${widget.info!.filePath}';
+      url = 'http://127.0.0.1:${FileService.port}${widget.info!.filePath}';
     } else {
       url = widget.info!.url! + widget.info!.filePath!;
     }

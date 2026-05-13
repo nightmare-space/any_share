@@ -4,14 +4,12 @@ import 'package:flutter/foundation.dart';
 class DioService {
   DioService._internal({BaseOptions? options}) {
     dio = Dio(options ?? _defaultOptions());
-    if (kDebugMode) {
-      dio.interceptors.add(
-        LogInterceptor(
-          requestBody: true,
-          responseBody: true,
-        ),
-      );
-    }
+    // dio.interceptors.add(
+    //   LogInterceptor(
+    //     requestBody: true,
+    //     responseBody: true,
+    //   ),
+    // );
   }
   static final DioService instance = DioService._internal();
   late final Dio dio;

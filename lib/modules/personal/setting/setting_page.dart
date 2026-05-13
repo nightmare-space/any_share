@@ -12,6 +12,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:speed_share/common/assets.dart';
 import 'package:speed_share/common/config.dart';
 import 'package:speed_share/routes/app_pages.dart';
+import 'package:speed_share/services/chat_service.dart';
 import '../../../controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/themes/theme.dart';
@@ -281,7 +282,7 @@ class _SettingPageState extends State<SettingPage> {
                             children.add(
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: $(10), vertical: $(2)),
-                                child: SelectableText('$address:${chatController.messageBindPort}/sdcard'),
+                                child: SelectableText('$address:${ChatService.port}/sdcard'),
                               ),
                             );
                           }

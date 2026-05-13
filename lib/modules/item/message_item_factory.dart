@@ -37,68 +37,72 @@ class MessageItemFactory {
     if (child == null) {
       return null;
     }
-    return Align(
-      alignment: sendByUser ? Alignment.centerLeft : Alignment.centerLeft,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: $(10),
-          vertical: $(8),
-        ),
-        child: Column(
-          crossAxisAlignment: sendByUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-          children: [
-            if (info!.deviceName != null && info.deviceName!.isNotEmpty)
-              Row(
-                mainAxisAlignment: sendByUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: info.deviceType?.deviceColor.withOpacityExact(0.15),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    child: Center(
-                      child: Text(
-                        info.deviceName ?? '',
-                        style: TextStyle(
-                          fontSize: $(12),
-                          color: info.deviceType?.deviceColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: $(4)),
-                  if (info is ClipboardMessage)
-                    Container(
-                      decoration: BoxDecoration(
-                        color: info.deviceType?.deviceColor.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      margin: EdgeInsets.only(left: $(4)),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      child: Center(
-                        child: Text(
-                          l10n.clipboard,
-                          style: TextStyle(fontSize: $(12), color: info.deviceType?.deviceColor),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            SizedBox(
-              height: $(4),
+    return Builder(
+      builder: (context) {
+        return Align(
+          alignment: sendByUser ? Alignment.centerLeft : Alignment.centerLeft,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: $(10),
+              vertical: $(8),
             ),
-            child,
-          ],
-        ),
-      ),
+            child: Column(
+              crossAxisAlignment: sendByUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              children: [
+                if (info!.deviceName != null && info.deviceName!.isNotEmpty)
+                  Row(
+                    mainAxisAlignment: sendByUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: info.deviceType?.deviceColor.withOpacityExact(0.15),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: $(8),
+                          vertical: $(4),
+                        ),
+                        child: Center(
+                          child: Text(
+                            info.deviceName ?? '',
+                            style: TextStyle(
+                              fontSize: $(12),
+                              color: info.deviceType?.deviceColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: $(4)),
+                      if (info is ClipboardMessage)
+                        Container(
+                          decoration: BoxDecoration(
+                            color: info.deviceType?.deviceColor.withOpacityExact(0.15),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          margin: EdgeInsets.only(left: $(4)),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: $(8),
+                            vertical: $(4),
+                          ),
+                          child: Center(
+                            child: Text(
+                              context.l10n.clipboard,
+                              style: TextStyle(fontSize: $(12), color: info.deviceType?.deviceColor),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                SizedBox(
+                  height: $(4),
+                ),
+                if (child != null) child,
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

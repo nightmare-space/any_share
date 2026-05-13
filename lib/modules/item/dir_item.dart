@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart';
 import 'package:speed_share/common/assets.dart';
+import 'package:speed_share/services/chat_service.dart';
 import '../../../controllers/chat_controller.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/models/models.dart';
@@ -107,7 +108,7 @@ class _DirMessageItemState extends State<DirMessageItem> {
   Widget build(BuildContext context) {
     String? urlPrifix;
     if (widget.sendByUser!) {
-      urlPrifix = 'http://127.0.0.1:${chatController.messageBindPort}';
+      urlPrifix = 'http://127.0.0.1:${ChatService.port}';
     } else {
       urlPrifix = info!.urlPrifix;
     }

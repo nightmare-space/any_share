@@ -7,6 +7,7 @@ import 'package:path/path.dart';
 import 'package:speed_share/common/extensions/extensions.dart';
 
 import 'package:speed_share/generated/l10n.dart';
+import 'package:speed_share/services/dio_manager.dart';
 import 'package:speed_share/utils/utils.dart' hide FileUtil;
 import 'controllers.dart';
 
@@ -16,12 +17,11 @@ class DownloadInfo {
   int count = 0;
 }
 
+// TODO:Compare with file_manager's DonwloadController
 class DownloadController extends GetxController {
   /// key是url，value是进度
   Map<String?, DownloadInfo> progress = {};
   SettingController settingController = Get.find();
-
-  final Dio dio = Dio();
 
   double getProgress(String? url) {
     if (progress.containsKey(url)) {
@@ -68,24 +68,8 @@ class DownloadController extends GetxController {
     progress[url] = info;
     String savePath = getSavePath(url, dir);
     Timer timer = await computeNetSpeed(info);
-    // Response res = await RangeDownload.downloadWithChunks(
-    //   '$urlPath?download=true', savePath,
-    //   // isRangeDownload: false, //Support normal download
-    //   maxChunk: 4,
-    //   // dio: Dio(),//Optional parameters "dio".Convenient to customize request settings.
-    //   // cancelToken: cancelToken,
-    //   onReceiveProgress: (received, total) {
-    //     count = received;
-    //     fileDownratio = received / total;
-    //     setState(() {});
-    //     if (!isStarted) {
-    //       startTime = DateTime.now();
-    //       isStarted = true;
-    //     }
-    //   },
-    // );
     try {
-      await dio.download(
+      await DioClient.download(
         '$url?download=true',
         savePath,
         onReceiveProgress: (count, total) {

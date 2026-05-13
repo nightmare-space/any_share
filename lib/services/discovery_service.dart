@@ -7,7 +7,11 @@ class DiscoveryService {
   DiscoveryService._();
 
   static final DiscoveryService instance = DiscoveryService._();
+
+  static const bool enableLog = false;
+
   late final ChatController chatController = Get.find();
+  late final DeviceController deviceController = Get.find();
   final Multicast multicast = Multicast();
   final List<String> _messages = [];
 
@@ -27,16 +31,18 @@ class DiscoveryService {
   }
 
   Future<void> receiveUdpMessage(String message, String address) async {
-    // Log.w(message);
+    if (enableLog) {
+      Log.i(message);
+    }
     final String id = message.split(',').first;
     final String port = message.split(',').last;
-    // if(message)
-    // Log.e('UniqueUtil.getDevicesId() -> ${UniqueUtil.getDevicesId()}');
-
     if ((await PlatformUtil.localAddress()).contains(address)) {
       return;
     }
     if (id.trim() != await UniqueUtil.getDevicesId()) {
+      if (deviceController.ipIsConnect(address)) {
+        return;
+      }
       chatController.sendJoinEvent('http://$address:$port');
     }
   }

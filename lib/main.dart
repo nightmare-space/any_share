@@ -7,6 +7,8 @@ import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:settings/settings.dart';
+import 'package:speed_share/services/chat_service.dart';
+import 'package:speed_share/services/file_service.dart';
 import 'package:speed_share_extension/speed_share_extension.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:file_manager/file_manager.dart' as file_manager;
@@ -129,11 +131,34 @@ Future<void> initApp() async {
     ClipboardService.instance.init();
     DesktopService.instance.init();
   }
-
+  // prepare file server to provide file transfer
+  await FileService.start();
+  await ChatService.start();
+  String udpData = '';
+  udpData += await UniqueUtil.getDevicesId();
+  udpData += ',${ChatService.port}';
+  // 将设备 ID 与聊天服务器成功创建的端口 UDP 广播出去
+  DiscoveryService.instance.startBroadcast(udpData);
   unpackWebResource();
   await initApi('Speed Share', Config.versionName);
+  requestManageStorage();
 }
 
 extension SizeExt on Size {
   String str() => 'Size(${width.toStringAsFixed(1)}, ${height.toStringAsFixed(1)})';
+}
+
+Future<void> requestManageStorage() async {
+  if (await Permission.manageExternalStorage.isGranted) {
+    Log.i('Permission already granted');
+    return;
+  }
+
+  final result = await Permission.manageExternalStorage.request();
+
+  if (result.isGranted) {
+    Log.i('Permission granted');
+  } else {
+    Log.i('Permission denied');
+  }
 }

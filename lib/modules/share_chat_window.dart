@@ -11,6 +11,7 @@ import 'package:speed_share/common/assets.dart';
 import 'package:speed_share/common/device_type_extension.dart';
 import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/modules/widget/menu.dart';
+import 'package:speed_share/services/chat_service.dart';
 import 'package:speed_share/utils/scan_util.dart';
 import 'package:speed_share/common/config.dart';
 import 'package:speed_share/generated/l10n.dart';
@@ -175,11 +176,8 @@ class _ShareChatV2State extends State<ShareChatV2> with SingleTickerProviderStat
                   ),
                   NiIconButton(
                     onTap: () {
-                      ChatController controller = Get.find();
                       Get.dialog(
-                        ShowQRPage(
-                          port: controller.messageBindPort,
-                        ),
+                        ShowQRPage(port: ChatService.port),
                       );
                     },
                     child: SvgPicture.asset(
