@@ -5,12 +5,11 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/common/device.dart';
 
-import 'package:speed_share/common/device_type.dart';
+import 'package:speed_share/common/common.dart';
 import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/models/history.dart';
-import 'package:speed_share/services/dio_manager.dart';
+import 'package:speed_share/services/dio_service.dart';
 
 // 用于管理设备连接的类
 class DeviceController extends GetxController {

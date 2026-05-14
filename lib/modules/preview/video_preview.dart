@@ -1,7 +1,8 @@
-// import 'package:better_player/better_player.dart';
-import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:better_player_plus/better_player_plus.dart';
+
 // 预览视频的组件
+// For previewing videos
 class VideoPreview extends StatefulWidget {
   const VideoPreview({Key? key, this.url}) : super(key: key);
   final String? url;

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:path/path.dart';
 
 /// 获得一个安全保存的文件路径，如果已经有一个存在了，会在文件名后面添加一个别名

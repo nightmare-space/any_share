@@ -1,8 +1,10 @@
 import 'dart:io';
+
 import 'package:archive/archive.dart';
 import 'package:flutter/services.dart';
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/common/config.dart';
+
+import 'package:speed_share/common/common.dart';
 
 /// 解压 web 资源，可以在浏览器访问速享页面，不仅仅是简单的 HTML 页面
 /// Unpack web resources, allowing access to the AnyShare page in the browser, not just a simple HTML page

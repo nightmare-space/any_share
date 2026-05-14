@@ -8,18 +8,15 @@ import 'package:flutter/material.dart' hide Router;
 import 'package:file_selector/file_selector.dart';
 import 'package:dio/dio.dart';
 import 'package:path/path.dart' as p;
-import 'package:get/get.dart' hide Response, FormData, MultipartFile;
+import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart';
 
-import 'package:speed_share/common/device.dart';
-import 'package:speed_share/common/extensions/extensions.dart';
-import 'package:speed_share/services/chat_service.dart';
+import 'package:speed_share/common/common.dart';
 import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/services/dio_manager.dart';
 import 'package:speed_share/models/models.dart';
-import 'package:speed_share/modules/item/item.dart';
+import 'package:speed_share/modules/message_item/message_item.dart';
 import 'package:speed_share/utils/utils.dart' hide FileUtil;
-import 'package:speed_share/services/file_service.dart';
+import 'package:speed_share/services/services.dart';
 import 'controllers.dart';
 
 // TODO: Need Display how much device connected to the chat window's bottom

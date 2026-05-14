@@ -2,25 +2,25 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:file_manager/server/file_server.dart' as file_manager;
-import 'package:get/get.dart' hide Response;
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_static/shelf_static.dart';
+import 'package:get/get.dart' hide Response;
 import 'package:path/path.dart' as p;
+import 'package:file_manager/server/file_server.dart' as file_manager;
 import 'package:global_repository/global_repository.dart';
 
-import 'package:speed_share/common/config.dart';
+import 'package:speed_share/common/common.dart';
+import 'package:speed_share/utils/utils.dart';
 import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/utils/path_util.dart';
 
 /// Singleton chat server that serves registered files via a single HTTP server.
 /// TODO: pure dart and add test
 const _tag = 'AnyShareChatServer';
 
-Middleware corsMiddleware() {
+Middleware _corsMiddleware() {
   return _corsHandler;
 }
 
@@ -170,7 +170,7 @@ class _ChatService {
       }
     });
     pipeline = pipeline.addMiddleware(logRequests());
-    pipeline = pipeline.addMiddleware(corsMiddleware());
+    pipeline = pipeline.addMiddleware(_corsMiddleware());
     final handler = pipeline.addHandler(_router);
     _port = Config.chatPortRangeStart;
     while (true) {

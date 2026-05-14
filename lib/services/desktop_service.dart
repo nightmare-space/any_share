@@ -1,11 +1,12 @@
 import 'dart:ui';
 
 import 'package:get/get.dart';
-import 'package:signale/signale.dart';
-import 'package:speed_share/common/assets.dart';
-import 'package:speed_share/generated/l10n.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:signale/signale.dart';
+
+import 'package:speed_share/common/common.dart';
+import 'package:speed_share/generated/l10n.dart';
 
 class DesktopService with WindowListener {
   DesktopService._();

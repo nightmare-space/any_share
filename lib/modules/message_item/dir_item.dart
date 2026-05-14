@@ -1,16 +1,18 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:dio/dio.dart';
+
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/common/assets.dart';
+
+import 'package:speed_share/common/common.dart';
+import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/services/chat_service.dart';
-import '../../../controllers/chat_controller.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/models/models.dart';
-import 'package:file_selector/file_selector.dart';
 
 class DirMessageItem extends StatefulWidget {
   const DirMessageItem({

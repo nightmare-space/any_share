@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 // 预览图片的组件
+// For previewing images
 class PreviewImage extends StatefulWidget {
   const PreviewImage({Key? key, this.path, this.tag}) : super(key: key);
   final String? path;
@@ -44,7 +45,7 @@ class _PreviewImageState extends State<PreviewImage> {
                   icon: const Icon(Icons.clear),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

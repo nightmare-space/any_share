@@ -2,10 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:global_repository/global_repository.dart';
 import 'package:image_picker/image_picker.dart';
-import '../controllers/controllers.dart';
-import 'package:speed_share/common/config.dart';
+import 'package:global_repository/global_repository.dart';
+
+import 'package:speed_share/common/common.dart';
+import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
 
 // 主页点击中间的按钮，打开的页面

@@ -3,7 +3,7 @@ import 'package:global_repository/global_repository.dart';
 import 'package:speed_share/common/device_type_extension.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/models/models.dart';
-import 'package:speed_share/modules/item/text_item.dart';
+import 'package:speed_share/modules/message_item/text_item.dart';
 import 'broswer_file_item.dart';
 import 'dir_item.dart';
 import 'file_item.dart';

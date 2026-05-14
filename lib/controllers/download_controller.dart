@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart';
-import 'package:speed_share/common/extensions/extensions.dart';
 
+import 'package:speed_share/common/common.dart';
 import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/services/dio_manager.dart';
+import 'package:speed_share/services/dio_service.dart';
 import 'package:speed_share/utils/utils.dart' hide FileUtil;
 import 'controllers.dart';
 

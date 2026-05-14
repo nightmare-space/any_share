@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:animations/animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:global_repository/global_repository.dart';

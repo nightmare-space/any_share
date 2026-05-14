@@ -1,23 +1,21 @@
 import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
-import 'package:file_manager/file_manager.dart' as file_manager;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:global_repository/global_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:speed_share/common/assets.dart';
-import 'package:speed_share/common/config.dart';
+import 'package:global_repository/global_repository.dart';
+import 'package:file_manager/file_manager.dart' as file_manager;
+
+import 'package:speed_share/controllers/controllers.dart';
+import 'package:speed_share/services/services.dart';
 import 'package:speed_share/routes/app_pages.dart';
-import 'package:speed_share/services/chat_service.dart';
-import '../../../controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/themes/theme.dart';
+import 'package:speed_share/widgets/switch/xliv_switch.dart';
 
-import '../../../widgets/switch/xliv_switch.dart';
 import 'dialog/select_language.dart';
 
 Future<int> getCacheSize(Directory cacheDir) async {

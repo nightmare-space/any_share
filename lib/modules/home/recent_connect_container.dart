@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart';
-import 'package:speed_share/common/device.dart';
-import '../../controllers/controllers.dart';
+import 'package:global_repository/global_repository.dart';
+
+import 'package:speed_share/common/common.dart';
+import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/models/history.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/modules/file/file_page.dart';

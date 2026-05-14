@@ -3,3 +3,4 @@ export 'file_util.dart';
 export 'path_util.dart';
 export 'vibrate.dart';
 export 'document/document.dart';
+export 'scan_util.dart';

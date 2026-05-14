@@ -3,17 +3,17 @@ import 'dart:math';
 
 import 'package:flutter/material.dart' hide Router;
 import 'package:flutter/services.dart';
-import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart' as p;
 import 'package:get/get.dart' hide Response;
-import 'package:speed_share/services/file_service.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:global_repository/global_repository.dart';
 
 import 'package:speed_share/modules/widget/icon.dart';
-import 'package:speed_share/themes/theme.dart';
-import 'package:speed_share/common/extensions/file_type_ext.dart';
-import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
+import 'package:speed_share/themes/theme.dart';
+import 'package:speed_share/common/common.dart';
+import 'package:speed_share/controllers/controllers.dart';
+import 'package:speed_share/services/services.dart';
 import 'package:speed_share/models/models.dart';
 
 class FileItem extends StatefulWidget {

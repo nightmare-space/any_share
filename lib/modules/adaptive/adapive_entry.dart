@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:signale/signale.dart';
 
-import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/modules/home/desktop_home.dart';
 import 'package:speed_share/modules/home/mobile_home.dart';
 
-// 自动响应布局
+// Reponsive Entry Point
 class AdaptiveEntryPoint extends StatefulWidget {
   const AdaptiveEntryPoint({
     Key? key,

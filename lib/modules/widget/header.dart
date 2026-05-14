@@ -3,10 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:get/get.dart';
-
 import 'package:global_repository/global_repository.dart';
-import 'package:speed_share/common/device.dart';
-import 'package:speed_share/common/device_type_extension.dart';
+
+import 'package:speed_share/common/common.dart';
 import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/generated/l10n.dart';
 

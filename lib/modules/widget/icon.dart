@@ -1,8 +1,10 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/utils.dart';
+import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart' hide FileUtil;
+
 import 'package:speed_share/common/assets.dart';
 import 'package:speed_share/common/config.dart';
 import 'package:speed_share/common/extensions/file_type_ext.dart';

@@ -1,18 +1,19 @@
 import 'dart:io';
 
-import 'package:global_repository/global_repository.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_static/shelf_static.dart';
 import 'package:path/path.dart' as p;
-import 'package:speed_share/common/config.dart';
+import 'package:global_repository/global_repository.dart';
+
+import 'package:speed_share/common/common.dart';
 
 /// Singleton file server that serves registered files via a single HTTP server.
 /// TODO: pure dart and add test
 const _tag = 'AnyShareFileServer';
 
-Middleware corsMiddleware() {
+Middleware _corsMiddleware() {
   return _corsHandler;
 }
 
@@ -54,7 +55,7 @@ class _FileService {
     }
     var pipeline = const Pipeline();
     pipeline = pipeline.addMiddleware(logRequests());
-    pipeline = pipeline.addMiddleware(corsMiddleware());
+    pipeline = pipeline.addMiddleware(_corsMiddleware());
     final handler = pipeline.addHandler(_router);
     int rangeStart = Config.shelfPortRangeStart;
     int rangeEnd = Config.shelfPortRangeEnd;

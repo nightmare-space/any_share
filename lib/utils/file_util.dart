@@ -1,11 +1,10 @@
-import 'dart:io';
-
-import 'package:file_manager/file_manager.dart' as file_manager;
 import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:get/get.dart';
 import 'package:open_file/open_file.dart';
 import 'package:signale/signale.dart';
+import 'package:file_manager/file_manager.dart' as file_manager;
+
 import 'package:speed_share/modules/preview/image_preview.dart';
 import 'package:speed_share/modules/preview/video_preview.dart';
 import 'package:speed_share/common/extensions/file_type_ext.dart';
@@ -28,14 +27,6 @@ class FileUtil {
     } else {
       OpenFile.open(path);
     }
-  }
-
-  // 获得windows的盘符列表
-  // google查下
-  // 尽量用ffi调用win32 api
-  static List<String> getWindowsDrive() {
-    //TODO(ren)
-    return [];
   }
 }
 

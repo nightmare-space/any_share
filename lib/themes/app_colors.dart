@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// TODO: Remove
 class AppColors {
   AppColors._();
   static const Color fontColor = Color(0xff201b1a);

@@ -1,19 +1,21 @@
 import 'dart:io';
-import 'package:animations/animations.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:animations/animations.dart';
 import 'package:get/get.dart';
-import 'package:global_repository/global_repository.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as path;
 import 'package:responsive_framework/responsive_framework.dart';
-import '../../../controllers/file_controller.dart';
+import 'package:global_repository/global_repository.dart';
 import 'package:file_manager/file_manager.dart' as file_manager;
-import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/themes/theme.dart';
-import '../widget/header.dart';
-import '../widget/icon.dart';
 import 'package:android_api_server_client/android_api_server_client.dart';
+import 'package:speed_share/controllers/controllers.dart';
+
+import 'package:speed_share/generated/l10n.dart';
+import 'package:speed_share/modules/widget/header.dart';
+import 'package:speed_share/modules/widget/icon.dart';
+import 'package:speed_share/themes/theme.dart';
 
 class NiIconButton extends StatelessWidget {
   const NiIconButton({Key? key, this.child, this.onTap}) : super(key: key);

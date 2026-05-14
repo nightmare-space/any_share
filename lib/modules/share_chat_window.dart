@@ -1,26 +1,22 @@
 import 'dart:math';
 
-import 'package:file_manager/file_manager.dart' as file_manager;
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
+import 'package:file_selector/file_selector.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart' hide Response;
-import 'package:global_repository/global_repository.dart' hide GestureWithScale;
 import 'package:image_picker/image_picker.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:global_repository/global_repository.dart' hide GestureWithScale;
+import 'package:file_manager/file_manager.dart' as file_manager;
 
-import 'package:speed_share/common/assets.dart';
-import 'package:speed_share/common/device_type_extension.dart';
+import 'package:speed_share/common/common.dart';
 import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/modules/widget/menu.dart';
-import 'package:speed_share/services/chat_service.dart';
-import 'package:speed_share/utils/scan_util.dart';
-import 'package:speed_share/common/config.dart';
+import 'package:speed_share/services/services.dart';
+import 'package:speed_share/utils/utils.dart';
 import 'package:speed_share/generated/l10n.dart';
 import 'package:speed_share/themes/theme.dart';
-import 'package:speed_share/utils/utils.dart';
-
 import 'dialog/show_qr_page.dart';
 import 'widget/gesture.dart';
 

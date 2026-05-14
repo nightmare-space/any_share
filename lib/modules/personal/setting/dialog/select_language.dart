@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
-import '../../../../../controllers/setting_controller.dart';
+
+import 'package:speed_share/controllers/controllers.dart';
 
 class SelectLang extends StatefulWidget {
   const SelectLang({Key? key}) : super(key: key);

@@ -1,13 +1,14 @@
 import 'dart:io';
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
-import '../../controllers/controllers.dart';
-import 'package:speed_share/generated/l10n.dart';
-import 'package:speed_share/themes/theme.dart';
 
-import '../dialog/join_chat.dart';
+import 'package:speed_share/controllers/controllers.dart';
+import 'package:speed_share/generated/l10n.dart';
+import 'package:speed_share/modules/dialog/join_chat.dart';
+import 'package:speed_share/themes/theme.dart';
 
 class HeaderMenu extends StatefulWidget {
   const HeaderMenu({

@@ -1,7 +1,8 @@
-import 'package:clipboard_watcher/clipboard_watcher.dart' show ClipboardListener, clipboardWatcher;
 import 'package:flutter/services.dart';
+import 'package:clipboard_watcher/clipboard_watcher.dart';
 import 'package:get/get.dart';
 import 'package:signale/signale.dart';
+
 import 'package:speed_share/controllers/controllers.dart';
 import 'package:speed_share/models/models.dart';
 
